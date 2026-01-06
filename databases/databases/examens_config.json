@@ -1,0 +1,216 @@
+{
+  "consultation": [
+    {
+      "id": "consult_specialisee",
+      "name": "Consultation Spécialisée",
+      "prix": 7500
+    },
+    {
+      "id": "consult_generale",
+      "name": "Consultation Générale",
+      "prix": 5000
+    },
+    {
+      "id": "consult_professeur",
+      "name": "Consultation Reference",
+      "prix": 2500
+    },
+    {
+      "id": "consult_urgence",
+      "name": "Consultation Gynécologie",
+      "prix": 10000
+    },
+    {
+      "id": "kc_1761557423453",
+      "name": "KC",
+      "prix": 1500
+    }
+  ],
+  "laboratoire": [
+    {
+      "id": "ts",
+      "name": "TS",
+      "prix": 3000
+    },
+    {
+      "id": "vs",
+      "name": "VS",
+      "prix": 2000
+    },
+    {
+      "id": "tc",
+      "name": "TC",
+      "prix": 4000
+    },
+    {
+      "id": "tp",
+      "name": "TP",
+      "prix": 3500
+    },
+    {
+      "id": "glycemie",
+      "name": "Glycémie",
+      "prix": 1500
+    },
+    {
+      "id": "uree",
+      "name": "Urée",
+      "prix": 2000
+    },
+    {
+      "id": "creatinine",
+      "name": "Créatinine",
+      "prix": 2000
+    },
+    {
+      "id": "transaminases",
+      "name": "Transaminases",
+      "prix": 4000
+    },
+    {
+      "id": "bilirubine",
+      "name": "Bilirubine",
+      "prix": 3000
+    },
+    {
+      "id": "ionogramme",
+      "name": "Ionogramme Sanguin",
+      "prix": 4500
+    },
+    {
+      "id": "crp",
+      "name": "CRP",
+      "prix": 3500
+    },
+    {
+      "id": "nfs_1760460215908",
+      "name": "NFS",
+      "prix": 10000
+    }
+  ],
+  "echographie": [
+    {
+      "id": "echo_gyneco",
+      "name": "Echo. Gynéco-Obstétrique",
+      "prix": 15000
+    },
+    {
+      "id": "echo_abdominale",
+      "name": "Echo. Abdominale",
+      "prix": 12000
+    },
+    {
+      "id": "echo_pelvienne",
+      "name": "Echo. Pelvienne",
+      "prix": 10000
+    },
+    {
+      "id": "echo_prostatique",
+      "name": "Echo. Prostatique",
+      "prix": 12000
+    },
+    {
+      "id": "echo_partie_molle",
+      "name": "Echo. de la partie molle",
+      "prix": 8000
+    },
+    {
+      "id": "echo_renale",
+      "name": "Echo. Rénale",
+      "prix": 10000
+    },
+    {
+      "id": "echo_voies_urinaires",
+      "name": "Echo. des voies urinaires",
+      "prix": 10000
+    },
+    {
+      "id": "echo_thyroidienne",
+      "name": "Echo. Thyroidienne",
+      "prix": 9000
+    }
+  ],
+  "hospitalisation": [
+    {
+      "id": "hosp_jour",
+      "name": "Hospitalisation de Jour",
+      "prix": 20000
+    },
+    {
+      "id": "hosp_nuit",
+      "name": "Hospitalisation Nuit",
+      "prix": 25000
+    },
+    {
+      "id": "hosp_urgence",
+      "name": "Hospitalisation Urgence",
+      "prix": 30000
+    },
+    {
+      "id": "hosp_chambre",
+      "name": "Chambre Privée",
+      "prix": 15000
+    },
+    {
+      "id": "hosp_soins",
+      "name": "Soins Infirmiers",
+      "prix": 5000
+    }
+  ],
+  "chirurgie": [
+    {
+      "id": "chir_mineure",
+      "name": "Chirurgie Mineure",
+      "prix": 50000
+    },
+    {
+      "id": "chir_majeure",
+      "name": "Chirurgie Majeure",
+      "prix": 150000
+    },
+    {
+      "id": "chir_urgence",
+      "name": "Chirurgie d'Urgence",
+      "prix": 100000
+    },
+    {
+      "id": "chir_ambulatoire",
+      "name": "Chirurgie Ambulatoire",
+      "prix": 40000
+    }
+  ],
+  "kinesitherapie": [
+    {
+      "id": "kine_seance",
+      "name": "Séance de Kinésithérapie",
+      "prix": 8000
+    },
+    {
+      "id": "kine_reeducation",
+      "name": "Rééducation Fonctionnelle",
+      "prix": 10000
+    },
+    {
+      "id": "kine_massage",
+      "name": "Massage Thérapeutique",
+      "prix": 7000
+    }
+  ],
+  "fibroscopie": [
+    {
+      "id": "fibro_gastrique",
+      "name": "Fibroscopie Gastrique",
+      "prix": 25000
+    },
+    {
+      "id": "fibro_bronchique",
+      "name": "Fibroscopie Bronchique",
+      "prix": 30000
+    },
+    {
+      "id": "fibro_colique",
+      "name": "Fibroscopie Colique",
+      "prix": 35000
+    }
+  ]
+}

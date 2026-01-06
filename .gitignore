@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environnement
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Build
+client/build/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Base de données locale (si fichiers JSON)
+databases/*.json
+!databases/labo.json.example
+
+
+
+# Node modules
+node_modules/
+*/node_modules/
+
+
+

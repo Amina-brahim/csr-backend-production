@@ -1,0 +1,61 @@
+[
+  {
+    "id": "admin",
+    "username": "admin",
+    "password": "admin123",
+    "role": "admin",
+    "service": "administration",
+    "createdAt": "2025-10-21T07:13:29.562Z",
+    "createdBy": "system",
+    "isActive": true,
+    "lastLogin": "2025-12-09T08:25:47.622Z"
+  },
+  {
+    "id": 1763376823506,
+    "username": "Amina",
+    "password": "12345678",
+    "service": "Caisse",
+    "fullName": "Amina",
+    "email": "",
+    "isActive": true,
+    "createdAt": "2025-11-17T10:53:42.630Z",
+    "lastLogin": "2025-12-11T10:58:23.002Z",
+    "permissions": [
+      "caisse",
+      "view",
+      "create_patient"
+    ]
+  },
+  {
+    "id": 1763377050351,
+    "username": "Labo",
+    "password": "12345678",
+    "service": "Laboratoire",
+    "fullName": "Labo",
+    "email": "",
+    "isActive": true,
+    "createdAt": "2025-11-17T10:57:29.874Z",
+    "lastLogin": "2025-12-08T09:45:21.979Z",
+    "permissions": [
+      "labo",
+      "view",
+      "update_status"
+    ]
+  },
+  {
+    "id": 1765187924354,
+    "username": "Caisse1",
+    "password": "12345678",
+    "service": "Caisse",
+    "fullName": "Labo1",
+    "email": "",
+    "isActive": true,
+    "createdAt": "2025-12-08T09:58:44.341Z",
+    "lastLogin": "2025-12-09T10:06:57.749Z",
+    "permissions": [
+      "caisse",
+      "view",
+      "create_patient"
+    ]
+  }
+]

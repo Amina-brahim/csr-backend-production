@@ -1,0 +1,48 @@
+[
+  {
+    "id": "1761593832306_4obt3pdw1",
+    "patientId": "CSR25100001",
+    "patientName": "Hassan Brahim Mahamat",
+    "amount": "14000",
+    "services": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "reason": "dtdtte fghfry rfguyru",
+    "cancelledBy": "admin",
+    "timestamp": "2025-10-27T19:37:12.304Z",
+    "status": "annulé",
+    "originalPatientData": {
+      "nomClient": "Hassan Brahim Mahamat",
+      "numClient": 1,
+      "numAirTel": "65520323",
+      "numTIGO": "",
+      "dateCreation": "2025-10-07T09:13:54.875Z"
+    }
+  },
+  {
+    "id": "1761593647082_qz63kw68h",
+    "patientId": "CSR25100002",
+    "patientName": "Amina Brahim Mahamat",
+    "amount": "12500",
+    "services": [
+      {
+        "value": "consultation",
+        "name": "Consultation"
+      }
+    ],
+    "reason": "jhgefjhfuyururt",
+    "cancelledBy": "admin",
+    "timestamp": "2025-10-27T19:34:07.072Z",
+    "status": "annulé",
+    "originalPatientData": {
+      "nomClient": "Amina Brahim Mahamat",
+      "numClient": 2,
+      "numAirTel": "65678899",
+      "numTIGO": "",
+      "dateCreation": "2025-10-07T09:19:12.735Z"
+    }
+  }
+]

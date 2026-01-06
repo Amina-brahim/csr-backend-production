@@ -1,0 +1,871 @@
+[
+  {
+    "numClient": 1,
+    "nomClient": "Hassan Brahim Mahamat",
+    "numID_CSR": "CSR25100001",
+    "numAirTel": "65520323",
+    "numTIGO": "",
+    "numMedecin": "",
+    "mode_Paie_OP": "",
+    "service": "aucun",
+    "assure": "Non",
+    "total_OP": "14000",
+    "remise_OP": "",
+    "dette_OP": "",
+    "jeton_OP": "KONGrIKnTzfqojXdp9bi5vjUlIZPuf6JNm9sriBe",
+    "isLaboratorized": "En cours",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      }
+    ],
+    "dateCreation": "2025-10-07T09:13:54.875Z",
+    "dateModification": "2025-10-07T09:54:56.239Z",
+    "updatedAt": "2025-10-07T11:15:59.319Z",
+    "journalEntryDate": "2025-10-18T09:24:31.988Z",
+    "journalId": "17607794719883rs5ak28w"
+  },
+  {
+    "numClient": 3,
+    "nomClient": "Amina",
+    "numID_CSR": "CSR25100003",
+    "numAirTel": "65165453",
+    "numTIGO": "",
+    "numMedecin": "",
+    "mode_Paie_OP": "",
+    "service": "aucun",
+    "assure": "Non",
+    "total_OP": "7000",
+    "remise_OP": "",
+    "dette_OP": "",
+    "jeton_OP": "UCctHzoiz57twxhpiZANubGwajEeJaDvuKKclYy0",
+    "isLaboratorized": "Terminé",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      },
+      {
+        "id": "glycemie",
+        "name": "Glycémie",
+        "prix": 1500,
+        "service": "laboratoire"
+      },
+      {
+        "id": "uree",
+        "name": "Urée",
+        "prix": 2000,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      },
+      {
+        "id": "glycemie",
+        "name": "Glycémie",
+        "prix": 1500,
+        "service": "laboratoire"
+      },
+      {
+        "id": "uree",
+        "name": "Urée",
+        "prix": 2000,
+        "service": "laboratoire"
+      }
+    ],
+    "dateCreation": "2025-10-07T09:59:10.941Z",
+    "updatedAt": "2025-10-07T10:33:47.958Z",
+    "journalEntryDate": "2025-10-18T09:24:31.988Z",
+    "journalId": "1760779471988i8wmeb6fb"
+  },
+  {
+    "numClient": 4,
+    "nomClient": "Amina Brahim Mahamat",
+    "numID_CSR": "CSR25100004",
+    "numAirTel": "6565453",
+    "numTIGO": "9565453",
+    "numMedecin": "",
+    "mode_Paie_OP": "cheque",
+    "service": "aucun",
+    "assure": "Non",
+    "total_OP": "14000",
+    "remise_OP": "30",
+    "dette_OP": "5000",
+    "jeton_OP": "z2EHDOMyp4T7ta967cH0CgCzbORXYHXM7nznxVgD",
+    "isLaboratorized": "En attente",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      }
+    ],
+    "dateCreation": "2025-10-13T05:22:40.991Z",
+    "journalEntryDate": "2025-10-18T09:24:31.988Z",
+    "journalId": "1760779471988efw0j9ht9"
+  },
+  {
+    "numClient": 5,
+    "nomClient": "Koubra Abdelkhader",
+    "numID_CSR": "CSR25100005",
+    "numAirTel": "62915788",
+    "numTIGO": "",
+    "numMedecin": "",
+    "mode_Paie_OP": "cheque",
+    "service": "aucun",
+    "assure": "Non",
+    "total_OP": "10000",
+    "remise_OP": "10",
+    "dette_OP": "",
+    "jeton_OP": "weHLndRDC5EUfBLyMVOCoYCo2Msbd9MNObW8YfVP",
+    "isLaboratorized": "En attente",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "nfs_1760460215908",
+        "name": "NFS",
+        "prix": 10000,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "nfs_1760460215908",
+        "name": "NFS",
+        "prix": 10000,
+        "service": "laboratoire"
+      }
+    ],
+    "dateCreation": "2025-10-14T16:50:36.616Z",
+    "journalEntryDate": "2025-10-18T09:24:31.988Z",
+    "journalId": "1760779471988f40caxd0y"
+  },
+  {
+    "numClient": 6,
+    "nomClient": "Koubra Abdelkhader",
+    "numID_CSR": "CSR25100006",
+    "numAirTel": "62915788",
+    "numTIGO": "98766788",
+    "numMedecin": "",
+    "mode_Paie_OP": "cheque",
+    "service": "aucun",
+    "assure": "ASCOMA",
+    "total_OP": "5000",
+    "remise_OP": "20",
+    "dette_OP": "0",
+    "jeton_OP": "cDOxsbfDNZYY3hYELkDThdPIrSGi5QHR7PbQ6DRE",
+    "isLaboratorized": "Annulé",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      }
+    ],
+    "dateCreation": "2025-10-18T09:21:42.235Z",
+    "updatedAt": "2025-10-18T09:22:51.442Z",
+    "journalEntryDate": "2025-10-18T09:24:31.988Z",
+    "journalId": "1760779471988br8m4uhc1"
+  },
+  {
+    "numClient": 7,
+    "nomClient": "Amina",
+    "numID_CSR": "CSR25100007",
+    "numAirTel": "6588998",
+    "numTIGO": "9777888",
+    "numMedecin": "88999",
+    "mode_Paie_OP": "cheque",
+    "service": "laboratoire",
+    "assure": "Non",
+    "total_OP": "9000",
+    "remise_OP": "",
+    "dette_OP": "",
+    "jeton_OP": "2mPhpCTlae1CgGECyP22AvMFTbt3TivI1lUZncHL",
+    "isLaboratorized": "En attente",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      }
+    ],
+    "serviceName": "Laboratoire",
+    "examensPourCeService": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      }
+    ],
+    "totalPourCeService": 9000,
+    "dateService": "2025-10-19T18:25:41.232Z",
+    "journalEntryDate": "2025-10-19T18:25:41.234Z",
+    "journalId": "1760898341234jjr6j5cbp"
+  },
+  {
+    "numClient": 8,
+    "nomClient": "Hassan",
+    "numID_CSR": "CSR25100008",
+    "numAirTel": "679906677",
+    "numTIGO": "9980655",
+    "numMedecin": "08778",
+    "mode_Paie_OP": "cheque",
+    "service": "laboratoire",
+    "assure": "STAR International",
+    "total_OP": "12500",
+    "remise_OP": "10",
+    "dette_OP": "0",
+    "jeton_OP": "29F78p6QZL8VOa0Cw6j1CZyfaSA09Ut9E4cs77gH",
+    "isLaboratorized": "En attente",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      }
+    ],
+    "serviceName": "Laboratoire",
+    "examensPourCeService": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      }
+    ],
+    "totalPourCeService": 12500,
+    "dateService": "2025-10-28T10:41:44.066Z",
+    "journalEntryDate": "2025-10-28T10:41:44.067Z",
+    "journalId": "1761648104067jvndp03qa"
+  },
+  {
+    "numClient": 9,
+    "nomClient": "AMINA",
+    "numID_CSR": "CSR25110009",
+    "numAirTel": "6789809",
+    "numTIGO": "988878",
+    "numMedecin": "688999",
+    "mode_Paie_OP": "cheque",
+    "service": "laboratoire",
+    "assure": "ASCOMA",
+    "total_OP": "12500",
+    "remise_OP": "10",
+    "dette_OP": "0",
+    "jeton_OP": "PAIJlTq9B879P3FjkMEvmue7FNF2iISnAI7P1CXO",
+    "isLaboratorized": "En attente",
+    "servicesDetails": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      }
+    ],
+    "caisseUser": "Caisse1",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      }
+    ],
+    "serviceName": "Laboratoire",
+    "examensPourCeService": [
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "vs",
+        "name": "VS",
+        "prix": 2000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tc",
+        "name": "TC",
+        "prix": 4000,
+        "service": "laboratoire"
+      },
+      {
+        "id": "tp",
+        "name": "TP",
+        "prix": 3500,
+        "service": "laboratoire"
+      }
+    ],
+    "totalPourCeService": 12500,
+    "dateService": "2025-11-10T12:05:54.320Z",
+    "journalEntryDate": "2025-11-10T12:05:54.322Z",
+    "journalId": "176277635432268u45ezxk"
+  },
+  {
+    "numClient": 10,
+    "nomClient": "Koubra",
+    "numID_CSR": "CSR25120010",
+    "numAirTel": "6889066",
+    "numTIGO": "9765788",
+    "numMedecin": "6678988",
+    "mode_Paie_OP": "cheque",
+    "service": "laboratoire",
+    "assure": "ASCOMA",
+    "total_OP": "95000",
+    "remise_OP": "10",
+    "dette_OP": "0",
+    "jeton_OP": "SvE1cKvBinLUVm65o2EpBsEV7B1iEwiuJ2O9ENbi",
+    "isLaboratorized": "En attente",
+    "servicesDetails": [
+      {
+        "value": "consultation",
+        "name": "Consultation"
+      },
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      },
+      {
+        "value": "echographie",
+        "name": "Echographie"
+      },
+      {
+        "value": "chirurgie",
+        "name": "Chirurgie"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "consult_specialisee",
+        "name": "Consultation Spécialisée",
+        "prix": 7500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_generale",
+        "name": "Consultation Générale",
+        "prix": 5000,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_professeur",
+        "name": "Consultation Reference",
+        "prix": 2500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "chir_mineure",
+        "name": "Chirurgie Mineure",
+        "prix": 50000,
+        "service": "chirurgie",
+        "serviceName": "Chirurgie"
+      },
+      {
+        "id": "echo_abdominale",
+        "name": "Echo. Abdominale",
+        "prix": 12000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      },
+      {
+        "id": "echo_pelvienne",
+        "name": "Echo. Pelvienne",
+        "prix": 10000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      }
+    ],
+    "caisseUser": "Amina",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "consultation",
+        "name": "Consultation"
+      },
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      },
+      {
+        "value": "echographie",
+        "name": "Echographie"
+      },
+      {
+        "value": "chirurgie",
+        "name": "Chirurgie"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "consult_specialisee",
+        "name": "Consultation Spécialisée",
+        "prix": 7500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_generale",
+        "name": "Consultation Générale",
+        "prix": 5000,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_professeur",
+        "name": "Consultation Reference",
+        "prix": 2500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "chir_mineure",
+        "name": "Chirurgie Mineure",
+        "prix": 50000,
+        "service": "chirurgie",
+        "serviceName": "Chirurgie"
+      },
+      {
+        "id": "echo_abdominale",
+        "name": "Echo. Abdominale",
+        "prix": 12000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      },
+      {
+        "id": "echo_pelvienne",
+        "name": "Echo. Pelvienne",
+        "prix": 10000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      }
+    ],
+    "serviceName": "Laboratoire",
+    "examensPourCeService": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      }
+    ],
+    "totalPourCeService": 8000,
+    "dateService": "2025-12-11T11:12:38.191Z",
+    "journalEntryDate": "2025-12-11T11:12:38.193Z",
+    "journalId": "1765451558193edz1j89cd"
+  }
+]

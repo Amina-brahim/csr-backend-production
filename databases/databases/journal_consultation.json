@@ -1,0 +1,175 @@
+[
+  {
+    "numClient": 10,
+    "nomClient": "Koubra",
+    "numID_CSR": "CSR25120010",
+    "numAirTel": "6889066",
+    "numTIGO": "9765788",
+    "numMedecin": "6678988",
+    "mode_Paie_OP": "cheque",
+    "service": "aucun",
+    "assure": "ASCOMA",
+    "total_OP": "95000",
+    "remise_OP": "10",
+    "dette_OP": "0",
+    "jeton_OP": "SvE1cKvBinLUVm65o2EpBsEV7B1iEwiuJ2O9ENbi",
+    "isLaboratorized": "En attente",
+    "servicesDetails": [
+      {
+        "value": "consultation",
+        "name": "Consultation"
+      },
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      },
+      {
+        "value": "echographie",
+        "name": "Echographie"
+      },
+      {
+        "value": "chirurgie",
+        "name": "Chirurgie"
+      }
+    ],
+    "examensDetails": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "consult_specialisee",
+        "name": "Consultation Spécialisée",
+        "prix": 7500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_generale",
+        "name": "Consultation Générale",
+        "prix": 5000,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_professeur",
+        "name": "Consultation Reference",
+        "prix": 2500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "chir_mineure",
+        "name": "Chirurgie Mineure",
+        "prix": 50000,
+        "service": "chirurgie",
+        "serviceName": "Chirurgie"
+      },
+      {
+        "id": "echo_abdominale",
+        "name": "Echo. Abdominale",
+        "prix": 12000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      },
+      {
+        "id": "echo_pelvienne",
+        "name": "Echo. Pelvienne",
+        "prix": 10000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      }
+    ],
+    "caisseUser": "Amina",
+    "caisseService": "Caisse",
+    "servicesSelectionnes": [
+      {
+        "value": "consultation",
+        "name": "Consultation"
+      },
+      {
+        "value": "laboratoire",
+        "name": "Laboratoire"
+      },
+      {
+        "value": "echographie",
+        "name": "Echographie"
+      },
+      {
+        "value": "chirurgie",
+        "name": "Chirurgie"
+      }
+    ],
+    "examensSelectionnes": [
+      {
+        "id": "nfs",
+        "name": "NFS",
+        "prix": 5000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "ts",
+        "name": "TS",
+        "prix": 3000,
+        "service": "laboratoire",
+        "serviceName": "Laboratoire"
+      },
+      {
+        "id": "consult_specialisee",
+        "name": "Consultation Spécialisée",
+        "prix": 7500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_generale",
+        "name": "Consultation Générale",
+        "prix": 5000,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "consult_professeur",
+        "name": "Consultation Reference",
+        "prix": 2500,
+        "service": "consultation",
+        "serviceName": "Consultation"
+      },
+      {
+        "id": "chir_mineure",
+        "name": "Chirurgie Mineure",
+        "prix": 50000,
+        "service": "chirurgie",
+        "serviceName": "Chirurgie"
+      },
+      {
+        "id": "echo_abdominale",
+        "name": "Echo. Abdominale",
+        "prix": 12000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      },
+      {
+        "id": "echo_pelvienne",
+        "name": "Echo. Pelvienne",
+        "prix": 10000,
+        "service": "echographie",
+        "serviceName": "Echographie"
+      }
+    ],
+    "dateCreation": "2025-12-11T11:12:38.181Z",
+    "journalEntryDate": "2025-12-11T11:13:08.664Z",
+    "journalId": "17654515886649yp2pr0lq"
+  }
+]

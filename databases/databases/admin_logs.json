@@ -1,0 +1,4002 @@
+[
+  {
+    "id": 1767690928693.8914,
+    "timestamp": "2026-01-06T09:15:28.693Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767690770200.243,
+    "timestamp": "2026-01-06T09:12:50.200Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767604361142.8975,
+    "timestamp": "2026-01-05T09:12:41.142Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767603753548.7908,
+    "timestamp": "2026-01-05T09:02:33.548Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767378297464.523,
+    "timestamp": "2026-01-02T18:24:57.464Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767378164210.578,
+    "timestamp": "2026-01-02T18:22:44.210Z",
+    "type": "error",
+    "user": "system",
+    "message": "Exception non capturée: listen EADDRINUSE: address already in use 0.0.0.0:4600",
+    "socketId": null
+  },
+  {
+    "id": 1767375198418.33,
+    "timestamp": "2026-01-02T17:33:18.418Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767351677096.284,
+    "timestamp": "2026-01-02T11:01:17.096Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767351612239.0093,
+    "timestamp": "2026-01-02T11:00:12.239Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767350887929.5173,
+    "timestamp": "2026-01-02T10:48:07.929Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767343841492.7722,
+    "timestamp": "2026-01-02T08:50:41.492Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render.com",
+    "socketId": null
+  },
+  {
+    "id": 1767171335008.111,
+    "timestamp": "2025-12-31T08:55:35.008Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766922098293.687,
+    "timestamp": "2025-12-28T11:41:38.293Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766913471305.1282,
+    "timestamp": "2025-12-28T09:17:51.305Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766913300183.6724,
+    "timestamp": "2025-12-28T09:15:00.183Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766736616977.1729,
+    "timestamp": "2025-12-26T08:10:16.977Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766477973686.3542,
+    "timestamp": "2025-12-23T08:19:33.686Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766147124438.6035,
+    "timestamp": "2025-12-19T12:25:24.438Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766145648321.7566,
+    "timestamp": "2025-12-19T12:00:48.321Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766144731234.4924,
+    "timestamp": "2025-12-19T11:45:31.234Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur Render",
+    "socketId": null
+  },
+  {
+    "id": 1766137464453.6348,
+    "timestamp": "2025-12-19T09:44:24.453Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 0.0.0.0:4600",
+    "socketId": null
+  },
+  {
+    "id": 1766132841295.5706,
+    "timestamp": "2025-12-19T08:27:21.295Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 0.0.0.0:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765985306204.1545,
+    "timestamp": "2025-12-17T15:28:26.204Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765984638570.0903,
+    "timestamp": "2025-12-17T15:17:18.570Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765984027253.5142,
+    "timestamp": "2025-12-17T15:07:07.253Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765980160516.2588,
+    "timestamp": "2025-12-17T14:02:40.516Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765973138828.3154,
+    "timestamp": "2025-12-17T12:05:38.828Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765970378542.4443,
+    "timestamp": "2025-12-17T11:19:38.542Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765968122640.2742,
+    "timestamp": "2025-12-17T10:42:02.640Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765961291964.8347,
+    "timestamp": "2025-12-17T08:48:11.964Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 0.0.0.0:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765801651634.751,
+    "timestamp": "2025-12-15T12:27:31.634Z",
+    "type": "server_start",
+    "user": "system",
+    "message": "Serveur démarré sur 192.168.1.20:4600",
+    "socketId": null
+  },
+  {
+    "id": 1765460840678.131,
+    "timestamp": "2025-12-11T13:47:20.678Z",
+    "type": "connection",
+    "user": "system",
+    "message": "Nouvelle connexion détectée: ofZIGeRn-YSup8NEAAAT",
+    "socketId": null
+  },
+  {
+    "id": 1765460208706.4976,
+    "timestamp": "2025-12-11T13:36:48.706Z",
+    "type": "connection",
+    "user": "system",
+    "message": "Nouvelle connexion détectée: OpASVaESt-MJCh4ZAAAR",
+    "socketId": null
+  },
+  {
+    "id": 1765451588665.727,
+    "timestamp": "2025-12-11T11:13:08.665Z",
+    "type": "journal_save",
+    "user": "System",
+    "message": "Journal consultation sauvegardé: 1 entrées",
+    "socketId": null
+  },
+  {
+    "id": 1765451558202.5466,
+    "timestamp": "2025-12-11T11:12:38.202Z",
+    "type": "journal_update",
+    "user": "Caisse",
+    "message": "Données envoyées au journal Chirurgie: 1 examens pour Koubra",
+    "socketId": null
+  },
+  {
+    "id": 1765451558197.6458,
+    "timestamp": "2025-12-11T11:12:38.197Z",
+    "type": "journal_update",
+    "user": "Caisse",
+    "message": "Données envoyées au journal Echographie: 2 examens pour Koubra",
+    "socketId": null
+  },
+  {
+    "id": 1765451558194.8113,
+    "timestamp": "2025-12-11T11:12:38.194Z",
+    "type": "journal_update",
+    "user": "Caisse",
+    "message": "Données envoyées au journal Laboratoire: 2 examens pour Koubra",
+    "socketId": null
+  },
+  {
+    "id": 1765451558189.9802,
+    "timestamp": "2025-12-11T11:12:38.189Z",
+    "type": "journal_update",
+    "user": "Caisse",
+    "message": "Données envoyées au journal Consultation: 3 examens pour Koubra",
+    "socketId": null
+  },
+  {
+    "id": 1765451558181.8237,
+    "timestamp": "2025-12-11T11:12:38.181Z",
+    "type": "patient_create",
+    "user": "Caisse",
+    "message": "Nouveau patient: Koubra (CSR: CSR25120010)",
+    "socketId": null
+  },
+  {
+    "id": 1765450703003.7446,
+    "timestamp": "2025-12-11T10:58:23.003Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765450084289.2542,
+    "timestamp": "2025-12-11T10:48:04.289Z",
+    "type": "connection",
+    "user": "system",
+    "message": "Nouvelle connexion détectée: YzKVCBxa7OsG8joDAAAP",
+    "socketId": null
+  },
+  {
+    "id": 1765450083812.6392,
+    "timestamp": "2025-12-11T10:48:03.813Z",
+    "type": "disconnection",
+    "user": "Amina",
+    "message": "Déconnexion: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449631690.463,
+    "timestamp": "2025-12-11T10:40:31.690Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622570.8223,
+    "timestamp": "2025-12-11T10:40:22.570Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622520.8345,
+    "timestamp": "2025-12-11T10:40:22.520Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622467.0754,
+    "timestamp": "2025-12-11T10:40:22.467Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622403.2542,
+    "timestamp": "2025-12-11T10:40:22.403Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622305.233,
+    "timestamp": "2025-12-11T10:40:22.305Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622257.9368,
+    "timestamp": "2025-12-11T10:40:22.257Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622206.9895,
+    "timestamp": "2025-12-11T10:40:22.206Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622158.6396,
+    "timestamp": "2025-12-11T10:40:22.158Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622106.272,
+    "timestamp": "2025-12-11T10:40:22.106Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449622050.786,
+    "timestamp": "2025-12-11T10:40:22.050Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621763.442,
+    "timestamp": "2025-12-11T10:40:21.763Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621745.1997,
+    "timestamp": "2025-12-11T10:40:21.745Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621711.5022,
+    "timestamp": "2025-12-11T10:40:21.711Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621688.5989,
+    "timestamp": "2025-12-11T10:40:21.688Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621645.3098,
+    "timestamp": "2025-12-11T10:40:21.645Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621615.723,
+    "timestamp": "2025-12-11T10:40:21.615Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621594.9907,
+    "timestamp": "2025-12-11T10:40:21.594Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621570.1023,
+    "timestamp": "2025-12-11T10:40:21.570Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621524.3076,
+    "timestamp": "2025-12-11T10:40:21.524Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621480.2896,
+    "timestamp": "2025-12-11T10:40:21.480Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621406.5237,
+    "timestamp": "2025-12-11T10:40:21.406Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621360.3176,
+    "timestamp": "2025-12-11T10:40:21.360Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621322.3835,
+    "timestamp": "2025-12-11T10:40:21.322Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621280.5825,
+    "timestamp": "2025-12-11T10:40:21.280Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621239.4592,
+    "timestamp": "2025-12-11T10:40:21.239Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621186.051,
+    "timestamp": "2025-12-11T10:40:21.186Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621146.2417,
+    "timestamp": "2025-12-11T10:40:21.146Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621092.6274,
+    "timestamp": "2025-12-11T10:40:21.092Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449621036.9373,
+    "timestamp": "2025-12-11T10:40:21.036Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620976.405,
+    "timestamp": "2025-12-11T10:40:20.976Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620936.0598,
+    "timestamp": "2025-12-11T10:40:20.936Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620892.4963,
+    "timestamp": "2025-12-11T10:40:20.892Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620839.4023,
+    "timestamp": "2025-12-11T10:40:20.839Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620792.7483,
+    "timestamp": "2025-12-11T10:40:20.792Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620733.1067,
+    "timestamp": "2025-12-11T10:40:20.733Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620702.487,
+    "timestamp": "2025-12-11T10:40:20.702Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620667.3896,
+    "timestamp": "2025-12-11T10:40:20.667Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620626.7456,
+    "timestamp": "2025-12-11T10:40:20.626Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620594.2278,
+    "timestamp": "2025-12-11T10:40:20.594Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620550.667,
+    "timestamp": "2025-12-11T10:40:20.550Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620522.6096,
+    "timestamp": "2025-12-11T10:40:20.522Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620489.4502,
+    "timestamp": "2025-12-11T10:40:20.489Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620429.3015,
+    "timestamp": "2025-12-11T10:40:20.429Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620377.1316,
+    "timestamp": "2025-12-11T10:40:20.377Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620331.8748,
+    "timestamp": "2025-12-11T10:40:20.331Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620310.2498,
+    "timestamp": "2025-12-11T10:40:20.310Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620278.053,
+    "timestamp": "2025-12-11T10:40:20.278Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620235.5095,
+    "timestamp": "2025-12-11T10:40:20.235Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620198.1116,
+    "timestamp": "2025-12-11T10:40:20.198Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620146.8857,
+    "timestamp": "2025-12-11T10:40:20.146Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620083.7488,
+    "timestamp": "2025-12-11T10:40:20.083Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449620020.2056,
+    "timestamp": "2025-12-11T10:40:20.020Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619965.6973,
+    "timestamp": "2025-12-11T10:40:19.965Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619914.3572,
+    "timestamp": "2025-12-11T10:40:19.914Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619859.5435,
+    "timestamp": "2025-12-11T10:40:19.859Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619805.8342,
+    "timestamp": "2025-12-11T10:40:19.805Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619752.0825,
+    "timestamp": "2025-12-11T10:40:19.752Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619710.0352,
+    "timestamp": "2025-12-11T10:40:19.710Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619675.9448,
+    "timestamp": "2025-12-11T10:40:19.675Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619659.8877,
+    "timestamp": "2025-12-11T10:40:19.659Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619639.4807,
+    "timestamp": "2025-12-11T10:40:19.639Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619623.3938,
+    "timestamp": "2025-12-11T10:40:19.623Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619592.7544,
+    "timestamp": "2025-12-11T10:40:19.592Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619571.6917,
+    "timestamp": "2025-12-11T10:40:19.571Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619541.5154,
+    "timestamp": "2025-12-11T10:40:19.541Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619522.4014,
+    "timestamp": "2025-12-11T10:40:19.522Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619507.8542,
+    "timestamp": "2025-12-11T10:40:19.507Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619487.9487,
+    "timestamp": "2025-12-11T10:40:19.487Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619461.01,
+    "timestamp": "2025-12-11T10:40:19.461Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619428.5596,
+    "timestamp": "2025-12-11T10:40:19.428Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619379.1067,
+    "timestamp": "2025-12-11T10:40:19.379Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619329.962,
+    "timestamp": "2025-12-11T10:40:19.329Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619279.782,
+    "timestamp": "2025-12-11T10:40:19.279Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619225.4963,
+    "timestamp": "2025-12-11T10:40:19.225Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619120.7942,
+    "timestamp": "2025-12-11T10:40:19.120Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619067.31,
+    "timestamp": "2025-12-11T10:40:19.067Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449619011.863,
+    "timestamp": "2025-12-11T10:40:19.011Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618964.8467,
+    "timestamp": "2025-12-11T10:40:18.964Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618925.7048,
+    "timestamp": "2025-12-11T10:40:18.925Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618900.649,
+    "timestamp": "2025-12-11T10:40:18.900Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618869.5793,
+    "timestamp": "2025-12-11T10:40:18.869Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618835.2842,
+    "timestamp": "2025-12-11T10:40:18.835Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618787.3975,
+    "timestamp": "2025-12-11T10:40:18.787Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618749.4805,
+    "timestamp": "2025-12-11T10:40:18.749Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618711.3794,
+    "timestamp": "2025-12-11T10:40:18.711Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618662.9966,
+    "timestamp": "2025-12-11T10:40:18.662Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618616.9119,
+    "timestamp": "2025-12-11T10:40:18.616Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618595.7202,
+    "timestamp": "2025-12-11T10:40:18.595Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618573.3662,
+    "timestamp": "2025-12-11T10:40:18.573Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618529.1423,
+    "timestamp": "2025-12-11T10:40:18.529Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618469.5608,
+    "timestamp": "2025-12-11T10:40:18.469Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618412.2754,
+    "timestamp": "2025-12-11T10:40:18.412Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618364.312,
+    "timestamp": "2025-12-11T10:40:18.364Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618315.734,
+    "timestamp": "2025-12-11T10:40:18.315Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618288.8523,
+    "timestamp": "2025-12-11T10:40:18.288Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618264.1594,
+    "timestamp": "2025-12-11T10:40:18.264Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618239.4417,
+    "timestamp": "2025-12-11T10:40:18.239Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618219.3755,
+    "timestamp": "2025-12-11T10:40:18.219Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618198.357,
+    "timestamp": "2025-12-11T10:40:18.198Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618177.3237,
+    "timestamp": "2025-12-11T10:40:18.177Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618159.943,
+    "timestamp": "2025-12-11T10:40:18.159Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618132.4983,
+    "timestamp": "2025-12-11T10:40:18.132Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618109.1277,
+    "timestamp": "2025-12-11T10:40:18.109Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618085.0825,
+    "timestamp": "2025-12-11T10:40:18.085Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618064.22,
+    "timestamp": "2025-12-11T10:40:18.064Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618042.5583,
+    "timestamp": "2025-12-11T10:40:18.042Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449618012.385,
+    "timestamp": "2025-12-11T10:40:18.012Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617975.3442,
+    "timestamp": "2025-12-11T10:40:17.975Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617949.1558,
+    "timestamp": "2025-12-11T10:40:17.949Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617920.9238,
+    "timestamp": "2025-12-11T10:40:17.920Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617890.161,
+    "timestamp": "2025-12-11T10:40:17.890Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617856.5923,
+    "timestamp": "2025-12-11T10:40:17.856Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617767.9287,
+    "timestamp": "2025-12-11T10:40:17.767Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617724.0928,
+    "timestamp": "2025-12-11T10:40:17.724Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617696.801,
+    "timestamp": "2025-12-11T10:40:17.696Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617657.7402,
+    "timestamp": "2025-12-11T10:40:17.657Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617605.955,
+    "timestamp": "2025-12-11T10:40:17.605Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617548.189,
+    "timestamp": "2025-12-11T10:40:17.548Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617367.3547,
+    "timestamp": "2025-12-11T10:40:17.367Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617346.0564,
+    "timestamp": "2025-12-11T10:40:17.346Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617325.826,
+    "timestamp": "2025-12-11T10:40:17.325Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617305.18,
+    "timestamp": "2025-12-11T10:40:17.305Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617285.365,
+    "timestamp": "2025-12-11T10:40:17.285Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617265.4292,
+    "timestamp": "2025-12-11T10:40:17.265Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617235.291,
+    "timestamp": "2025-12-11T10:40:17.235Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617214.562,
+    "timestamp": "2025-12-11T10:40:17.214Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617190.736,
+    "timestamp": "2025-12-11T10:40:17.190Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617171.386,
+    "timestamp": "2025-12-11T10:40:17.171Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617151.8962,
+    "timestamp": "2025-12-11T10:40:17.151Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617130.2388,
+    "timestamp": "2025-12-11T10:40:17.130Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617110.9114,
+    "timestamp": "2025-12-11T10:40:17.110Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617089.6248,
+    "timestamp": "2025-12-11T10:40:17.089Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617061.3887,
+    "timestamp": "2025-12-11T10:40:17.061Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449617042.9878,
+    "timestamp": "2025-12-11T10:40:17.042Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616980.0454,
+    "timestamp": "2025-12-11T10:40:16.980Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616911.8376,
+    "timestamp": "2025-12-11T10:40:16.911Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616873.5205,
+    "timestamp": "2025-12-11T10:40:16.873Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616837.6128,
+    "timestamp": "2025-12-11T10:40:16.837Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616805.7905,
+    "timestamp": "2025-12-11T10:40:16.805Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616774.4355,
+    "timestamp": "2025-12-11T10:40:16.774Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616738.3416,
+    "timestamp": "2025-12-11T10:40:16.738Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616703.84,
+    "timestamp": "2025-12-11T10:40:16.703Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616667.2578,
+    "timestamp": "2025-12-11T10:40:16.667Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616626.9355,
+    "timestamp": "2025-12-11T10:40:16.626Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616590.8376,
+    "timestamp": "2025-12-11T10:40:16.590Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616558.1792,
+    "timestamp": "2025-12-11T10:40:16.558Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616532.4343,
+    "timestamp": "2025-12-11T10:40:16.532Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616509.7004,
+    "timestamp": "2025-12-11T10:40:16.509Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616397.9395,
+    "timestamp": "2025-12-11T10:40:16.397Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616379.3325,
+    "timestamp": "2025-12-11T10:40:16.379Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616322.2913,
+    "timestamp": "2025-12-11T10:40:16.322Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616278.0508,
+    "timestamp": "2025-12-11T10:40:16.278Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616238.1033,
+    "timestamp": "2025-12-11T10:40:16.238Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616187.9924,
+    "timestamp": "2025-12-11T10:40:16.187Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616134.427,
+    "timestamp": "2025-12-11T10:40:16.134Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616100.3271,
+    "timestamp": "2025-12-11T10:40:16.100Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616067.9062,
+    "timestamp": "2025-12-11T10:40:16.067Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449616033.3652,
+    "timestamp": "2025-12-11T10:40:16.033Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615993.8472,
+    "timestamp": "2025-12-11T10:40:15.993Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615951.7812,
+    "timestamp": "2025-12-11T10:40:15.951Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615927.5972,
+    "timestamp": "2025-12-11T10:40:15.927Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615889.3533,
+    "timestamp": "2025-12-11T10:40:15.889Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615851.1677,
+    "timestamp": "2025-12-11T10:40:15.851Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615813.4314,
+    "timestamp": "2025-12-11T10:40:15.813Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615771.785,
+    "timestamp": "2025-12-11T10:40:15.771Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615734.4675,
+    "timestamp": "2025-12-11T10:40:15.734Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615692.374,
+    "timestamp": "2025-12-11T10:40:15.692Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615650.0193,
+    "timestamp": "2025-12-11T10:40:15.650Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615611.4043,
+    "timestamp": "2025-12-11T10:40:15.611Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615568.0476,
+    "timestamp": "2025-12-11T10:40:15.568Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615520.3435,
+    "timestamp": "2025-12-11T10:40:15.520Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615466.6365,
+    "timestamp": "2025-12-11T10:40:15.466Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615415.6235,
+    "timestamp": "2025-12-11T10:40:15.415Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615344.809,
+    "timestamp": "2025-12-11T10:40:15.344Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615257.197,
+    "timestamp": "2025-12-11T10:40:15.257Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615054.7178,
+    "timestamp": "2025-12-11T10:40:15.054Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449615019.1736,
+    "timestamp": "2025-12-11T10:40:15.019Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614988.6538,
+    "timestamp": "2025-12-11T10:40:14.988Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614957.5684,
+    "timestamp": "2025-12-11T10:40:14.957Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614926.9133,
+    "timestamp": "2025-12-11T10:40:14.926Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614897.2083,
+    "timestamp": "2025-12-11T10:40:14.897Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614865.4258,
+    "timestamp": "2025-12-11T10:40:14.865Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614821.0513,
+    "timestamp": "2025-12-11T10:40:14.821Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614770.2576,
+    "timestamp": "2025-12-11T10:40:14.770Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614727.326,
+    "timestamp": "2025-12-11T10:40:14.727Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614680.5017,
+    "timestamp": "2025-12-11T10:40:14.680Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614633.3496,
+    "timestamp": "2025-12-11T10:40:14.633Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614595.631,
+    "timestamp": "2025-12-11T10:40:14.595Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614545.0378,
+    "timestamp": "2025-12-11T10:40:14.545Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614500.3628,
+    "timestamp": "2025-12-11T10:40:14.500Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614458.1208,
+    "timestamp": "2025-12-11T10:40:14.458Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614413.294,
+    "timestamp": "2025-12-11T10:40:14.413Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614369.5825,
+    "timestamp": "2025-12-11T10:40:14.369Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614335.848,
+    "timestamp": "2025-12-11T10:40:14.335Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614303.219,
+    "timestamp": "2025-12-11T10:40:14.303Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614260.2722,
+    "timestamp": "2025-12-11T10:40:14.260Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614212.3826,
+    "timestamp": "2025-12-11T10:40:14.212Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614164.26,
+    "timestamp": "2025-12-11T10:40:14.164Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614130.9517,
+    "timestamp": "2025-12-11T10:40:14.130Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614077.434,
+    "timestamp": "2025-12-11T10:40:14.077Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449614020.9543,
+    "timestamp": "2025-12-11T10:40:14.020Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613971.5437,
+    "timestamp": "2025-12-11T10:40:13.971Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613930.0205,
+    "timestamp": "2025-12-11T10:40:13.930Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613884.3428,
+    "timestamp": "2025-12-11T10:40:13.884Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613840.2747,
+    "timestamp": "2025-12-11T10:40:13.840Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613804.517,
+    "timestamp": "2025-12-11T10:40:13.804Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613753.9216,
+    "timestamp": "2025-12-11T10:40:13.753Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613723.9866,
+    "timestamp": "2025-12-11T10:40:13.723Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613690.799,
+    "timestamp": "2025-12-11T10:40:13.690Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613658.9758,
+    "timestamp": "2025-12-11T10:40:13.658Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613594.2188,
+    "timestamp": "2025-12-11T10:40:13.594Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613549.1685,
+    "timestamp": "2025-12-11T10:40:13.549Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613500.0103,
+    "timestamp": "2025-12-11T10:40:13.500Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613458.348,
+    "timestamp": "2025-12-11T10:40:13.458Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613403.4697,
+    "timestamp": "2025-12-11T10:40:13.403Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613369.5024,
+    "timestamp": "2025-12-11T10:40:13.369Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613336.3794,
+    "timestamp": "2025-12-11T10:40:13.336Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613297.1013,
+    "timestamp": "2025-12-11T10:40:13.297Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613266.331,
+    "timestamp": "2025-12-11T10:40:13.266Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613232.0195,
+    "timestamp": "2025-12-11T10:40:13.233Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613202.739,
+    "timestamp": "2025-12-11T10:40:13.202Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613153.0881,
+    "timestamp": "2025-12-11T10:40:13.153Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613124.1497,
+    "timestamp": "2025-12-11T10:40:13.124Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613099.025,
+    "timestamp": "2025-12-11T10:40:13.099Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613071.9167,
+    "timestamp": "2025-12-11T10:40:13.071Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613051.8093,
+    "timestamp": "2025-12-11T10:40:13.051Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613030.9392,
+    "timestamp": "2025-12-11T10:40:13.030Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449613009.9644,
+    "timestamp": "2025-12-11T10:40:13.009Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612988.2358,
+    "timestamp": "2025-12-11T10:40:12.988Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612966.1016,
+    "timestamp": "2025-12-11T10:40:12.966Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612942.9707,
+    "timestamp": "2025-12-11T10:40:12.942Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612912.2446,
+    "timestamp": "2025-12-11T10:40:12.912Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612881.6086,
+    "timestamp": "2025-12-11T10:40:12.881Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612850.5154,
+    "timestamp": "2025-12-11T10:40:12.850Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612820.7869,
+    "timestamp": "2025-12-11T10:40:12.820Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612795.9756,
+    "timestamp": "2025-12-11T10:40:12.795Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612767.4973,
+    "timestamp": "2025-12-11T10:40:12.767Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612739.5356,
+    "timestamp": "2025-12-11T10:40:12.739Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612709.491,
+    "timestamp": "2025-12-11T10:40:12.709Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612677.823,
+    "timestamp": "2025-12-11T10:40:12.677Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612647.0422,
+    "timestamp": "2025-12-11T10:40:12.647Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612615.9106,
+    "timestamp": "2025-12-11T10:40:12.615Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612581.389,
+    "timestamp": "2025-12-11T10:40:12.581Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612549.439,
+    "timestamp": "2025-12-11T10:40:12.549Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612520.041,
+    "timestamp": "2025-12-11T10:40:12.520Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612486.093,
+    "timestamp": "2025-12-11T10:40:12.486Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612457.4126,
+    "timestamp": "2025-12-11T10:40:12.457Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612425.3796,
+    "timestamp": "2025-12-11T10:40:12.425Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612392.457,
+    "timestamp": "2025-12-11T10:40:12.392Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612363.5679,
+    "timestamp": "2025-12-11T10:40:12.363Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612330.7651,
+    "timestamp": "2025-12-11T10:40:12.330Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612298.8108,
+    "timestamp": "2025-12-11T10:40:12.298Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612273.2786,
+    "timestamp": "2025-12-11T10:40:12.273Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612237.5793,
+    "timestamp": "2025-12-11T10:40:12.237Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612210.1516,
+    "timestamp": "2025-12-11T10:40:12.210Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612179.228,
+    "timestamp": "2025-12-11T10:40:12.179Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612150.4858,
+    "timestamp": "2025-12-11T10:40:12.150Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612102.645,
+    "timestamp": "2025-12-11T10:40:12.102Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612062.637,
+    "timestamp": "2025-12-11T10:40:12.062Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612031.3823,
+    "timestamp": "2025-12-11T10:40:12.031Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449612010.1616,
+    "timestamp": "2025-12-11T10:40:12.010Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611972.6006,
+    "timestamp": "2025-12-11T10:40:11.972Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611951.655,
+    "timestamp": "2025-12-11T10:40:11.951Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611930.01,
+    "timestamp": "2025-12-11T10:40:11.930Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611910.684,
+    "timestamp": "2025-12-11T10:40:11.910Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611887.8745,
+    "timestamp": "2025-12-11T10:40:11.887Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611836.1384,
+    "timestamp": "2025-12-11T10:40:11.836Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611806.4897,
+    "timestamp": "2025-12-11T10:40:11.806Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611781.4595,
+    "timestamp": "2025-12-11T10:40:11.781Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611757.5664,
+    "timestamp": "2025-12-11T10:40:11.757Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611726.5713,
+    "timestamp": "2025-12-11T10:40:11.726Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611704.0244,
+    "timestamp": "2025-12-11T10:40:11.704Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611679.8464,
+    "timestamp": "2025-12-11T10:40:11.679Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611659.7314,
+    "timestamp": "2025-12-11T10:40:11.659Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611627.3904,
+    "timestamp": "2025-12-11T10:40:11.627Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611584.308,
+    "timestamp": "2025-12-11T10:40:11.584Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611563.562,
+    "timestamp": "2025-12-11T10:40:11.563Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611519.368,
+    "timestamp": "2025-12-11T10:40:11.519Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611495.5437,
+    "timestamp": "2025-12-11T10:40:11.495Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611467.7778,
+    "timestamp": "2025-12-11T10:40:11.467Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611447.792,
+    "timestamp": "2025-12-11T10:40:11.447Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611422.5325,
+    "timestamp": "2025-12-11T10:40:11.422Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611395.5964,
+    "timestamp": "2025-12-11T10:40:11.395Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611374.037,
+    "timestamp": "2025-12-11T10:40:11.374Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611350.1436,
+    "timestamp": "2025-12-11T10:40:11.350Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611326.6687,
+    "timestamp": "2025-12-11T10:40:11.326Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611304.493,
+    "timestamp": "2025-12-11T10:40:11.304Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611282.405,
+    "timestamp": "2025-12-11T10:40:11.282Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611212.3682,
+    "timestamp": "2025-12-11T10:40:11.212Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611173.4048,
+    "timestamp": "2025-12-11T10:40:11.173Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611124.4075,
+    "timestamp": "2025-12-11T10:40:11.124Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611068.4985,
+    "timestamp": "2025-12-11T10:40:11.068Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449611032.2688,
+    "timestamp": "2025-12-11T10:40:11.032Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610994.0576,
+    "timestamp": "2025-12-11T10:40:10.994Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610947.986,
+    "timestamp": "2025-12-11T10:40:10.947Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610867.7527,
+    "timestamp": "2025-12-11T10:40:10.867Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610724.8977,
+    "timestamp": "2025-12-11T10:40:10.724Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610696.3335,
+    "timestamp": "2025-12-11T10:40:10.696Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610676.443,
+    "timestamp": "2025-12-11T10:40:10.676Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610656.4722,
+    "timestamp": "2025-12-11T10:40:10.656Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610631.2227,
+    "timestamp": "2025-12-11T10:40:10.631Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610603.3394,
+    "timestamp": "2025-12-11T10:40:10.603Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610582.1968,
+    "timestamp": "2025-12-11T10:40:10.582Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610560.5261,
+    "timestamp": "2025-12-11T10:40:10.560Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610537.0984,
+    "timestamp": "2025-12-11T10:40:10.537Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610517.8596,
+    "timestamp": "2025-12-11T10:40:10.517Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610496.9812,
+    "timestamp": "2025-12-11T10:40:10.496Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610426.8833,
+    "timestamp": "2025-12-11T10:40:10.426Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610399.3503,
+    "timestamp": "2025-12-11T10:40:10.399Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610378.8105,
+    "timestamp": "2025-12-11T10:40:10.378Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610349.3293,
+    "timestamp": "2025-12-11T10:40:10.349Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610322.566,
+    "timestamp": "2025-12-11T10:40:10.322Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610302.3403,
+    "timestamp": "2025-12-11T10:40:10.302Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610282.1897,
+    "timestamp": "2025-12-11T10:40:10.282Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610257.1824,
+    "timestamp": "2025-12-11T10:40:10.257Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610237.089,
+    "timestamp": "2025-12-11T10:40:10.237Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610214.1318,
+    "timestamp": "2025-12-11T10:40:10.214Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610193.8313,
+    "timestamp": "2025-12-11T10:40:10.193Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610158.7695,
+    "timestamp": "2025-12-11T10:40:10.158Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610132.7317,
+    "timestamp": "2025-12-11T10:40:10.132Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610109.7422,
+    "timestamp": "2025-12-11T10:40:10.109Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610043.699,
+    "timestamp": "2025-12-11T10:40:10.043Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449610016.4204,
+    "timestamp": "2025-12-11T10:40:10.016Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609983.3818,
+    "timestamp": "2025-12-11T10:40:09.983Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609947.8467,
+    "timestamp": "2025-12-11T10:40:09.947Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609919.3352,
+    "timestamp": "2025-12-11T10:40:09.919Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609886.5808,
+    "timestamp": "2025-12-11T10:40:09.886Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609866.6902,
+    "timestamp": "2025-12-11T10:40:09.866Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609847.7483,
+    "timestamp": "2025-12-11T10:40:09.847Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609825.333,
+    "timestamp": "2025-12-11T10:40:09.825Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609796.186,
+    "timestamp": "2025-12-11T10:40:09.796Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609776.438,
+    "timestamp": "2025-12-11T10:40:09.776Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609753.4978,
+    "timestamp": "2025-12-11T10:40:09.753Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609734.738,
+    "timestamp": "2025-12-11T10:40:09.734Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609712.6624,
+    "timestamp": "2025-12-11T10:40:09.712Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609672.5454,
+    "timestamp": "2025-12-11T10:40:09.672Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609636.2466,
+    "timestamp": "2025-12-11T10:40:09.636Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609606.6855,
+    "timestamp": "2025-12-11T10:40:09.606Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609577.4175,
+    "timestamp": "2025-12-11T10:40:09.577Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609532.0508,
+    "timestamp": "2025-12-11T10:40:09.532Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609483.47,
+    "timestamp": "2025-12-11T10:40:09.483Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609365.168,
+    "timestamp": "2025-12-11T10:40:09.365Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609343.3447,
+    "timestamp": "2025-12-11T10:40:09.343Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609316.5508,
+    "timestamp": "2025-12-11T10:40:09.316Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609282.5774,
+    "timestamp": "2025-12-11T10:40:09.282Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609240.041,
+    "timestamp": "2025-12-11T10:40:09.240Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609191.4167,
+    "timestamp": "2025-12-11T10:40:09.191Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609139.2136,
+    "timestamp": "2025-12-11T10:40:09.139Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609090.1968,
+    "timestamp": "2025-12-11T10:40:09.090Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609051.801,
+    "timestamp": "2025-12-11T10:40:09.051Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449609021.886,
+    "timestamp": "2025-12-11T10:40:09.021Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608988.2202,
+    "timestamp": "2025-12-11T10:40:08.988Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608949.5586,
+    "timestamp": "2025-12-11T10:40:08.949Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608916.488,
+    "timestamp": "2025-12-11T10:40:08.916Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608877.3435,
+    "timestamp": "2025-12-11T10:40:08.877Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608818.5193,
+    "timestamp": "2025-12-11T10:40:08.818Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608777.0925,
+    "timestamp": "2025-12-11T10:40:08.777Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608720.8135,
+    "timestamp": "2025-12-11T10:40:08.720Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608676.5781,
+    "timestamp": "2025-12-11T10:40:08.676Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608606.7075,
+    "timestamp": "2025-12-11T10:40:08.606Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608536.5686,
+    "timestamp": "2025-12-11T10:40:08.536Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608464.8264,
+    "timestamp": "2025-12-11T10:40:08.464Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608388.3752,
+    "timestamp": "2025-12-11T10:40:08.388Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608341.484,
+    "timestamp": "2025-12-11T10:40:08.341Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608287.345,
+    "timestamp": "2025-12-11T10:40:08.287Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608252.4578,
+    "timestamp": "2025-12-11T10:40:08.252Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608208.108,
+    "timestamp": "2025-12-11T10:40:08.208Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608178.8206,
+    "timestamp": "2025-12-11T10:40:08.178Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608141.3557,
+    "timestamp": "2025-12-11T10:40:08.141Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608104.1262,
+    "timestamp": "2025-12-11T10:40:08.104Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608077.9045,
+    "timestamp": "2025-12-11T10:40:08.077Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449608023.3318,
+    "timestamp": "2025-12-11T10:40:08.023Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607974.5813,
+    "timestamp": "2025-12-11T10:40:07.974Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607920.7566,
+    "timestamp": "2025-12-11T10:40:07.920Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607857.435,
+    "timestamp": "2025-12-11T10:40:07.857Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607749.3706,
+    "timestamp": "2025-12-11T10:40:07.749Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607648.0745,
+    "timestamp": "2025-12-11T10:40:07.648Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607585.878,
+    "timestamp": "2025-12-11T10:40:07.585Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607545.1748,
+    "timestamp": "2025-12-11T10:40:07.545Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607489.9646,
+    "timestamp": "2025-12-11T10:40:07.489Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607420.6104,
+    "timestamp": "2025-12-11T10:40:07.420Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607358.2566,
+    "timestamp": "2025-12-11T10:40:07.358Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607327.6746,
+    "timestamp": "2025-12-11T10:40:07.327Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607292.7312,
+    "timestamp": "2025-12-11T10:40:07.292Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607269.8342,
+    "timestamp": "2025-12-11T10:40:07.269Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607240.9934,
+    "timestamp": "2025-12-11T10:40:07.240Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607192.6624,
+    "timestamp": "2025-12-11T10:40:07.192Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607134.4338,
+    "timestamp": "2025-12-11T10:40:07.134Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607083.4001,
+    "timestamp": "2025-12-11T10:40:07.083Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449607010.1755,
+    "timestamp": "2025-12-11T10:40:07.010Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606953.408,
+    "timestamp": "2025-12-11T10:40:06.953Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606910.6167,
+    "timestamp": "2025-12-11T10:40:06.910Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606863.834,
+    "timestamp": "2025-12-11T10:40:06.863Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606813.5442,
+    "timestamp": "2025-12-11T10:40:06.813Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606756.211,
+    "timestamp": "2025-12-11T10:40:06.756Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606716.7815,
+    "timestamp": "2025-12-11T10:40:06.716Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606666.5337,
+    "timestamp": "2025-12-11T10:40:06.666Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606629.7573,
+    "timestamp": "2025-12-11T10:40:06.629Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606580.6904,
+    "timestamp": "2025-12-11T10:40:06.580Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606537.7673,
+    "timestamp": "2025-12-11T10:40:06.537Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606488.5752,
+    "timestamp": "2025-12-11T10:40:06.488Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606439.8562,
+    "timestamp": "2025-12-11T10:40:06.439Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606364.7507,
+    "timestamp": "2025-12-11T10:40:06.364Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606316.2085,
+    "timestamp": "2025-12-11T10:40:06.316Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606279.8555,
+    "timestamp": "2025-12-11T10:40:06.279Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606255.0645,
+    "timestamp": "2025-12-11T10:40:06.255Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606222.0771,
+    "timestamp": "2025-12-11T10:40:06.222Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606193.5227,
+    "timestamp": "2025-12-11T10:40:06.193Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606168.8796,
+    "timestamp": "2025-12-11T10:40:06.168Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606117.9944,
+    "timestamp": "2025-12-11T10:40:06.117Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606088.6147,
+    "timestamp": "2025-12-11T10:40:06.088Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606055.5383,
+    "timestamp": "2025-12-11T10:40:06.055Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449606015.8335,
+    "timestamp": "2025-12-11T10:40:06.015Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605983.035,
+    "timestamp": "2025-12-11T10:40:05.983Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605957.1023,
+    "timestamp": "2025-12-11T10:40:05.957Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605926.6418,
+    "timestamp": "2025-12-11T10:40:05.926Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605887.4033,
+    "timestamp": "2025-12-11T10:40:05.887Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605856.3528,
+    "timestamp": "2025-12-11T10:40:05.856Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605827.0657,
+    "timestamp": "2025-12-11T10:40:05.827Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605799.2363,
+    "timestamp": "2025-12-11T10:40:05.799Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605772.5776,
+    "timestamp": "2025-12-11T10:40:05.772Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605749.2778,
+    "timestamp": "2025-12-11T10:40:05.749Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605723.2742,
+    "timestamp": "2025-12-11T10:40:05.723Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605697.969,
+    "timestamp": "2025-12-11T10:40:05.697Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605665.6921,
+    "timestamp": "2025-12-11T10:40:05.665Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605635.2488,
+    "timestamp": "2025-12-11T10:40:05.635Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605610.5625,
+    "timestamp": "2025-12-11T10:40:05.610Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605585.9023,
+    "timestamp": "2025-12-11T10:40:05.585Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605550.3396,
+    "timestamp": "2025-12-11T10:40:05.550Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605518.1128,
+    "timestamp": "2025-12-11T10:40:05.518Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605486.1943,
+    "timestamp": "2025-12-11T10:40:05.486Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605463.639,
+    "timestamp": "2025-12-11T10:40:05.463Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605433.8652,
+    "timestamp": "2025-12-11T10:40:05.433Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605398.7944,
+    "timestamp": "2025-12-11T10:40:05.398Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605369.365,
+    "timestamp": "2025-12-11T10:40:05.369Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605338.9006,
+    "timestamp": "2025-12-11T10:40:05.338Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605303.9893,
+    "timestamp": "2025-12-11T10:40:05.303Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605274.7764,
+    "timestamp": "2025-12-11T10:40:05.274Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605250.409,
+    "timestamp": "2025-12-11T10:40:05.250Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605229.8965,
+    "timestamp": "2025-12-11T10:40:05.229Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605200.7788,
+    "timestamp": "2025-12-11T10:40:05.200Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605173.4072,
+    "timestamp": "2025-12-11T10:40:05.173Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605150.645,
+    "timestamp": "2025-12-11T10:40:05.150Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605113.5354,
+    "timestamp": "2025-12-11T10:40:05.113Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605047.299,
+    "timestamp": "2025-12-11T10:40:05.047Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449605023.1523,
+    "timestamp": "2025-12-11T10:40:05.023Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604998.213,
+    "timestamp": "2025-12-11T10:40:04.998Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604963.4668,
+    "timestamp": "2025-12-11T10:40:04.963Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604918.0996,
+    "timestamp": "2025-12-11T10:40:04.918Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604875.6255,
+    "timestamp": "2025-12-11T10:40:04.875Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604824.1128,
+    "timestamp": "2025-12-11T10:40:04.824Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604793.5571,
+    "timestamp": "2025-12-11T10:40:04.793Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604757.8,
+    "timestamp": "2025-12-11T10:40:04.757Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604725.1216,
+    "timestamp": "2025-12-11T10:40:04.725Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604690.2358,
+    "timestamp": "2025-12-11T10:40:04.690Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604637.2764,
+    "timestamp": "2025-12-11T10:40:04.637Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  },
+  {
+    "id": 1765449604562.649,
+    "timestamp": "2025-12-11T10:40:04.562Z",
+    "type": "user_connection",
+    "user": "Amina",
+    "message": "Utilisateur connecté: Amina (Caisse)",
+    "socketId": null
+  }
+]
