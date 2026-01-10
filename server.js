@@ -22,10 +22,12 @@ const USERS_FILE = path.resolve(databasesDir, 'users.json');
 // DÉFINISSEZ ICI L'URL EXACTE DE VOTRE FRONTEND VERCEL
 // REMPLACEZ 'https://csr-system.vercel.app' par VOTRE URL VERCEL FINALE
 const allowedOrigins = [
-    'http://localhost:3000',                     // Développement local
-    'https://csr-system.vercel.app',     // VOTRE FRONTEND VERCEL
-    // Ajoutez d'autres origines si nécessaire (ex: preview deployments)
-    // 'https://*.vercel.app' // Pattern possible, mais moins sécurisé
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://csr-system.vercel.app',
+    'https://csr-frontend.onrender.com',
+    'https://csr-frontend-*.onrender.com',  // Pour les déploiements preview
+    'https://*.onrender.com'                // Garder le wildcard général
 ];
 
 // Middleware CORS pour Express
