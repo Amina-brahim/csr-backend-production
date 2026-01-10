@@ -33,26 +33,39 @@ const allowedOrigins = [
 // Middleware CORS pour Express
 const corsOptions = {
     origin: function (origin, callback) {
-        // Autoriser les requêtes sans origine (comme curl, Postman, serveur à serveur)
-        if (!origin) return callback(null, true);
+        // 1. Autoriser les requêtes sans origine (curl, Postman, etc.)
+        if (!origin) {
+            console.log('🌐 Requête sans origine (probablement serveur à serveur)');
+            return callback(null, true);
+        }
         
-        // Vérifier si l'origine est dans la liste blanche
-        if (allowedOrigins.some(allowedOrigin => {
-            // Gère les patterns avec wildcard
-            if (allowedOrigin.includes('*')) {
-                const pattern = allowedOrigin.replace('*', '.*');
-                return new RegExp(pattern).test(origin);
+        // 2. Vérification simplifiée
+        const isAllowed = allowedOrigins.some(allowed => {
+            // Si allowed est exactement égal à l'origine
+            if (allowed === origin) return true;
+            
+            // Si allowed contient un wildcard
+            if (allowed.includes('*')) {
+                // Convertir le pattern en regex simple
+                const escaped = allowed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const pattern = escaped.replace('\\*', '.*');
+                return new RegExp(`^${pattern}$`).test(origin);
             }
-            return allowedOrigin === origin;
-        })) {
+            
+            return false;
+        });
+        
+        if (isAllowed) {
+            console.log(`✅ CORS autorisé pour: ${origin}`);
             callback(null, true);
         } else {
-            console.log('🚫 CORS bloqué pour l\'origine:', origin);
-            callback(new Error('Origine non autorisée par CORS'));
+            console.log(`🚫 CORS BLOQUÉ pour: ${origin}`);
+            console.log(`📋 Liste des origines autorisées:`, allowedOrigins);
+            callback(new Error(`Origine non autorisée: ${origin}`));
         }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    credentials: true, // IMPORTANT: pour les cookies/sessions
+    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Socket-ID']
 };
 
@@ -159,34 +172,41 @@ app.get('/api/test-connection', (req, res) => {
 const socketIO = require('socket.io')(http, {
     cors: {
         origin: function(origin, callback) {
-            // Autoriser sans origine ou origine dans la liste blanche
-            if (!origin || allowedOrigins.some(allowedOrigin => {
-                if (allowedOrigin.includes('*')) {
-                    const pattern = allowedOrigin.replace('*', '.*');
-                    return new RegExp(pattern).test(origin);
+            // 1. Autoriser sans origine
+            if (!origin) {
+                console.log('📡 Socket.IO: Requête sans origine');
+                return callback(null, true);
+            }
+            
+            // 2. Vérification simple
+            const isOriginAllowed = allowedOrigins.some(allowed => {
+                if (allowed === origin) return true;
+                if (allowed.includes('*')) {
+                    return origin.includes(allowed.replace('*', ''));
                 }
-                return allowedOrigin === origin;
-            })) {
+                return false;
+            });
+            
+            if (isOriginAllowed) {
+                console.log(`📡 Socket.IO: Origine autorisée - ${origin}`);
                 callback(null, true);
             } else {
-                console.log('🚫 Socket.IO CORS bloqué pour:', origin);
-                callback(new Error('Not allowed by CORS'));
+                console.log(`🚫 Socket.IO: Origine BLOQUÉE - ${origin}`);
+                callback(new Error('Origin not allowed'));
             }
         },
         methods: ["GET", "POST"],
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"]
     },
-    // Configuration critique pour Render
-    transports: ['polling', 'websocket'], // polling en premier
+    transports: ['polling', 'websocket'],
     allowUpgrades: true,
-    pingTimeout: 60000, // Augmenté pour éviter les déconnexions
+    pingTimeout: 60000,
     pingInterval: 25000,
     maxHttpBufferSize: 1e8,
-    connectTimeout: 30000, // Timeout de connexion augmenté
-    // Important pour éviter les problèmes de CORS
+    connectTimeout: 45000,
     allowEIO3: true,
-    cookie: false // Désactiver les cookies pour éviter les problèmes CORS
+    cookie: false
 });
 
 // Variable globale pour Socket.IO
