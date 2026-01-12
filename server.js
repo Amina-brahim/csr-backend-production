@@ -19,39 +19,29 @@ const USERS_FILE = path.resolve(databasesDir, 'users.json');
 // CONFIGURATION CORS CRITIQUE : Liste blanche pour Vercel + Render
 // ====================================================================================
 
-// DÉFINISSEZ ICI L'URL EXACTE DE VOTRE FRONTEND VERCEL
-// REMPLACEZ 'https://csr-system.vercel.app' par VOTRE URL VERCEL FINALE
 const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
     'https://csr-system.vercel.app',
     'https://csr-frontend.onrender.com',
-    'https://csr-frontend-*.onrender.com',  // Pour les déploiements preview
-    'https://*.onrender.com'                // Garder le wildcard général
+    'https://csr-frontend-*.onrender.com',
+    'https://*.onrender.com'
 ];
 
-// Middleware CORS pour Express
 const corsOptions = {
     origin: function (origin, callback) {
-        // 1. Autoriser les requêtes sans origine (curl, Postman, etc.)
         if (!origin) {
             console.log('🌐 Requête sans origine (probablement serveur à serveur)');
             return callback(null, true);
         }
         
-        // 2. Vérification simplifiée
         const isAllowed = allowedOrigins.some(allowed => {
-            // Si allowed est exactement égal à l'origine
             if (allowed === origin) return true;
-            
-            // Si allowed contient un wildcard
             if (allowed.includes('*')) {
-                // Convertir le pattern en regex simple
                 const escaped = allowed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const pattern = escaped.replace('\\*', '.*');
                 return new RegExp(`^${pattern}$`).test(origin);
             }
-            
             return false;
         });
         
@@ -69,13 +59,9 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Socket-ID']
 };
 
-// Appliquez le middleware CORS
 app.use(cors(corsOptions));
-
-// Middleware pour parser JSON
 app.use(express.json());
 
-// Middleware personnalisé pour CORS headers (sécurité supplémentaire)
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (origin && allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
@@ -85,10 +71,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// Route OPTIONS explicite pour les requêtes preflight
 app.options('*', cors(corsOptions));
 
-// Middleware pour logger les requêtes
 app.use((req, res, next) => {
     console.log(`🌐 ${req.method} ${req.url} - ${new Date().toISOString()}`);
     next();
@@ -98,7 +82,6 @@ app.use((req, res, next) => {
 // ROUTES CRITIQUES POUR RENDER.COM
 // ====================================================================================
 
-// Route de santé OBLIGATOIRE pour Render
 app.get('/health', (req, res) => {
     console.log('🩺 Health check reçu');
     res.status(200).json({
@@ -112,11 +95,9 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Route de vérification Socket.IO - CORRIGÉE
 app.get('/socket.io/', (req, res) => {
     console.log('📡 Handshake Socket.IO reçu:', req.query);
     
-    // Headers CORS explicites
     const origin = req.headers.origin;
     if (origin && allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -125,20 +106,18 @@ app.get('/socket.io/', (req, res) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     
-    // Réponse pour le handshake Socket.IO v4
     res.json({
         success: true,
         message: 'Socket.IO server is running',
         sid: 'render_' + Date.now(),
         upgrades: ['websocket', 'polling'],
         pingInterval: 25000,
-        pingTimeout: 20000, // Augmenté pour Render
+        pingTimeout: 20000,
         maxPayload: 1000000,
         transports: ['polling', 'websocket']
     });
 });
 
-// Route pour le polling Socket.IO
 app.get('/socket.io/*', (req, res) => {
     console.log('📡 Polling request reçu:', req.path);
     const origin = req.headers.origin;
@@ -149,7 +128,6 @@ app.get('/socket.io/*', (req, res) => {
     res.status(200).send('OK');
 });
 
-// Route de test de connexion
 app.get('/api/test-connection', (req, res) => {
     res.json({
         success: true,
@@ -166,19 +144,17 @@ app.get('/api/test-connection', (req, res) => {
 });
 
 // ====================================================================================
-// CONFIGURATION SOCKET.IO POUR RENDER.COM - VERSION CORRIGÉE POUR VERCEL
+// CONFIGURATION SOCKET.IO - SYSTÈME DE SYNCHRONISATION AMÉLIORÉ
 // ====================================================================================
 
 const socketIO = require('socket.io')(http, {
     cors: {
         origin: function(origin, callback) {
-            // 1. Autoriser sans origine
             if (!origin) {
                 console.log('📡 Socket.IO: Requête sans origine');
                 return callback(null, true);
             }
             
-            // 2. Vérification simple
             const isOriginAllowed = allowedOrigins.some(allowed => {
                 if (allowed === origin) return true;
                 if (allowed.includes('*')) {
@@ -209,10 +185,12 @@ const socketIO = require('socket.io')(http, {
     cookie: false
 });
 
-// Variable globale pour Socket.IO
 global.io = socketIO;
 
-// Système de verrouillage
+// ====================================================================================
+// FONCTIONS UTILITAIRES
+// ====================================================================================
+
 const fileLocks = new Map();
 
 const acquireLock = async (filePath) => {
@@ -227,17 +205,12 @@ const releaseLock = (filePath) => {
     fileLocks.delete(filePath);
 };
 
-// ====================================================================================
-// CONFIGURATION INITIALE
-// ====================================================================================
-
 let users = [];
 let Clients = [];
 let FichierLaboOuvert = false;
 let dernierNumClient = 0;
 let adminLogs = [];
 
-// Configuration par défaut des examens
 let examensConfig = {
     consultation: [
         { id: "consult_specialisee", name: "Consultation Spécialisée", prix: 7500 },
@@ -294,14 +267,8 @@ let examensConfig = {
     ]
 };
 
-// Stockage des utilisateurs connectés par service
 let connectedUsers = new Map();
 
-// ====================================================================================
-// FONCTIONS UTILITAIRES
-// ====================================================================================
-
-// Fonction pour charger la configuration des examens
 const loadExamensConfig = async () => {
     try {
         await fs.access(EXAMENS_CONFIG_FILE);
@@ -320,7 +287,6 @@ const loadExamensConfig = async () => {
     }
 };
 
-// Fonction pour sauvegarder la configuration des examens
 const saveExamensConfig = async () => {
     try {
         await fs.writeFile(EXAMENS_CONFIG_FILE, JSON.stringify(examensConfig, null, 2));
@@ -330,169 +296,6 @@ const saveExamensConfig = async () => {
         throw error;
     }
 };
-
-// Fonction pour ajouter un nouvel examen
-const addNewExam = async (service, examName, examPrice, username = 'system') => {
-    try {
-        if (!service || !examName || !examPrice) {
-            throw new Error('Tous les champs sont obligatoires');
-        }
-
-        const price = parseFloat(examPrice);
-        if (isNaN(price) || price <= 0) {
-            throw new Error('Le prix doit être un nombre positif');
-        }
-
-        if (!examensConfig[service]) {
-            examensConfig[service] = [];
-        }
-
-        const examenExiste = examensConfig[service].some(examen => 
-            examen.name.toLowerCase() === examName.toLowerCase().trim()
-        );
-
-        if (examenExiste) {
-            throw new Error('Cet examen existe déjà dans ce service');
-        }
-
-        const examId = examName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-
-        const newExam = {
-            id: examId,
-            name: examName.trim(),
-            prix: price
-        };
-
-        examensConfig[service].push(newExam);
-        await saveExamensConfig();
-
-        console.log(`✅ Nouvel examen ajouté: ${examName} pour ${service} à ${price} FCFA`);
-
-        await addAdminLog(
-            `Nouvel examen ajouté: ${examName} dans ${service} - ${price} FCFA`,
-            'exam_added',
-            username
-        );
-
-        return newExam;
-
-    } catch (error) {
-        console.error('❌ Erreur ajout nouvel examen:', error);
-        throw error;
-    }
-};
-
-// Fonction pour modifier un examen existant
-const modifyExam = async (service, examId, newName, newPrice, username = 'system') => {
-    try {
-        if (!service || !examId || !newName || !newPrice) {
-            throw new Error('Tous les champs sont obligatoires');
-        }
-
-        const price = parseFloat(newPrice);
-        if (isNaN(price) || price <= 0) {
-            throw new Error('Le prix doit être un nombre positif');
-        }
-
-        if (!examensConfig[service]) {
-            throw new Error('Service non trouvé');
-        }
-
-        const examIndex = examensConfig[service].findIndex(examen => examen.id === examId);
-        if (examIndex === -1) {
-            throw new Error('Examen non trouvé');
-        }
-
-        const nomExisteDeja = examensConfig[service].some((examen, index) => 
-            index !== examIndex && examen.name.toLowerCase() === newName.toLowerCase().trim()
-        );
-
-        if (nomExisteDeja) {
-            throw new Error('Un examen avec ce nom existe déjà dans ce service');
-        }
-
-        const ancienExam = { ...examensConfig[service][examIndex] };
-
-        examensConfig[service][examIndex] = {
-            ...examensConfig[service][examIndex],
-            name: newName.trim(),
-            prix: price
-        };
-
-        await saveExamensConfig();
-
-        console.log(`✅ Examen modifié: ${ancienExam.name} → ${newName}, ${ancienExam.prix} → ${price} FCFA`);
-
-        await addAdminLog(
-            `Examen modifié: ${ancienExam.name} (${ancienExam.prix}F) → ${newName} (${price}F) dans ${service}`,
-            'exam_modified',
-            username
-        );
-
-        return {
-            ancienExam: ancienExam,
-            nouvelExam: examensConfig[service][examIndex]
-        };
-
-    } catch (error) {
-        console.error('❌ Erreur modification examen:', error);
-        throw error;
-    }
-};
-
-// Fonction pour supprimer un examen
-const deleteExam = async (service, examId, username = 'system') => {
-    try {
-        if (!service || !examId) {
-            throw new Error('Service et examen sont obligatoires');
-        }
-
-        if (!examensConfig[service]) {
-            throw new Error('Service non trouvé');
-        }
-
-        const examIndex = examensConfig[service].findIndex(examen => examen.id === examId);
-        if (examIndex === -1) {
-            throw new Error('Examen non trouvé');
-        }
-
-        const examASupprimer = examensConfig[service][examIndex];
-
-        examensConfig[service].splice(examIndex, 1);
-        await saveExamensConfig();
-
-        console.log(`✅ Examen supprimé: ${examASupprimer.name} du service ${service}`);
-
-        await addAdminLog(
-            `Examen supprimé: ${examASupprimer.name} (${examASupprimer.prix}F) du service ${service}`,
-            'exam_deleted',
-            username
-        );
-
-        return examASupprimer;
-
-    } catch (error) {
-        console.error('❌ Erreur suppression examen:', error);
-        throw error;
-    }
-};
-
-// Fonction pour obtenir les services disponibles
-const getAvailableServices = () => {
-    return [
-        { value: 'consultation', name: 'Consultation' },
-        { value: 'laboratoire', name: 'Laboratoire' },
-        { value: 'echographie', name: 'Echographie' },
-        { value: 'hospitalisation', name: 'Hospitalisation' },
-        { value: 'chirurgie', name: 'Chirurgie' },
-        { value: 'kinesitherapie', name: 'Kinésithérapie' },
-        { value: 'fibroscopie', name: 'Fibroscopie' }
-    ];
-};
-
-// ====================================================================================
-// GESTION DES UTILISATEURS - CORRIGÉE
-// ====================================================================================
 
 let usersDatabase = [
     {
@@ -580,7 +383,6 @@ const availableServices = [
     "Maintenance"
 ];
 
-// Charger les utilisateurs depuis le fichier
 const loadUsers = async () => {
     try {
         await fs.access(USERS_FILE);
@@ -599,7 +401,6 @@ const loadUsers = async () => {
     }
 };
 
-// Sauvegarder les utilisateurs
 const saveUsers = async () => {
     try {
         await fs.writeFile(USERS_FILE, JSON.stringify(usersDatabase, null, 2));
@@ -610,12 +411,10 @@ const saveUsers = async () => {
     }
 };
 
-// Générer un ID unique
 const generateUserId = () => {
     return Date.now() + Math.floor(Math.random() * 1000);
 };
 
-// Mettre à jour la dernière connexion
 const updateUserLastLogin = async (username) => {
     try {
         const userIndex = usersDatabase.findIndex(user => user.username === username);
@@ -632,174 +431,6 @@ const updateUserLastLogin = async (username) => {
     }
 };
 
-// Ajouter un utilisateur
-const addUser = async (userData, username = 'system') => {
-    try {
-        console.log('🔄 Tentative d\'ajout utilisateur:', userData);
-        
-        if (!userData.username || !userData.password || !userData.service || !userData.fullName) {
-            throw new Error('Tous les champs obligatoires doivent être remplis');
-        }
-
-        const userExists = usersDatabase.some(user => 
-            user.username.toLowerCase() === userData.username.toLowerCase()
-        );
-
-        if (userExists) {
-            throw new Error('Un utilisateur avec ce nom existe déjà');
-        }
-
-        if (!availableServices.includes(userData.service)) {
-            throw new Error('Service invalide');
-        }
-
-        const newUser = {
-            id: generateUserId(),
-            username: userData.username.trim(),
-            password: userData.password,
-            service: userData.service,
-            fullName: userData.fullName.trim(),
-            email: userData.email || '',
-            isActive: userData.isActive !== undefined ? userData.isActive : true,
-            createdAt: new Date().toISOString(),
-            lastLogin: null,
-            permissions: userData.permissions || getDefaultPermissions(userData.service)
-        };
-
-        usersDatabase.push(newUser);
-        await saveUsers();
-
-        console.log(`✅ Nouvel utilisateur ajouté: ${newUser.username} (${newUser.service})`);
-
-        await addAdminLog(
-            `Nouvel utilisateur créé: ${newUser.username} - ${newUser.fullName} (${newUser.service})`,
-            'user_created',
-            username
-        );
-
-        return newUser;
-
-    } catch (error) {
-        console.error('❌ Erreur ajout utilisateur:', error);
-        throw error;
-    }
-};
-
-// Modifier un utilisateur
-const modifyUser = async (userId, userData, username = 'system') => {
-    try {
-        console.log('🔄 Tentative de modification utilisateur:', userId, userData);
-        
-        if (!userId) {
-            throw new Error('ID utilisateur manquant');
-        }
-
-        const userIndex = usersDatabase.findIndex(user => user.id === userId);
-        if (userIndex === -1) {
-            throw new Error('Utilisateur non trouvé');
-        }
-
-        const oldUser = { ...usersDatabase[userIndex] };
-
-        if (userData.username !== undefined) {
-            const usernameExists = usersDatabase.some((user, index) => 
-                index !== userIndex && user.username.toLowerCase() === userData.username.toLowerCase()
-            );
-            if (usernameExists) {
-                throw new Error('Un autre utilisateur avec ce nom existe déjà');
-            }
-            usersDatabase[userIndex].username = userData.username.trim();
-        }
-
-        if (userData.password !== undefined && userData.password !== '') {
-            usersDatabase[userIndex].password = userData.password;
-        }
-
-        if (userData.service !== undefined) {
-            if (!availableServices.includes(userData.service)) {
-                throw new Error('Service invalide');
-            }
-            usersDatabase[userIndex].service = userData.service;
-            usersDatabase[userIndex].permissions = getDefaultPermissions(userData.service);
-        }
-
-        if (userData.fullName !== undefined) {
-            usersDatabase[userIndex].fullName = userData.fullName.trim();
-        }
-
-        if (userData.email !== undefined) {
-            usersDatabase[userIndex].email = userData.email;
-        }
-
-        if (userData.isActive !== undefined) {
-            usersDatabase[userIndex].isActive = userData.isActive;
-        }
-
-        if (userData.permissions !== undefined) {
-            usersDatabase[userIndex].permissions = userData.permissions;
-        }
-
-        await saveUsers();
-
-        console.log(`✅ Utilisateur modifié: ${usersDatabase[userIndex].username}`);
-
-        await addAdminLog(
-            `Utilisateur modifié: ${oldUser.username} → ${usersDatabase[userIndex].username}`,
-            'user_modified',
-            username
-        );
-
-        return {
-            oldUser: oldUser,
-            updatedUser: usersDatabase[userIndex]
-        };
-
-    } catch (error) {
-        console.error('❌ Erreur modification utilisateur:', error);
-        throw error;
-    }
-};
-
-// Supprimer un utilisateur
-const deleteUser = async (userId, username = 'system') => {
-    try {
-        console.log('🔄 Tentative de suppression utilisateur:', userId);
-        
-        if (!userId) {
-            throw new Error('ID utilisateur manquant');
-        }
-
-        const userIndex = usersDatabase.findIndex(user => user.id === userId);
-        if (userIndex === -1) {
-            throw new Error('Utilisateur non trouvé');
-        }
-
-        const userToDelete = usersDatabase[userIndex];
-
-        if (userToDelete.username === 'admin') {
-            throw new Error('Impossible de supprimer le compte administrateur principal');
-        }
-
-        usersDatabase.splice(userIndex, 1);
-        await saveUsers();
-
-        console.log(`✅ Utilisateur supprimé: ${userToDelete.username}`);
-
-        await addAdminLog(
-            `Utilisateur supprimé: ${userToDelete.username} - ${userToDelete.fullName}`,
-            'user_deleted',
-            username
-        );
-
-        return userToDelete;
-
-    } catch (error) {
-        console.error('❌ Erreur suppression utilisateur:', error);
-        throw error;
-    }
-};
-
-// Obtenir les permissions par défaut
 const getDefaultPermissions = (service) => {
     const permissionsMap = {
         'Administration': ['all'],
@@ -811,15 +442,11 @@ const getDefaultPermissions = (service) => {
         'Hospitalisation': ['hospitalisation', 'view'],
         'Maintenance': ['maintenance', 'view']
     };
-    
     return permissionsMap[service] || ['view'];
 };
 
-// FONCTION VERIFY CREDENTIALS CRITIQUE - VERSION CORRIGÉE
 const verifyCredentials = (username, password) => {
     console.log('🔐 [SERVER] Vérification credentials pour:', username);
-    
-    // Recherche insensible à la casse
     const user = usersDatabase.find(u => 
         u.username.toLowerCase() === username.toLowerCase() && 
         u.password === password &&
@@ -842,11 +469,6 @@ const verifyCredentials = (username, password) => {
     }
 };
 
-// ====================================================================================
-// FONCTIONS POUR L'ANNULATION DE PAIEMENT
-// ====================================================================================
-
-// Trouver un patient par ID CSR
 const trouverPatientParCSR = async (patientId) => {
     try {
         const patients = await loadPatientData();
@@ -857,18 +479,14 @@ const trouverPatientParCSR = async (patientId) => {
     }
 };
 
-// Générer un ID unique
 const generateId = () => {
     return Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 };
 
-// Sauvegarder l'annulation
 const sauvegarderAnnulation = async (annulation) => {
     const annulationsFile = path.resolve(databasesDir, 'payment_cancellations.json');
-    
     try {
         await ensureDirectoryExists(databasesDir);
-        
         let annulationsExistantes = [];
         try {
             const data = await fs.readFile(annulationsFile, 'utf8');
@@ -878,15 +496,11 @@ const sauvegarderAnnulation = async (annulation) => {
         } catch (error) {
             if (error.code !== 'ENOENT') throw error;
         }
-
         annulationsExistantes.unshift(annulation);
-        
         if (annulationsExistantes.length > 1000) {
             annulationsExistantes = annulationsExistantes.slice(0, 1000);
         }
-        
         await fs.writeFile(annulationsFile, JSON.stringify(annulationsExistantes, null, 2));
-        
         console.log(`✅ Annulation sauvegardée: ${annulation.patientName} - ${annulation.amount} FCFA`);
         return true;
     } catch (error) {
@@ -895,30 +509,22 @@ const sauvegarderAnnulation = async (annulation) => {
     }
 };
 
-// Supprimer un patient
 const supprimerPatient = async (patientId) => {
     let lockAcquired = false;
     try {
         await acquireLock(LABO_FILE);
         lockAcquired = true;
-        
         const data = await fs.readFile(LABO_FILE, 'utf8');
         let patients = JSON.parse(data);
-
         const patientIndex = patients.findIndex(p => p.numID_CSR === patientId);
-        
         if (patientIndex === -1) {
             throw new Error(`Patient ${patientId} non trouvé`);
         }
-
         const patientSupprime = patients[patientIndex];
-        
         patients.splice(patientIndex, 1);
-        
         const tmpFile = LABO_FILE + '.tmp';
         await fs.writeFile(tmpFile, JSON.stringify(patients, null, 2));
         await fs.rename(tmpFile, LABO_FILE);
-
         console.log(`✅ Patient supprimé: ${patientSupprime.nomClient} (${patientId})`);
         return patientSupprime;
     } catch (error) {
@@ -931,10 +537,8 @@ const supprimerPatient = async (patientId) => {
     }
 };
 
-// Charger l'historique des annulations
 const loadCancellationHistory = async () => {
     const annulationsFile = path.resolve(databasesDir, 'payment_cancellations.json');
-    
     try {
         await fs.access(annulationsFile);
         const data = await fs.readFile(annulationsFile, 'utf8');
@@ -949,7 +553,6 @@ const loadCancellationHistory = async () => {
     }
 };
 
-// Créer le répertoire si il n'existe pas
 async function ensureDirectoryExists(dirPath) {
     try {
         await fs.access(dirPath);
@@ -964,7 +567,6 @@ async function ensureDirectoryExists(dirPath) {
     }
 }
 
-// Obtenir l'adresse IP locale
 function getLocalIP() {
     try {
         const interfaces = os.networkInterfaces();
@@ -982,7 +584,6 @@ function getLocalIP() {
     }
 }
 
-// Charger le dernier numéro de client
 async function chargerDernierNumClient() {
     try {
         const data = await fs.readFile(LABO_FILE, 'utf8');
@@ -1009,11 +610,9 @@ async function chargerDernierNumClient() {
     }
 }
 
-// Initialiser le fichier labo
 async function initializeLaboFile() {
     try {
         await ensureDirectoryExists(databasesDir);
-        
         try {
             await fs.access(LABO_FILE);
             console.log('Fichier labo.json existe déjà');
@@ -1032,7 +631,6 @@ async function initializeLaboFile() {
     }
 }
 
-// Charger les données des patients
 const loadPatientData = async () => {
     try {
         const data = await fs.readFile(LABO_FILE, 'utf8');
@@ -1047,32 +645,25 @@ const loadPatientData = async () => {
     }
 };
 
-// Mettre à jour le statut par numClient
 const updateLaboratorizedStatus = async (numClient, newStatus) => {
     let lockAcquired = false;
     try {
         await acquireLock(LABO_FILE);
         lockAcquired = true;
-        
         const data = await fs.readFile(LABO_FILE, 'utf8');
         let records = JSON.parse(data);
-
         const recordIndex = records.findIndex(r => r.numClient == numClient);
-
         if (recordIndex === -1) {
             throw new Error('Client ' + numClient + ' non trouvé');
         }
-
         records[recordIndex] = {
             ...records[recordIndex],
             isLaboratorized: newStatus,
             updatedAt: new Date().toISOString()
         };
-
         const tmpFile = LABO_FILE + '.tmp';
         await fs.writeFile(tmpFile, JSON.stringify(records, null, 2));
         await fs.rename(tmpFile, LABO_FILE);
-
         return records[recordIndex];
     } catch (error) {
         console.error('Erreur lors de la mise à jour:', error);
@@ -1084,32 +675,25 @@ const updateLaboratorizedStatus = async (numClient, newStatus) => {
     }
 };
 
-// Mettre à jour le statut par numID_CSR
 const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
     let lockAcquired = false;
     try {
         await acquireLock(LABO_FILE);
         lockAcquired = true;
-        
         const data = await fs.readFile(LABO_FILE, 'utf8');
         let records = JSON.parse(data);
-
         const recordIndex = records.findIndex(r => r.numID_CSR === numID_CSR);
-
         if (recordIndex === -1) {
             throw new Error('Client ' + numID_CSR + ' non trouvé');
         }
-
         records[recordIndex] = {
             ...records[recordIndex],
             isLaboratorized: newStatus,
             updatedAt: new Date().toISOString()
         };
-
         const tmpFile = LABO_FILE + '.tmp';
         await fs.writeFile(tmpFile, JSON.stringify(records, null, 2));
         await fs.rename(tmpFile, LABO_FILE);
-
         return records[recordIndex];
     } catch (error) {
         console.error('Erreur lors de la mise à jour par CSR:', error);
@@ -1121,7 +705,6 @@ const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
     }
 };
 
-// Générer un nouvel ID client
 const generateNewClientId = async () => {
     try {
         dernierNumClient++;
@@ -1134,7 +717,6 @@ const generateNewClientId = async () => {
     }
 };
 
-// Ajouter un log d'administration
 const addAdminLog = async (message, type = 'info', user = 'system') => {
     const logEntry = {
         id: Date.now() + Math.random(),
@@ -1144,12 +726,10 @@ const addAdminLog = async (message, type = 'info', user = 'system') => {
         message: message,
         socketId: null
     };
-    
     adminLogs.unshift(logEntry);
     if (adminLogs.length > 500) {
         adminLogs = adminLogs.slice(0, 500);
     }
-    
     try {
         await ensureDirectoryExists(databasesDir);
         const logsToSave = adminLogs.slice(0, 1000);
@@ -1157,12 +737,10 @@ const addAdminLog = async (message, type = 'info', user = 'system') => {
     } catch (error) {
         console.error('Erreur sauvegarde logs admin:', error);
     }
-    
     socketIO.emit('admin_log', logEntry);
     return logEntry;
 };
 
-// Charger les logs d'administration
 const loadAdminLogs = async () => {
     try {
         await fs.access(ADMIN_LOG_FILE);
@@ -1179,7 +757,6 @@ const loadAdminLogs = async () => {
     }
 };
 
-// Obtenir les statistiques du serveur
 const getServerStats = () => {
     return {
         totalPatients: dernierNumClient,
@@ -1190,12 +767,10 @@ const getServerStats = () => {
     };
 };
 
-// Déterminer le service
 const determineService = (socket, data = {}) => {
     if (data.service) {
         return data.service;
     }
-    
     if (socket.handshake.headers.referer) {
         const referer = socket.handshake.headers.referer;
         if (referer.includes('/MGLabo')) return 'Laboratoire';
@@ -1204,16 +779,13 @@ const determineService = (socket, data = {}) => {
         if (referer.includes('/Administration')) return 'Administration';
         if (referer.includes('/MgJournaux')) return 'Journaux';
     }
-    
     const existingUser = connectedUsers.get(socket.id);
     if (existingUser && existingUser.service) {
         return existingUser.service;
     }
-    
     return 'Autre';
 };
 
-// Obtenir la liste des utilisateurs connectés par service
 const getConnectedUsersByService = () => {
     const usersByService = {
         'Laboratoire': [],
@@ -1226,7 +798,6 @@ const getConnectedUsersByService = () => {
         'Maintenance': [],
         'Autre': []
     };
-    
     connectedUsers.forEach((userData, socketId) => {
         const service = userData.service || 'Autre';
         if (usersByService[service]) {
@@ -1251,20 +822,17 @@ const getConnectedUsersByService = () => {
             });
         }
     });
-    
     return usersByService;
 };
 
 // ====================================================================================
-// SOCKET.IO HANDLERS - VERSION CORRIGÉE POUR RENDER ET VERCEL
+// SOCKET.IO HANDLERS - SYSTÈME DE SYNCHRONISATION EN TEMPS RÉEL
 // ====================================================================================
 
 socketIO.on('connection', (socket) => {
     console.log('✅✅✅ NOUVELLE CONNEXION Socket.io: ' + socket.id);
     console.log('📡 IP: ' + socket.handshake.address);
-    console.log('🌐 Headers:', socket.handshake.headers);
     
-    // Vérifier l'origine de la connexion
     const origin = socket.handshake.headers.origin || socket.handshake.headers.referer;
     if (origin && !allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
         console.log('🚫 Connexion Socket.IO rejetée - Origine non autorisée:', origin);
@@ -1272,7 +840,6 @@ socketIO.on('connection', (socket) => {
         return;
     }
     
-    // Envoyer immédiatement les infos de connexion
     socket.emit('server_info', {
         serverIP: 'csr-serveur-backend.onrender.com',
         serverPort: PORT,
@@ -1292,12 +859,9 @@ socketIO.on('connection', (socket) => {
         ip: socket.handshake.address,
         isIdentified: false
     };
-    
     connectedUsers.set(socket.id, userData);
-    
     addAdminLog('Nouvelle connexion détectée: ' + socket.id, 'connection', 'system');
 
-    // Notifier de la nouvelle connexion
     socketIO.emit('user_connected', {
         socketId: socket.id,
         service: userService,
@@ -1307,17 +871,11 @@ socketIO.on('connection', (socket) => {
         connectedUsers: getConnectedUsersByService()
     });
 
-    // Initialisation
     initializeLaboFile().catch(console.error);
-
-    // ============================================================================
-    // GESTIONNAIRE USER_IDENTIFICATION - CORRIGÉ
-    // ============================================================================
 
     socket.on('user_identification', async (userInfo) => {
         try {
             console.log('🔐 Identification utilisateur reçue:', userInfo);
-            
             if (!userInfo || !userInfo.username || !userInfo.service) {
                 console.log('❌ Données d\'identification incomplètes');
                 socket.emit('identification_failed', { 
@@ -1325,14 +883,11 @@ socketIO.on('connection', (socket) => {
                 });
                 return;
             }
-
-            // Vérifier si l'utilisateur existe dans la base
             const user = usersDatabase.find(u => 
                 u.username.toLowerCase() === userInfo.username.toLowerCase() && 
                 u.service === userInfo.service &&
                 u.isActive === true
             );
-
             if (!user) {
                 console.log('❌ Utilisateur non trouvé ou inactif:', userInfo.username);
                 socket.emit('identification_failed', { 
@@ -1340,10 +895,7 @@ socketIO.on('connection', (socket) => {
                 });
                 return;
             }
-
-            // Mettre à jour la dernière connexion
             await updateUserLastLogin(userInfo.username);
-
             const updatedUserData = {
                 service: user.service,
                 username: user.username,
@@ -1354,19 +906,13 @@ socketIO.on('connection', (socket) => {
                 userId: user.id,
                 permissions: user.permissions || []
             };
-            
             connectedUsers.set(socket.id, updatedUserData);
-            
             console.log(`✅ Utilisateur identifié: ${user.username} (${user.service})`);
-
-            // Envoyer la confirmation
             socket.emit('identification_confirmed', {
                 success: true,
                 user: updatedUserData,
                 message: `Identifié avec succès comme ${user.username} (${user.service})`
             });
-
-            // Notifier tous les clients
             socketIO.emit('user_connected', {
                 socketId: socket.id,
                 service: updatedUserData.service,
@@ -1375,13 +921,11 @@ socketIO.on('connection', (socket) => {
                 connectTime: updatedUserData.connectTime,
                 connectedUsers: getConnectedUsersByService()
             });
-
             await addAdminLog(
                 `Utilisateur connecté: ${user.username} (${user.service})`,
                 'user_connection',
                 user.username
             );
-            
         } catch (error) {
             console.error('❌ Erreur identification:', error);
             socket.emit('identification_failed', { 
@@ -1390,14 +934,9 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // ============================================================================
-    // GESTIONNAIRE VERIFY_USER_CREDENTIALS - CRITIQUE
-    // ============================================================================
-
     socket.on('verify_user_credentials', async (credentials, callback) => {
         try {
             console.log('🔐 [SERVER] Vérification credentials reçue:', credentials);
-            
             if (!credentials || !credentials.username || !credentials.password) {
                 console.log('❌ [SERVER] Credentials incomplets');
                 if (callback) {
@@ -1409,15 +948,10 @@ socketIO.on('connection', (socket) => {
                 }
                 return;
             }
-
             const user = verifyCredentials(credentials.username, credentials.password);
-            
             if (user) {
                 console.log('✅ [SERVER] Utilisateur authentifié:', user.username);
-                
-                // Mettre à jour la dernière connexion
                 await updateUserLastLogin(credentials.username);
-                
                 if (callback) {
                     callback({
                         success: true,
@@ -1437,7 +971,6 @@ socketIO.on('connection', (socket) => {
                     });
                 }
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur vérification credentials:', error);
             if (callback) {
@@ -1450,13 +983,148 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // GESTIONNAIRES EXISTANTS (conservés)
+    // GESTIONNAIRE UPDATE_STATUS AMÉLIORÉ POUR LA SYNCHRONISATION
+    // ============================================================================
+
+    socket.on('update_status', async ({ numClient, numID_CSR, isLaboratorized }) => {
+        console.log('🔄 [SERVER] Mise à jour de statut reçue:', { 
+            numID_CSR, 
+            numClient, 
+            isLaboratorized 
+        });
+        
+        try {
+            const statusMap = {
+                0: "En attente",
+                1: "En cours",
+                2: "Terminé",
+                3: "Annulé"
+            };
+            
+            const isLaboratorizedText = statusMap[isLaboratorized] || "En attente";
+            console.log(`📝 [SERVER] Conversion statut: ${isLaboratorized} → "${isLaboratorizedText}"`);
+            
+            let updatedRecord;
+            
+            // Mettre à jour dans la base de données
+            if (numID_CSR) {
+                updatedRecord = await updateLaboratorizedStatusByCSR(numID_CSR, isLaboratorizedText);
+                console.log(`✅ [SERVER] Statut mis à jour pour CSR ${numID_CSR}: "${isLaboratorizedText}"`);
+            } else if (numClient) {
+                updatedRecord = await updateLaboratorizedStatus(numClient, isLaboratorizedText);
+                console.log(`✅ [SERVER] Statut mis à jour pour client ${numClient}: "${isLaboratorizedText}"`);
+            } else {
+                throw new Error('Identifiant client manquant (numClient ou numID_CSR requis)');
+            }
+
+            // Journaliser l'action
+            await addAdminLog(
+                `Statut patient mis à jour: ${updatedRecord.nomClient} - ${isLaboratorizedText}`,
+                'status_update',
+                'Laboratoire'
+            );
+
+            // ====================================================================
+            // DIFFUSION DES CHANGEMENTS À TOUS LES SERVICES
+            // ====================================================================
+            
+            // 1. Répondre au laboratoire qui a fait la modification
+            socket.emit('Mise à jour réussie', updatedRecord);
+            
+            // 2. Diffuser à tous les clients pour les mises à jour en temps réel
+            socketIO.emit('Etat Analyses Mis à Jour', updatedRecord);
+            
+            // 3. Événement spécifique pour les journaux
+            const updateDataForJournals = {
+                type: 'patient_status_update',
+                patientId: numID_CSR || numClient,
+                patientName: updatedRecord.nomClient,
+                numID_CSR: updatedRecord.numID_CSR,
+                numClient: updatedRecord.numClient,
+                nouveauStatut: isLaboratorizedText,
+                ancienStatut: updatedRecord.isLaboratorized,
+                service: 'Laboratoire',
+                timestamp: new Date().toISOString(),
+                updatedBy: socket.id,
+                patientData: updatedRecord
+            };
+            
+            socketIO.emit('statut_patient_mis_a_jour', updateDataForJournals);
+            console.log(`📢 [SERVER] Changement diffusé à tous les services pour ${updatedRecord.nomClient}`);
+            
+            // 4. Événement pour les journaux spécifiques par service
+            if (updatedRecord.servicesSelectionnes && Array.isArray(updatedRecord.servicesSelectionnes)) {
+                updatedRecord.servicesSelectionnes.forEach(service => {
+                    const serviceValue = typeof service === 'object' ? service.value : service;
+                    if (serviceValue) {
+                        const serviceUpdate = {
+                            ...updateDataForJournals,
+                            targetService: serviceValue
+                        };
+                        socketIO.emit(`journal_update_${serviceValue}`, serviceUpdate);
+                        console.log(`📋 [SERVER] Mise à jour envoyée au journal ${serviceValue}`);
+                    }
+                });
+            }
+
+            // 5. Événement général pour les composants qui écoutent
+            socketIO.emit('patient_data_updated', {
+                event: 'status_changed',
+                data: updatedRecord,
+                timestamp: new Date().toISOString()
+            });
+
+            console.log(`🎯 [SERVER] Synchronisation terminée pour ${updatedRecord.nomClient}`);
+
+        } catch (error) {
+            console.error('❌ [SERVER] Erreur lors de la mise à jour:', error.message);
+            socket.emit('update_error', {
+                numClient: numClient || numID_CSR,
+                message: error.message
+            });
+            
+            await addAdminLog(
+                `Erreur mise à jour statut: ${error.message}`,
+                'error',
+                'Laboratoire'
+            );
+        }
+    });
+
+    // ============================================================================
+    // GESTIONNAIRE POUR LES JOURNAUX - ÉVÉNEMENT SPÉCIFIQUE
+    // ============================================================================
+
+    socket.on('get_journal_updates', (service, callback) => {
+        console.log(`📋 [SERVER] Demande de mises à jour pour le journal: ${service}`);
+        try {
+            const updates = {
+                success: true,
+                service: service,
+                lastUpdates: [],
+                message: `Écoute active pour le journal ${service}`
+            };
+            if (callback) {
+                callback(updates);
+            }
+        } catch (error) {
+            console.error('❌ [SERVER] Erreur get_journal_updates:', error);
+            if (callback) {
+                callback({
+                    success: false,
+                    message: error.message
+                });
+            }
+        }
+    });
+
+    // ============================================================================
+    // AUTRES GESTIONNAIRES EXISTANTS
     // ============================================================================
 
     socket.on('get_users_list', async (callback) => {
         try {
             console.log('📋 [SERVER] Demande de liste des utilisateurs');
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1478,10 +1146,8 @@ socketIO.on('connection', (socket) => {
 
     socket.on('add_new_user', async (userData, callback) => {
         console.log('👤 [SERVER] Demande d\'ajout nouvel utilisateur:', userData);
-        
         try {
             const newUser = await addUser(userData, userData.adminUsername);
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1489,10 +1155,8 @@ socketIO.on('connection', (socket) => {
                     newUser: newUser
                 });
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur ajout utilisateur:', error);
-            
             if (callback) {
                 callback({
                     success: false,
@@ -1504,10 +1168,8 @@ socketIO.on('connection', (socket) => {
 
     socket.on('modify_user', async (userData, callback) => {
         console.log('👤 [SERVER] Demande de modification utilisateur:', userData);
-        
         try {
             const result = await modifyUser(userData.userId, userData, userData.adminUsername);
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1516,10 +1178,8 @@ socketIO.on('connection', (socket) => {
                     updatedUser: result.updatedUser
                 });
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur modification utilisateur:', error);
-            
             if (callback) {
                 callback({
                     success: false,
@@ -1531,10 +1191,8 @@ socketIO.on('connection', (socket) => {
 
     socket.on('delete_user', async (userData, callback) => {
         console.log('👤 [SERVER] Demande de suppression utilisateur:', userData);
-        
         try {
             const deletedUser = await deleteUser(userData.userId, userData.adminUsername);
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1542,10 +1200,8 @@ socketIO.on('connection', (socket) => {
                     deletedUser: deletedUser
                 });
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur suppression utilisateur:', error);
-            
             if (callback) {
                 callback({
                     success: false,
@@ -1577,16 +1233,11 @@ socketIO.on('connection', (socket) => {
 
     socket.on('add_new_exam', async (examData, callback) => {
         console.log('🔧 [SERVER] Demande d\'ajout nouvel examen:', examData);
-        
         try {
             const { service, examName, examPrice, username } = examData;
-            
             const newExam = await addNewExam(service, examName, examPrice, username);
-            
             socketIO.emit('examens_config_updated', examensConfig);
-            
             console.log('🔧 [SERVER] Configuration diffusée à tous les clients');
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1594,17 +1245,14 @@ socketIO.on('connection', (socket) => {
                     newExam: newExam
                 });
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur ajout nouvel examen:', error);
-            
             if (callback) {
                 callback({
                     success: false,
                     message: '❌ Erreur lors de l\'ajout: ' + error.message
                 });
             }
-            
             await addAdminLog(
                 'Erreur ajout examen: ' + error.message,
                 'error',
@@ -1615,16 +1263,11 @@ socketIO.on('connection', (socket) => {
 
     socket.on('modify_exam', async (examData, callback) => {
         console.log('🔧 [SERVER] Demande de modification d\'examen:', examData);
-        
         try {
             const { service, examId, newName, newPrice, username } = examData;
-            
             const result = await modifyExam(service, examId, newName, newPrice, username);
-            
             socketIO.emit('examens_config_updated', examensConfig);
-            
             console.log('🔧 [SERVER] Configuration modifiée diffusée à tous les clients');
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1633,17 +1276,14 @@ socketIO.on('connection', (socket) => {
                     nouvelExam: result.nouvelExam
                 });
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur modification examen:', error);
-            
             if (callback) {
                 callback({
                     success: false,
                     message: '❌ Erreur lors de la modification: ' + error.message
                 });
             }
-            
             await addAdminLog(
                 'Erreur modification examen: ' + error.message,
                 'error',
@@ -1654,16 +1294,11 @@ socketIO.on('connection', (socket) => {
 
     socket.on('delete_exam', async (examData, callback) => {
         console.log('🔧 [SERVER] Demande de suppression d\'examen:', examData);
-        
         try {
             const { service, examId, username } = examData;
-            
             const examSupprime = await deleteExam(service, examId, username);
-            
             socketIO.emit('examens_config_updated', examensConfig);
-            
             console.log('🔧 [SERVER] Configuration mise à jour diffusée à tous les clients après suppression');
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1671,17 +1306,14 @@ socketIO.on('connection', (socket) => {
                     examSupprime: examSupprime
                 });
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur suppression examen:', error);
-            
             if (callback) {
                 callback({
                     success: false,
                     message: '❌ Erreur lors de la suppression: ' + error.message
                 });
             }
-            
             await addAdminLog(
                 'Erreur suppression examen: ' + error.message,
                 'error',
@@ -1690,11 +1322,9 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Gestionnaire pour l'annulation de paiement
     socket.on('cancel_patient_payment', async (data, callback) => {
         try {
             console.log('🔔 [SERVER] Annulation de paiement demandée:', data);
-            
             const patient = await trouverPatientParCSR(data.patientId);
             if (!patient) {
                 console.log('❌ [SERVER] Patient non trouvé:', data.patientId);
@@ -1706,9 +1336,7 @@ socketIO.on('connection', (socket) => {
                 }
                 return;
             }
-
             console.log(`✅ [SERVER] Patient trouvé: ${patient.nomClient} - ${data.amount} FCFA`);
-
             const annulation = {
                 id: generateId(),
                 patientId: data.patientId,
@@ -1727,11 +1355,8 @@ socketIO.on('connection', (socket) => {
                     dateCreation: patient.dateCreation
                 }
             };
-            
             await sauvegarderAnnulation(annulation);
-            
             const patientSupprime = await supprimerPatient(data.patientId);
-            
             socketIO.emit('payment_cancelled', {
                 patientId: data.patientId,
                 patientName: data.patientName,
@@ -1740,21 +1365,17 @@ socketIO.on('connection', (socket) => {
                 timestamp: data.timestamp,
                 reason: data.reason
             });
-
             socketIO.emit('patient_deleted', {
                 patientId: data.patientId,
                 deletedBy: data.cancelledBy,
                 timestamp: data.timestamp
             });
-
             await addAdminLog(
                 `Paiement annulé: ${data.patientName} (${data.patientId}) - ${data.amount} FCFA - Motif: ${data.reason}`,
                 'payment_cancelled',
                 data.cancelledBy
             );
-
             console.log(`✅ [SERVER] Paiement annulé avec succès pour ${data.patientName}`);
-
             if (callback) {
                 callback({ 
                     success: true, 
@@ -1762,16 +1383,13 @@ socketIO.on('connection', (socket) => {
                     annulation: annulation
                 });
             }
-            
         } catch (error) {
             console.error('❌ [SERVER] Erreur lors de l\'annulation:', error);
-            
             await addAdminLog(
                 `Erreur annulation paiement: ${error.message}`,
                 'error',
                 data.cancelledBy || 'system'
             );
-
             if (callback) {
                 callback({ 
                     success: false, 
@@ -1781,11 +1399,9 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Gestionnaire pour récupérer l'historique des annulations
     socket.on('get_cancellation_history', async (callback) => {
         try {
             const history = await loadCancellationHistory();
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1805,11 +1421,9 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Recherche patient pour annulation
     socket.on('search_patient_for_cancellation', async (patientId, callback) => {
         try {
             const patient = await trouverPatientParCSR(patientId);
-            
             if (callback) {
                 callback({
                     success: true,
@@ -1828,7 +1442,6 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Gestionnaire pour obtenir le dernier numéro client
     socket.on('get_last_client_number', async (callback) => {
         try {
             await chargerDernierNumClient();
@@ -1850,13 +1463,10 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Récupérer données du journal
     socket.on('recuperer_donnees_journal', async (callback) => {
         try {
             console.log('📥 Demande de récupération des données du journal');
-            
             const patients = await loadPatientData();
-            
             const donneesJournal = patients.map(patient => ({
                 ...patient,
                 dateCreation: patient.dateCreation || patient.dateModification || new Date().toISOString(),
@@ -1864,9 +1474,7 @@ socketIO.on('connection', (socket) => {
                 caisseUser: patient.caisseUser || 'Non spécifié',
                 isLaboratorized: patient.isLaboratorized || 'En attente'
             }));
-
             console.log(`✅ ${donneesJournal.length} patients chargés pour le journal`);
-
             if (callback) {
                 callback({
                     success: true,
@@ -1886,14 +1494,11 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Gestionnaire pour admin login
     socket.on('admin_login', async (adminData, callback) => {
         try {
             const isValid = adminData.username === 'admin' && adminData.password === 'admin123';
-            
             if (isValid) {
                 await updateUserLastLogin(adminData.username);
-
                 const userData = {
                     service: 'Administration',
                     username: adminData.username,
@@ -1903,12 +1508,8 @@ socketIO.on('connection', (socket) => {
                     isIdentified: true,
                     userId: 1
                 };
-                
                 connectedUsers.set(socket.id, userData);
-                
                 await addAdminLog('Connexion administrateur: ' + adminData.username, 'admin_login', adminData.username);
-                
-                // Envoyer les données mises à jour
                 socket.emit('examens_config_updated', examensConfig);
                 socket.emit('admin_logs_history', adminLogs.slice(0, 100));
                 socket.emit('server_stats', getServerStats());
@@ -1917,7 +1518,6 @@ socketIO.on('connection', (socket) => {
                     users: usersDatabase,
                     connectedUsers: getConnectedUsersByService()
                 });
-                
                 if (callback) {
                     callback({ success: true, message: 'Connexion réussie' });
                 }
@@ -1931,21 +1531,16 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Gestionnaire pour labo
     socket.on("labo", async (srData, callback) => {
         console.log("Tentative d'enregistrement pour: " + srData.nomClient + ', ' + srData.numID_CSR);
         console.log("Services sélectionnés:", srData.servicesSelectionnes);
-        
         try {
             await ensureDirectoryExists(databasesDir);
             let patientsData = await loadPatientData();
-
             const patientExistantIndex = patientsData.findIndex(patient => 
                 patient.numID_CSR === srData.numID_CSR
             );
-
             let numClientFinal = srData.numClient;
-
             if (patientExistantIndex !== -1) {
                 numClientFinal = patientsData[patientExistantIndex].numClient;
                 patientsData[patientExistantIndex] = {
@@ -1954,7 +1549,6 @@ socketIO.on('connection', (socket) => {
                     numClient: numClientFinal,
                     dateModification: new Date().toISOString()
                 };
-                
                 await addAdminLog(
                     'Patient mis à jour: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
                     'patient_update',
@@ -1967,22 +1561,17 @@ socketIO.on('connection', (socket) => {
                     numClient: numClientFinal,
                     dateCreation: new Date().toISOString()
                 });
-                
                 await addAdminLog(
                     'Nouveau patient: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
                     'patient_create',
                     'Caisse'
                 );
             }
-
             await fs.writeFile(LABO_FILE, JSON.stringify(patientsData, null, 2), 'utf8');
-            
             if (numClientFinal > dernierNumClient) {
                 dernierNumClient = numClientFinal;
                 console.log('🔄 Dernier numéro client mis à jour: ' + dernierNumClient);
             }
-            
-            // Envoyer les données aux journaux des services
             const servicesSelectionnes = srData.servicesSelectionnes || [];
             for (const service of servicesSelectionnes) {
                 try {
@@ -1994,23 +1583,18 @@ socketIO.on('connection', (socket) => {
                         dateService: new Date().toISOString(),
                         caisseUser: srData.caisseUser || 'Utilisateur inconnu'
                     };
-                    
                     socketIO.emit(`nouveau_patient_${service.value}`, journalData);
                     socketIO.emit('nouveau_patient_journal', journalData);
-                    
                     console.log(`📋 Données envoyées au service ${service.name}`);
-                    
                 } catch (error) {
                     console.error(`❌ Erreur envoi service ${service}:`, error);
                 }
             }
-
             socketIO.emit("nouveau_patient", {
                 ...srData,
                 numClient: numClientFinal,
                 isLaboratorized: srData.isLaboratorized || "En attente"
             });
-
             if (callback) {
                 callback({
                     success: true, 
@@ -2020,13 +1604,11 @@ socketIO.on('connection', (socket) => {
             }
         } catch (error) {
             console.error('Erreur écriture Fichier Base de Données', error);
-            
             await addAdminLog(
                 'Erreur enregistrement patient: ' + error.message,
                 'error',
                 'Caisse'
             );
-            
             if (callback) {
                 callback({
                     success: false, 
@@ -2036,7 +1618,6 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Récupérer données
     socket.on('recuperer_donnees', async (callback) => {
         try {
             const donnees = await loadPatientData();
@@ -2080,50 +1661,7 @@ socketIO.on('connection', (socket) => {
     socket.on("maj", () => {
         socketIO.emit("update");
     });
-    
-    socket.on('update_status', async ({ numClient, numID_CSR, isLaboratorized }) => {
-        console.log('Tentative de mise à jour: CSR=' + numID_CSR + ', Client=' + numClient + ', Statut=' + isLaboratorized);
-        
-        try {
-            const statusMap = {
-                0: "En attente",
-                1: "En cours",
-                2: "Terminé",
-                3: "Annulé"
-            };
-            const isLaboratorizedText = statusMap[isLaboratorized] || "En attente";
-            
-            let updatedRecord;
-            
-            if (numID_CSR) {
-                updatedRecord = await updateLaboratorizedStatusByCSR(numID_CSR, isLaboratorizedText);
-                console.log('Statut mis à jour pour ' + numID_CSR + ': ' + isLaboratorizedText);
-            } else if (numClient) {
-                updatedRecord = await updateLaboratorizedStatus(numClient, isLaboratorizedText);
-                console.log('Statut mis à jour pour ' + numClient + ': ' + isLaboratorizedText);
-            } else {
-                throw new Error('Identifiant client manquant (numClient ou numID_CSR requis)');
-            }
 
-            await addAdminLog(
-                'Statut patient mis à jour: ' + updatedRecord.nomClient + ' - ' + isLaboratorizedText,
-                'status_update',
-                'Laboratoire'
-            );
-
-            socket.emit('Mise à jour réussie', updatedRecord);
-            socketIO.emit('Etat Analyses Mis à Jour', updatedRecord);
-
-        } catch (error) {
-            console.error('Erreur:', error.message);
-            socket.emit('update_error', {
-                numClient: numClient || numID_CSR,
-                message: error.message
-            });
-        }
-    });
-
-    // PING/PONG
     socket.on('ping', (data) => {
         socket.emit('pong', { 
             timestamp: Date.now(),
@@ -2132,13 +1670,10 @@ socketIO.on('connection', (socket) => {
         });
     });
 
-    // Déconnexion
     socket.on('disconnect', () => {
         console.log('🔌 Client déconnecté: ' + socket.id);
-        
         const disconnectedUser = connectedUsers.get(socket.id);
         connectedUsers.delete(socket.id);
-        
         if (disconnectedUser) {
             socketIO.emit('user_disconnected', {
                 socketId: socket.id,
@@ -2147,12 +1682,10 @@ socketIO.on('connection', (socket) => {
                 fullName: disconnectedUser.fullName,
                 connectedUsers: getConnectedUsersByService()
             });
-
             socketIO.emit('users_list_updated', {
                 users: usersDatabase,
                 connectedUsers: getConnectedUsersByService()
             });
-            
             addAdminLog(
                 `Déconnexion: ${disconnectedUser.username} (${disconnectedUser.service})`,
                 'disconnection',
@@ -2163,10 +1696,9 @@ socketIO.on('connection', (socket) => {
 });
 
 // ====================================================================================
-// ROUTES EXPRESS POUR L'API REST
+// ROUTES EXPRESS
 // ====================================================================================
 
-// Route racine
 app.get('/', (req, res) => {
     res.json({ 
         message: "Serveur CSR Backend en fonctionnement sur Render.com",
@@ -2192,7 +1724,6 @@ app.get('/', (req, res) => {
     });
 });
 
-// Route pour vérifier la connexion Socket.IO
 app.get('/api/socket-status', (req, res) => {
     res.json({
         success: true,
@@ -2203,15 +1734,11 @@ app.get('/api/socket-status', (req, res) => {
     });
 });
 
-// Route pour vérifier les credentials via API REST
 app.post('/api/auth/verify', async (req, res) => {
     try {
         const { username, password } = req.body;
-        
         console.log('🔐 [API] Vérification credentials pour:', username);
-        
         const user = verifyCredentials(username, password);
-        
         if (user) {
             res.json({
                 success: true,
@@ -2236,7 +1763,6 @@ app.post('/api/auth/verify', async (req, res) => {
     }
 });
 
-// Route pour obtenir la liste des utilisateurs
 app.get('/api/users', async (req, res) => {
     try {
         res.json({
@@ -2254,7 +1780,6 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-// Route pour obtenir la configuration des examens
 app.get('/api/examens/config', async (req, res) => {
     try {
         res.json({
@@ -2271,7 +1796,6 @@ app.get('/api/examens/config', async (req, res) => {
     }
 });
 
-// Route pour obtenir les logs d'administration
 app.get('/api/admin/logs', async (req, res) => {
     try {
         const logs = adminLogs.slice(0, 100);
@@ -2289,7 +1813,6 @@ app.get('/api/admin/logs', async (req, res) => {
     }
 });
 
-// Route pour obtenir les statistiques
 app.get('/api/admin/stats', (req, res) => {
     try {
         const stats = getServerStats();
@@ -2305,7 +1828,6 @@ app.get('/api/admin/stats', (req, res) => {
     }
 });
 
-// Route pour les utilisateurs connectés
 app.get('/api/admin/connected-users', (req, res) => {
     try {
         const users = getConnectedUsersByService();
@@ -2322,7 +1844,6 @@ app.get('/api/admin/connected-users', (req, res) => {
     }
 });
 
-// Route pour vérifier la santé complète
 app.get('/api/health/detailed', (req, res) => {
     const health = {
         status: 'healthy',
@@ -2350,11 +1871,9 @@ app.get('/api/health/detailed', (req, res) => {
             logs: 'active'
         }
     };
-    
     res.json(health);
 });
 
-// Route 404 pour les routes non trouvées
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -2382,25 +1901,17 @@ app.use((req, res) => {
 async function startServer() {
     try {
         console.log('🚀 Démarrage du serveur Render.com...');
-        
         await ensureDirectoryExists(databasesDir);
         console.log('✅ Répertoire de base de données vérifié');
-        
         await initializeLaboFile();
         console.log('✅ Fichier labo initialisé');
-        
         await loadAdminLogs();
         console.log('✅ Logs d\'administration chargés');
-        
         await loadExamensConfig();
         console.log('✅ Configuration des examens chargée');
-        
         await loadUsers();
         console.log('✅ Base de données utilisateurs chargée');
-        
         const localIP = getLocalIP();
-        
-        // Démarrer le serveur
         http.listen(PORT, '0.0.0.0', () => {
             console.log('==========================================');
             console.log('🎉 SERVEUR RENDER.COM DÉMARRÉ AVEC SUCCÈS');
@@ -2421,8 +1932,11 @@ async function startServer() {
             console.log('2. Socket.IO: https://csr-serveur-backend.onrender.com/socket.io/');
             console.log('3. Test API: https://csr-serveur-backend.onrender.com/api/test-connection');
             console.log('==========================================');
+            console.log('🔄 Système de synchronisation laboratoire/journaux: ACTIVÉ ✅');
+            console.log('📢 Événements diffusés: statut_patient_mis_a_jour, journal_update_*, patient_data_updated');
+            console.log('==========================================');
             
-            addAdminLog('Serveur démarré sur Render.com', 'server_start', 'system');
+            addAdminLog('Serveur démarré sur Render.com avec synchronisation temps réel', 'server_start', 'system');
         });
     } catch (error) {
         console.error('❌ Erreur lors du démarrage du serveur:', error);
@@ -2430,7 +1944,6 @@ async function startServer() {
     }
 }
 
-// Gestion des signaux pour un arrêt propre
 process.on('SIGINT', () => {
     console.log('🔻 Arrêt du serveur...');
     addAdminLog('Serveur arrêté', 'server_stop', 'system');
@@ -2453,5 +1966,4 @@ process.on('unhandledRejection', (reason, promise) => {
     addAdminLog('Rejet non géré: ' + reason, 'error', 'system');
 });
 
-// Démarrer le serveur
 startServer();
