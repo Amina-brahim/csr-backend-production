@@ -970,29 +970,57 @@ function getLocalIP() {
     }
 }
 
-// Charger le dernier numéro de client
+// ====================================================================================
+// FONCTIONS CRITIQUES POUR LA GÉNÉRATION DES IDs - VERSIONS CORRIGÉES
+// ====================================================================================
+
+// Charger le dernier numéro de client - VERSION CORRIGÉE
 async function chargerDernierNumClient() {
     try {
+        console.log('📂 Tentative de lecture du fichier labo.json...');
+        
+        // Vérifier que le fichier existe
+        await ensureDirectoryExists(databasesDir);
+        await fs.access(LABO_FILE);
+        
         const data = await fs.readFile(LABO_FILE, 'utf8');
+        console.log(`📂 Contenu du fichier labo.json: ${data.length} caractères`);
+        
         if (data.trim()) {
             const patients = JSON.parse(data);
+            console.log(`📊 ${patients.length} patients trouvés dans la base`);
+            
             if (patients.length > 0) {
-                const maxNumClient = Math.max(...patients.map(p => {
-                    const num = parseInt(p.numClient);
-                    return isNaN(num) ? 0 : num;
-                }));
+                // Extraire tous les numéros de clients
+                const numerosClients = patients.map(p => {
+                    if (p.numClient) {
+                        const num = parseInt(p.numClient);
+                        return isNaN(num) ? 0 : num;
+                    }
+                    return 0;
+                });
+                
+                // Trouver le maximum
+                const maxNumClient = Math.max(...numerosClients);
                 dernierNumClient = maxNumClient;
-                console.log('Dernier numéro client chargé: ' + dernierNumClient);
+                console.log(`✅ Dernier numéro client trouvé: ${dernierNumClient}`);
             } else {
                 dernierNumClient = 0;
-                console.log('Aucun patient trouvé, numéro client initialisé à 0');
+                console.log('ℹ️ Aucun patient trouvé, numéro client initialisé à 0');
             }
         } else {
             dernierNumClient = 0;
-            console.log('Fichier vide, numéro client initialisé à 0');
+            console.log('ℹ️ Fichier vide, numéro client initialisé à 0');
         }
     } catch (error) {
-        console.error('Erreur lors du chargement du dernier numéro client:', error);
+        console.error('❌ Erreur lors du chargement du dernier numéro client:', error);
+        
+        // Vérifier si le fichier existe, sinon le créer
+        if (error.code === 'ENOENT') {
+            console.log('📁 Fichier labo.json non trouvé, création...');
+            await fs.writeFile(LABO_FILE, '[]', 'utf8');
+        }
+        
         dernierNumClient = 0;
     }
 }
@@ -1109,15 +1137,25 @@ const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
     }
 };
 
-// Générer un nouvel ID client
+// Générer un nouvel ID client - VERSION ROBUSTE
 const generateNewClientId = async () => {
     try {
+        // S'assurer d'avoir le dernier numéro à jour
+        await chargerDernierNumClient();
+        
+        // Incrémenter
         dernierNumClient++;
-        console.log('Nouveau numéro client généré: ' + dernierNumClient);
+        
+        console.log(`🆔 Nouveau numéro client généré: ${dernierNumClient}`);
+        
         return dernierNumClient;
     } catch (error) {
-        console.error('Erreur génération ID:', error);
+        console.error('❌ Erreur génération ID:', error);
+        
+        // Fallback: incrémenter même en cas d'erreur
         dernierNumClient++;
+        console.log(`🆔 Fallback: Nouveau numéro client (avec erreur): ${dernierNumClient}`);
+        
         return dernierNumClient;
     }
 };
@@ -1459,6 +1497,72 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
+    // GESTIONNAIRES CRITIQUES POUR LA GÉNÉRATION DES IDs - AJOUTÉS
+    // ============================================================================
+
+    socket.on('get_last_client_number', async (callback) => {
+        try {
+            console.log('📊 [SERVER] Demande dernier numéro client');
+            
+            // Charger les données pour obtenir le dernier numéro
+            await chargerDernierNumClient();
+            
+            console.log(`📊 [SERVER] Dernier numéro client: ${dernierNumClient}`);
+            
+            if (callback) {
+                callback({
+                    success: true,
+                    lastClientNumber: dernierNumClient
+                });
+            }
+        } catch (error) {
+            console.error('❌ Erreur get_last_client_number:', error);
+            if (callback) {
+                callback({
+                    success: false,
+                    message: error.message,
+                    lastClientNumber: 0
+                });
+            }
+        }
+    });
+
+    socket.on('get_next_client_id', async (callback) => {
+        try {
+            console.log('🆔 [SERVER] Demande prochain ID client');
+            
+            // Générer le prochain ID
+            const nextId = await generateNewClientId();
+            
+            console.log(`🆔 [SERVER] Prochain ID client: ${nextId}`);
+            
+            if (callback) {
+                callback({
+                    success: true,
+                    nextId: nextId
+                });
+            }
+        } catch (error) {
+            console.error('❌ Erreur get_next_client_id:', error);
+            if (callback) {
+                callback({
+                    success: false,
+                    message: error.message,
+                    nextId: dernierNumClient + 1
+                });
+            }
+        }
+    });
+
+    socket.on('Ouverture_Session', () => {
+        console.log('📂 [SERVER] Ouverture de session de caisse');
+        socket.emit('session_ouverte', { 
+            timestamp: new Date().toISOString(),
+            message: 'Session caisse ouverte'
+        });
+    });
+
+    // ============================================================================
     // GESTIONNAIRE UPDATE_STATUS - CRITIQUE POUR INTERACTION LABO/JOURNAL
     // ============================================================================
 
@@ -1704,15 +1808,6 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    socket.on('get_next_client_id', async (callback) => {
-        try {
-            const nextId = await generateNewClientId();
-            if (callback) callback({ success: true, nextId });
-        } catch (error) {
-            if (callback) callback({ success: false, message: error.message });
-        }
-    });
-    
     socket.on('get_patient_by_csr', async (numID_CSR, callback) => {
         try {
             const patient = await trouverPatientParCSR(numID_CSR);
@@ -1816,6 +1911,34 @@ app.get('/api/socket-status', (req, res) => {
         transports: socketIO.engine.transports,
         timestamp: new Date().toISOString()
     });
+});
+
+// ====================================================================================
+// NOUVELLE ROUTE POUR TESTER LES IDs
+// ====================================================================================
+
+// Route pour tester la génération d'ID
+app.get('/api/test-ids', async (req, res) => {
+    try {
+        await chargerDernierNumClient();
+        
+        const nextId = await generateNewClientId();
+        
+        res.json({
+            success: true,
+            dernierNumClient: dernierNumClient,
+            prochainId: nextId,
+            fichierLabo: LABO_FILE,
+            fichierExiste: await fs.access(LABO_FILE).then(() => true).catch(() => false),
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            dernierNumClient: dernierNumClient
+        });
+    }
 });
 
 // Route pour vérifier les credentials via API REST
@@ -1980,6 +2103,7 @@ app.use((req, res) => {
             '/',
             '/health',
             '/api/test-connection',
+            '/api/test-ids',
             '/api/auth/verify',
             '/api/users',
             '/api/examens/config',
@@ -2035,6 +2159,7 @@ async function startServer() {
             console.log('1. Health check: https://csr-serveur-backend.onrender.com/health');
             console.log('2. Socket.IO: https://csr-serveur-backend.onrender.com/socket.io/');
             console.log('3. Test API: https://csr-serveur-backend.onrender.com/api/test-connection');
+            console.log('4. Test IDs: https://csr-serveur-backend.onrender.com/api/test-ids');
             console.log('==========================================');
             
             addAdminLog('Serveur démarré sur Render.com', 'server_start', 'system');
