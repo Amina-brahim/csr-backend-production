@@ -152,8 +152,7 @@ app.get('/api/test-connection', (req, res) => {
             port: PORT,
             environment: process.env.NODE_ENV,
             nodeVersion: process.version
-        }
-    });
+        });
 });
 
 // ====================================================================================
@@ -201,19 +200,27 @@ const socketIO = require('socket.io')(http, {
 // Variable globale pour Socket.IO
 global.io = socketIO;
 
-// Système de verrouillage
+// Système de verrouillage amélioré
 const fileLocks = new Map();
 
 const acquireLock = async (filePath) => {
-    while (fileLocks.has(filePath)) {
-        await new Promise(resolve => setTimeout(resolve, 50));
+    const lockKey = filePath + '_lock';
+    const maxWaitTime = 5000; // 5 secondes max
+    const startTime = Date.now();
+    
+    while (fileLocks.has(lockKey)) {
+        if (Date.now() - startTime > maxWaitTime) {
+            throw new Error(`Timeout lors de l'acquisition du verrou pour ${filePath}`);
+        }
+        await new Promise(resolve => setTimeout(resolve, 10));
     }
-    fileLocks.set(filePath, true);
-    return true;
+    fileLocks.set(lockKey, true);
+    return () => releaseLock(filePath); // Retourne une fonction pour libérer le verrou
 };
 
 const releaseLock = (filePath) => {
-    fileLocks.delete(filePath);
+    const lockKey = filePath + '_lock';
+    fileLocks.delete(lockKey);
 };
 
 // ====================================================================================
@@ -885,11 +892,8 @@ const sauvegarderAnnulation = async (annulation) => {
 
 // Supprimer un patient
 const supprimerPatient = async (patientId) => {
-    let lockAcquired = false;
+    const releaseLock = await acquireLock(LABO_FILE);
     try {
-        await acquireLock(LABO_FILE);
-        lockAcquired = true;
-        
         const data = await fs.readFile(LABO_FILE, 'utf8');
         let patients = JSON.parse(data);
 
@@ -913,9 +917,7 @@ const supprimerPatient = async (patientId) => {
         console.error('❌ Erreur suppression patient:', error);
         throw error;
     } finally {
-        if (lockAcquired) {
-            releaseLock(LABO_FILE);
-        }
+        releaseLock();
     }
 };
 
@@ -974,54 +976,61 @@ function getLocalIP() {
 // FONCTIONS CRITIQUES POUR LA GÉNÉRATION DES IDs - VERSIONS CORRIGÉES
 // ====================================================================================
 
-// Charger le dernier numéro de client - VERSION CORRIGÉE
+// Charger le dernier numéro de client - VERSION CORRIGÉE ET OPTIMISÉE
 async function chargerDernierNumClient() {
     try {
         console.log('📂 Tentative de lecture du fichier labo.json...');
         
         // Vérifier que le fichier existe
         await ensureDirectoryExists(databasesDir);
-        await fs.access(LABO_FILE);
         
-        const data = await fs.readFile(LABO_FILE, 'utf8');
-        console.log(`📂 Contenu du fichier labo.json: ${data.length} caractères`);
-        
-        if (data.trim()) {
-            const patients = JSON.parse(data);
-            console.log(`📊 ${patients.length} patients trouvés dans la base`);
+        try {
+            await fs.access(LABO_FILE);
+            const data = await fs.readFile(LABO_FILE, 'utf8');
+            console.log(`📂 Contenu du fichier labo.json: ${data.length} caractères`);
             
-            if (patients.length > 0) {
-                // Extraire tous les numéros de clients
-                const numerosClients = patients.map(p => {
-                    if (p.numClient) {
-                        const num = parseInt(p.numClient);
-                        return isNaN(num) ? 0 : num;
-                    }
-                    return 0;
-                });
+            if (data.trim()) {
+                const patients = JSON.parse(data);
+                console.log(`📊 ${patients.length} patients trouvés dans la base`);
                 
-                // Trouver le maximum
-                const maxNumClient = Math.max(...numerosClients);
-                dernierNumClient = maxNumClient;
-                console.log(`✅ Dernier numéro client trouvé: ${dernierNumClient}`);
+                if (patients.length > 0) {
+                    // Extraire tous les numéros de clients
+                    const numerosClients = patients.map(p => {
+                        if (p.numClient) {
+                            const num = parseInt(p.numClient);
+                            return isNaN(num) ? 0 : num;
+                        }
+                        return 0;
+                    });
+                    
+                    // Trouver le maximum
+                    const maxNumClient = Math.max(...numerosClients);
+                    dernierNumClient = maxNumClient;
+                    console.log(`✅ Dernier numéro client trouvé: ${dernierNumClient}`);
+                    return dernierNumClient;
+                } else {
+                    dernierNumClient = 0;
+                    console.log('ℹ️ Aucun patient trouvé, numéro client initialisé à 0');
+                    return 0;
+                }
             } else {
                 dernierNumClient = 0;
-                console.log('ℹ️ Aucun patient trouvé, numéro client initialisé à 0');
+                console.log('ℹ️ Fichier vide, numéro client initialisé à 0');
+                return 0;
             }
-        } else {
-            dernierNumClient = 0;
-            console.log('ℹ️ Fichier vide, numéro client initialisé à 0');
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                console.log('📁 Fichier labo.json non trouvé, création...');
+                await fs.writeFile(LABO_FILE, '[]', 'utf8');
+                dernierNumClient = 0;
+                return 0;
+            }
+            throw error;
         }
     } catch (error) {
         console.error('❌ Erreur lors du chargement du dernier numéro client:', error);
-        
-        // Vérifier si le fichier existe, sinon le créer
-        if (error.code === 'ENOENT') {
-            console.log('📁 Fichier labo.json non trouvé, création...');
-            await fs.writeFile(LABO_FILE, '[]', 'utf8');
-        }
-        
         dernierNumClient = 0;
+        return 0;
     }
 }
 
@@ -1050,6 +1059,7 @@ async function initializeLaboFile() {
 
 // Charger les données des patients
 const loadPatientData = async () => {
+    const releaseLock = await acquireLock(LABO_FILE);
     try {
         const data = await fs.readFile(LABO_FILE, 'utf8');
         if (!data.trim()) return [];
@@ -1060,16 +1070,15 @@ const loadPatientData = async () => {
             return [];
         }
         throw error;
+    } finally {
+        releaseLock();
     }
 };
 
 // Mettre à jour le statut par numClient
 const updateLaboratorizedStatus = async (numClient, newStatus) => {
-    let lockAcquired = false;
+    const releaseLock = await acquireLock(LABO_FILE);
     try {
-        await acquireLock(LABO_FILE);
-        lockAcquired = true;
-        
         const data = await fs.readFile(LABO_FILE, 'utf8');
         let records = JSON.parse(data);
 
@@ -1094,19 +1103,14 @@ const updateLaboratorizedStatus = async (numClient, newStatus) => {
         console.error('Erreur lors de la mise à jour:', error);
         throw error;
     } finally {
-        if (lockAcquired) {
-            releaseLock(LABO_FILE);
-        }
+        releaseLock();
     }
 };
 
 // Mettre à jour le statut par numID_CSR
 const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
-    let lockAcquired = false;
+    const releaseLock = await acquireLock(LABO_FILE);
     try {
-        await acquireLock(LABO_FILE);
-        lockAcquired = true;
-        
         const data = await fs.readFile(LABO_FILE, 'utf8');
         let records = JSON.parse(data);
 
@@ -1131,9 +1135,7 @@ const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
         console.error('Erreur lors de la mise à jour par CSR:', error);
         throw error;
     } finally {
-        if (lockAcquired) {
-            releaseLock(LABO_FILE);
-        }
+        releaseLock();
     }
 };
 
@@ -1141,10 +1143,10 @@ const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
 const generateNewClientId = async () => {
     try {
         // S'assurer d'avoir le dernier numéro à jour
-        await chargerDernierNumClient();
+        const currentNum = await chargerDernierNumClient();
         
         // Incrémenter
-        dernierNumClient++;
+        dernierNumClient = currentNum + 1;
         
         console.log(`🆔 Nouveau numéro client généré: ${dernierNumClient}`);
         
@@ -1153,10 +1155,11 @@ const generateNewClientId = async () => {
         console.error('❌ Erreur génération ID:', error);
         
         // Fallback: incrémenter même en cas d'erreur
-        dernierNumClient++;
-        console.log(`🆔 Fallback: Nouveau numéro client (avec erreur): ${dernierNumClient}`);
+        const fallbackNum = (dernierNumClient || 0) + 1;
+        dernierNumClient = fallbackNum;
+        console.log(`🆔 Fallback: Nouveau numéro client (avec erreur): ${fallbackNum}`);
         
-        return dernierNumClient;
+        return fallbackNum;
     }
 };
 
@@ -1412,19 +1415,23 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // GESTIONNAIRE VERIFY_USER_CREDENTIALS
+    // GESTIONNAIRE VERIFY_USER_CREDENTIALS - CORRIGÉ
     // ============================================================================
 
-    socket.on('verify_user_credentials', async (credentials, callback) => {
+    socket.on('verify_user_credentials', (credentials, callback) => {
         try {
             console.log('🔐 [SERVER] Vérification credentials reçue:', credentials);
             
             if (!credentials || !credentials.username || !credentials.password) {
                 console.log('❌ [SERVER] Credentials incomplets');
-                if (callback) {
+                if (typeof callback === 'function') {
                     callback({
                         success: false,
                         isValid: false,
+                        message: 'Nom d\'utilisateur et mot de passe requis'
+                    });
+                } else {
+                    socket.emit('verification_error', {
                         message: 'Nom d\'utilisateur et mot de passe requis'
                     });
                 }
@@ -1436,10 +1443,18 @@ socketIO.on('connection', (socket) => {
             if (user) {
                 console.log('✅ [SERVER] Utilisateur authentifié:', user.username);
                 
-                await updateUserLastLogin(credentials.username);
+                // Mettre à jour la dernière connexion
+                updateUserLastLogin(credentials.username).catch(console.error);
                 
-                if (callback) {
+                if (typeof callback === 'function') {
                     callback({
+                        success: true,
+                        isValid: true,
+                        user: user,
+                        message: 'Authentification réussie'
+                    });
+                } else {
+                    socket.emit('verification_result', {
                         success: true,
                         isValid: true,
                         user: user,
@@ -1448,11 +1463,17 @@ socketIO.on('connection', (socket) => {
                 }
             } else {
                 console.log('❌ [SERVER] Échec authentification pour:', credentials.username);
-                if (callback) {
+                if (typeof callback === 'function') {
                     callback({
                         success: true,
                         isValid: false,
                         user: null,
+                        message: 'Nom d\'utilisateur ou mot de passe incorrect'
+                    });
+                } else {
+                    socket.emit('verification_result', {
+                        success: true,
+                        isValid: false,
                         message: 'Nom d\'utilisateur ou mot de passe incorrect'
                     });
                 }
@@ -1460,9 +1481,13 @@ socketIO.on('connection', (socket) => {
             
         } catch (error) {
             console.error('❌ [SERVER] Erreur vérification credentials:', error);
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
                     success: false,
+                    message: 'Erreur interne du serveur: ' + error.message
+                });
+            } else {
+                socket.emit('verification_error', {
                     message: 'Erreur interne du serveur: ' + error.message
                 });
             }
@@ -1470,54 +1495,29 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // GESTIONNAIRES EXISTANTS
+    // GESTIONNAIRES CRITIQUES POUR LA GÉNÉRATION DES IDs - CORRIGÉS
     // ============================================================================
 
-    socket.on('get_users_list', async (callback) => {
-        try {
-            console.log('📋 [SERVER] Demande de liste des utilisateurs');
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    users: usersDatabase,
-                    services: availableServices,
-                    count: usersDatabase.length
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur récupération liste utilisateurs:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: error.message
-                });
-            }
-        }
-    });
-
-    // ============================================================================
-    // GESTIONNAIRES CRITIQUES POUR LA GÉNÉRATION DES IDs - AJOUTÉS
-    // ============================================================================
-
-    socket.on('get_last_client_number', async (callback) => {
+    socket.on('get_last_client_number', (callback) => {
         try {
             console.log('📊 [SERVER] Demande dernier numéro client');
             
-            // Charger les données pour obtenir le dernier numéro
-            await chargerDernierNumClient();
-            
-            console.log(`📊 [SERVER] Dernier numéro client: ${dernierNumClient}`);
-            
-            if (callback) {
-                callback({
+            if (typeof callback !== 'function') {
+                console.warn('⚠️ Aucun callback fourni pour get_last_client_number');
+                socket.emit('last_client_number_result', {
                     success: true,
-                    lastClientNumber: dernierNumClient
+                    lastClientNumber: dernierNumClient || 0
                 });
+                return;
             }
+            
+            callback({
+                success: true,
+                lastClientNumber: dernierNumClient || 0
+            });
         } catch (error) {
             console.error('❌ Erreur get_last_client_number:', error);
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
                     success: false,
                     message: error.message,
@@ -1531,20 +1531,24 @@ socketIO.on('connection', (socket) => {
         try {
             console.log('🆔 [SERVER] Demande prochain ID client');
             
-            // Générer le prochain ID
             const nextId = await generateNewClientId();
             
             console.log(`🆔 [SERVER] Prochain ID client: ${nextId}`);
             
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
+                    success: true,
+                    nextId: nextId
+                });
+            } else {
+                socket.emit('next_client_id_result', {
                     success: true,
                     nextId: nextId
                 });
             }
         } catch (error) {
             console.error('❌ Erreur get_next_client_id:', error);
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
                     success: false,
                     message: error.message,
@@ -1563,7 +1567,7 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // GESTIONNAIRE UPDATE_STATUS - CRITIQUE POUR INTERACTION LABO/JOURNAL
+    // GESTIONNAIRE UPDATE_STATUS - CORRIGÉ
     // ============================================================================
 
     socket.on('update_status', async ({ numClient, numID_CSR, isLaboratorized, patientName }) => {
@@ -1652,96 +1656,110 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // AUTRES GESTIONNAIRES
+    // AUTRES GESTIONNAIRES - CORRIGÉS
     // ============================================================================
 
-    // Gestionnaire pour labo
     socket.on("labo", async (srData, callback) => {
         console.log("Tentative d'enregistrement pour: " + srData.nomClient + ', ' + srData.numID_CSR);
         
         try {
             await ensureDirectoryExists(databasesDir);
-            let patientsData = await loadPatientData();
-
-            const patientExistantIndex = patientsData.findIndex(patient => 
-                patient.numID_CSR === srData.numID_CSR
-            );
-
-            let numClientFinal = srData.numClient;
-
-            if (patientExistantIndex !== -1) {
-                numClientFinal = patientsData[patientExistantIndex].numClient;
-                patientsData[patientExistantIndex] = {
-                    ...patientsData[patientExistantIndex],
-                    ...srData,
-                    numClient: numClientFinal,
-                    dateModification: new Date().toISOString()
-                };
-                
-                await addAdminLog(
-                    'Patient mis à jour: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
-                    'patient_update',
-                    'Caisse'
-                );
-            } else {
-                numClientFinal = await generateNewClientId();
-                patientsData.push({
-                    ...srData,
-                    numClient: numClientFinal,
-                    dateCreation: new Date().toISOString()
-                });
-                
-                await addAdminLog(
-                    'Nouveau patient: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
-                    'patient_create',
-                    'Caisse'
-                );
-            }
-
-            await fs.writeFile(LABO_FILE, JSON.stringify(patientsData, null, 2), 'utf8');
+            const releaseLock = await acquireLock(LABO_FILE);
             
-            if (numClientFinal > dernierNumClient) {
-                dernierNumClient = numClientFinal;
-                console.log('🔄 Dernier numéro client mis à jour: ' + dernierNumClient);
-            }
-            
-            // CORRECTION : Diffuser les données aux journaux des services
-            const servicesSelectionnes = srData.servicesSelectionnes || [];
-            for (const service of servicesSelectionnes) {
-                try {
-                    const serviceName = typeof service === 'object' ? service.value : service;
-                    const journalData = {
+            try {
+                const data = await fs.readFile(LABO_FILE, 'utf8');
+                let patientsData = data.trim() ? JSON.parse(data) : [];
+
+                const patientExistantIndex = patientsData.findIndex(patient => 
+                    patient.numID_CSR === srData.numID_CSR
+                );
+
+                let numClientFinal = srData.numClient;
+
+                if (patientExistantIndex !== -1) {
+                    numClientFinal = patientsData[patientExistantIndex].numClient;
+                    patientsData[patientExistantIndex] = {
+                        ...patientsData[patientExistantIndex],
                         ...srData,
                         numClient: numClientFinal,
-                        service: serviceName,
-                        serviceName: typeof service === 'object' ? service.name : service,
-                        dateService: new Date().toISOString(),
-                        caisseUser: srData.caisseUser || 'Utilisateur inconnu'
+                        dateModification: new Date().toISOString()
                     };
                     
-                    socketIO.emit(`nouveau_patient_${serviceName}`, journalData);
-                    socketIO.emit('nouveau_patient_journal', journalData);
+                    await addAdminLog(
+                        'Patient mis à jour: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
+                        'patient_update',
+                        'Caisse'
+                    );
+                } else {
+                    numClientFinal = await generateNewClientId();
+                    patientsData.push({
+                        ...srData,
+                        numClient: numClientFinal,
+                        dateCreation: new Date().toISOString()
+                    });
                     
-                    console.log(`📋 [SERVER] Données envoyées au service ${serviceName}`);
-                    
-                } catch (error) {
-                    console.error(`❌ Erreur envoi service ${service}:`, error);
+                    await addAdminLog(
+                        'Nouveau patient: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
+                        'patient_create',
+                        'Caisse'
+                    );
                 }
-            }
 
-            // CORRECTION : Émettre l'événement général
-            socketIO.emit("nouveau_patient", {
-                ...srData,
-                numClient: numClientFinal,
-                isLaboratorized: srData.isLaboratorized || "En attente"
-            });
+                const tmpFile = LABO_FILE + '.tmp';
+                await fs.writeFile(tmpFile, JSON.stringify(patientsData, null, 2), 'utf8');
+                await fs.rename(tmpFile, LABO_FILE);
+                
+                if (numClientFinal > dernierNumClient) {
+                    dernierNumClient = numClientFinal;
+                    console.log('🔄 Dernier numéro client mis à jour: ' + dernierNumClient);
+                }
+                
+                // CORRECTION : Diffuser les données aux journaux des services
+                const servicesSelectionnes = srData.servicesSelectionnes || [];
+                for (const service of servicesSelectionnes) {
+                    try {
+                        const serviceName = typeof service === 'object' ? service.value : service;
+                        const journalData = {
+                            ...srData,
+                            numClient: numClientFinal,
+                            service: serviceName,
+                            serviceName: typeof service === 'object' ? service.name : service,
+                            dateService: new Date().toISOString(),
+                            caisseUser: srData.caisseUser || 'Utilisateur inconnu'
+                        };
+                        
+                        socketIO.emit(`nouveau_patient_${serviceName}`, journalData);
+                        socketIO.emit('nouveau_patient_journal', journalData);
+                        
+                        console.log(`📋 [SERVER] Données envoyées au service ${serviceName}`);
+                        
+                    } catch (error) {
+                        console.error(`❌ Erreur envoi service ${service}:`, error);
+                    }
+                }
 
-            if (callback) {
-                callback({
-                    success: true, 
-                    message: "Patient enregistré avec succès",
-                    numClient: numClientFinal
+                // CORRECTION : Émettre l'événement général
+                socketIO.emit("nouveau_patient", {
+                    ...srData,
+                    numClient: numClientFinal,
+                    isLaboratorized: srData.isLaboratorized || "En attente"
                 });
+
+                if (typeof callback === 'function') {
+                    callback({
+                        success: true, 
+                        message: "Patient enregistré avec succès",
+                        numClient: numClientFinal
+                    });
+                } else {
+                    socket.emit('enregistrement_result', {
+                        success: true, 
+                        message: "Patient enregistré avec succès",
+                        numClient: numClientFinal
+                    });
+                }
+            } finally {
+                releaseLock();
             }
         } catch (error) {
             console.error('Erreur écriture Fichier Base de Données', error);
@@ -1752,8 +1770,13 @@ socketIO.on('connection', (socket) => {
                 'Caisse'
             );
             
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
+                    success: false, 
+                    message: "Erreur lors de l'enregistrement: " + error.message
+                });
+            } else {
+                socket.emit('enregistrement_error', {
                     success: false, 
                     message: "Erreur lors de l'enregistrement: " + error.message
                 });
@@ -1765,10 +1788,18 @@ socketIO.on('connection', (socket) => {
     socket.on('recuperer_donnees', async (callback) => {
         try {
             const donnees = await loadPatientData();
-            if (callback) callback({ success: true, donnees });
+            if (typeof callback === 'function') {
+                callback({ success: true, donnees });
+            } else {
+                socket.emit('donnees_recuperees', { success: true, donnees });
+            }
         } catch (error) {
             console.error("Erreur récupération données:", error);
-            if (callback) callback({ success: false, error: error.message });
+            if (typeof callback === 'function') {
+                callback({ success: false, error: error.message });
+            } else {
+                socket.emit('recuperation_error', { success: false, error: error.message });
+            }
         }
     });
     
@@ -1789,8 +1820,15 @@ socketIO.on('connection', (socket) => {
 
             console.log(`✅ [SERVER] ${donneesJournal.length} patients chargés pour le journal`);
 
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
+                    success: true,
+                    donnees: donneesJournal,
+                    count: donneesJournal.length,
+                    message: `${donneesJournal.length} patients chargés`
+                });
+            } else {
+                socket.emit('donnees_journal_recuperees', {
                     success: true,
                     donnees: donneesJournal,
                     count: donneesJournal.length,
@@ -1799,8 +1837,13 @@ socketIO.on('connection', (socket) => {
             }
         } catch (error) {
             console.error('❌ Erreur récupération données journal:', error);
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
+                    success: false,
+                    message: 'Erreur lors du chargement: ' + error.message
+                });
+            } else {
+                socket.emit('recuperation_journal_error', {
                     success: false,
                     message: 'Erreur lors du chargement: ' + error.message
                 });
@@ -1811,8 +1854,14 @@ socketIO.on('connection', (socket) => {
     socket.on('get_patient_by_csr', async (numID_CSR, callback) => {
         try {
             const patient = await trouverPatientParCSR(numID_CSR);
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
+                    success: true,
+                    patient: patient,
+                    existe: patient !== null
+                });
+            } else {
+                socket.emit('patient_by_csr_result', {
                     success: true,
                     patient: patient,
                     existe: patient !== null
@@ -1820,8 +1869,13 @@ socketIO.on('connection', (socket) => {
             }
         } catch (error) {
             console.error('Erreur recherche:', error.message);
-            if (callback) {
+            if (typeof callback === 'function') {
                 callback({
+                    success: false,
+                    message: error.message
+                });
+            } else {
+                socket.emit('recherche_error', {
                     success: false,
                     message: error.message
                 });
@@ -1920,16 +1974,15 @@ app.get('/api/socket-status', (req, res) => {
 // Route pour tester la génération d'ID
 app.get('/api/test-ids', async (req, res) => {
     try {
-        await chargerDernierNumClient();
-        
+        const lastNum = await chargerDernierNumClient();
         const nextId = await generateNewClientId();
         
         res.json({
             success: true,
-            dernierNumClient: dernierNumClient,
+            dernierNumClient: lastNum,
             prochainId: nextId,
             fichierLabo: LABO_FILE,
-            fichierExiste: await fs.access(LABO_FILE).then(() => true).catch(() => false),
+            fichierExiste: true,
             timestamp: new Date().toISOString()
         });
     } catch (error) {
