@@ -19,34 +19,27 @@ const USERS_FILE = path.resolve(databasesDir, 'users.json');
 // CONFIGURATION CORS CRITIQUE : Liste blanche pour Vercel + Render
 // ====================================================================================
 
-// DÉFINISSEZ ICI L'URL EXACTE DE VOTRE FRONTEND VERCEL
-// REMPLACEZ 'https://csr-system.vercel.app' par VOTRE URL VERCEL FINALE
 const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
     'https://csr-system.vercel.app',
     'https://csr-frontend.onrender.com',
-    'https://csr-frontend-*.onrender.com',  // Pour les déploiements preview
-    'https://*.onrender.com'                // Garder le wildcard général
+    'https://csr-frontend-*.onrender.com',
+    'https://*.onrender.com'
 ];
 
 // Middleware CORS pour Express
 const corsOptions = {
     origin: function (origin, callback) {
-        // 1. Autoriser les requêtes sans origine (curl, Postman, etc.)
         if (!origin) {
             console.log('🌐 Requête sans origine (probablement serveur à serveur)');
             return callback(null, true);
         }
         
-        // 2. Vérification simplifiée
         const isAllowed = allowedOrigins.some(allowed => {
-            // Si allowed est exactement égal à l'origine
             if (allowed === origin) return true;
             
-            // Si allowed contient un wildcard
             if (allowed.includes('*')) {
-                // Convertir le pattern en regex simple
                 const escaped = allowed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const pattern = escaped.replace('\\*', '.*');
                 return new RegExp(`^${pattern}$`).test(origin);
@@ -75,7 +68,7 @@ app.use(cors(corsOptions));
 // Middleware pour parser JSON
 app.use(express.json());
 
-// Middleware personnalisé pour CORS headers (sécurité supplémentaire)
+// Middleware personnalisé pour CORS headers
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (origin && allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
@@ -112,11 +105,10 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Route de vérification Socket.IO - CORRIGÉE
+// Route de vérification Socket.IO
 app.get('/socket.io/', (req, res) => {
     console.log('📡 Handshake Socket.IO reçu:', req.query);
     
-    // Headers CORS explicites
     const origin = req.headers.origin;
     if (origin && allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -125,14 +117,13 @@ app.get('/socket.io/', (req, res) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     
-    // Réponse pour le handshake Socket.IO v4
     res.json({
         success: true,
         message: 'Socket.IO server is running',
         sid: 'render_' + Date.now(),
         upgrades: ['websocket', 'polling'],
         pingInterval: 25000,
-        pingTimeout: 20000, // Augmenté pour Render
+        pingTimeout: 20000,
         maxPayload: 1000000,
         transports: ['polling', 'websocket']
     });
@@ -166,19 +157,17 @@ app.get('/api/test-connection', (req, res) => {
 });
 
 // ====================================================================================
-// CONFIGURATION SOCKET.IO POUR RENDER.COM - VERSION CORRIGÉE POUR VERCEL
+// CONFIGURATION SOCKET.IO POUR RENDER.COM
 // ====================================================================================
 
 const socketIO = require('socket.io')(http, {
     cors: {
         origin: function(origin, callback) {
-            // 1. Autoriser sans origine
             if (!origin) {
                 console.log('📡 Socket.IO: Requête sans origine');
                 return callback(null, true);
             }
             
-            // 2. Vérification simple
             const isOriginAllowed = allowedOrigins.some(allowed => {
                 if (allowed === origin) return true;
                 if (allowed.includes('*')) {
@@ -819,7 +808,6 @@ const getDefaultPermissions = (service) => {
 const verifyCredentials = (username, password) => {
     console.log('🔐 [SERVER] Vérification credentials pour:', username);
     
-    // Recherche insensible à la casse
     const user = usersDatabase.find(u => 
         u.username.toLowerCase() === username.toLowerCase() && 
         u.password === password &&
@@ -1256,13 +1244,12 @@ const getConnectedUsersByService = () => {
 };
 
 // ====================================================================================
-// SOCKET.IO HANDLERS - VERSION CORRIGÉE POUR RENDER ET VERCEL
+// SOCKET.IO HANDLERS - CORRECTION POUR INTERACTION LABO/JOURNAL
 // ====================================================================================
 
 socketIO.on('connection', (socket) => {
     console.log('✅✅✅ NOUVELLE CONNEXION Socket.io: ' + socket.id);
     console.log('📡 IP: ' + socket.handshake.address);
-    console.log('🌐 Headers:', socket.handshake.headers);
     
     // Vérifier l'origine de la connexion
     const origin = socket.handshake.headers.origin || socket.handshake.headers.referer;
@@ -1311,7 +1298,7 @@ socketIO.on('connection', (socket) => {
     initializeLaboFile().catch(console.error);
 
     // ============================================================================
-    // GESTIONNAIRE USER_IDENTIFICATION - CORRIGÉ
+    // GESTIONNAIRE USER_IDENTIFICATION
     // ============================================================================
 
     socket.on('user_identification', async (userInfo) => {
@@ -1326,7 +1313,6 @@ socketIO.on('connection', (socket) => {
                 return;
             }
 
-            // Vérifier si l'utilisateur existe dans la base
             const user = usersDatabase.find(u => 
                 u.username.toLowerCase() === userInfo.username.toLowerCase() && 
                 u.service === userInfo.service &&
@@ -1341,7 +1327,6 @@ socketIO.on('connection', (socket) => {
                 return;
             }
 
-            // Mettre à jour la dernière connexion
             await updateUserLastLogin(userInfo.username);
 
             const updatedUserData = {
@@ -1359,14 +1344,12 @@ socketIO.on('connection', (socket) => {
             
             console.log(`✅ Utilisateur identifié: ${user.username} (${user.service})`);
 
-            // Envoyer la confirmation
             socket.emit('identification_confirmed', {
                 success: true,
                 user: updatedUserData,
                 message: `Identifié avec succès comme ${user.username} (${user.service})`
             });
 
-            // Notifier tous les clients
             socketIO.emit('user_connected', {
                 socketId: socket.id,
                 service: updatedUserData.service,
@@ -1391,7 +1374,7 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // GESTIONNAIRE VERIFY_USER_CREDENTIALS - CRITIQUE
+    // GESTIONNAIRE VERIFY_USER_CREDENTIALS
     // ============================================================================
 
     socket.on('verify_user_credentials', async (credentials, callback) => {
@@ -1415,7 +1398,6 @@ socketIO.on('connection', (socket) => {
             if (user) {
                 console.log('✅ [SERVER] Utilisateur authentifié:', user.username);
                 
-                // Mettre à jour la dernière connexion
                 await updateUserLastLogin(credentials.username);
                 
                 if (callback) {
@@ -1450,7 +1432,7 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // GESTIONNAIRES EXISTANTS (conservés)
+    // GESTIONNAIRES EXISTANTS
     // ============================================================================
 
     socket.on('get_users_list', async (callback) => {
@@ -1476,465 +1458,102 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    socket.on('add_new_user', async (userData, callback) => {
-        console.log('👤 [SERVER] Demande d\'ajout nouvel utilisateur:', userData);
+    // ============================================================================
+    // GESTIONNAIRE UPDATE_STATUS - CRITIQUE POUR INTERACTION LABO/JOURNAL
+    // ============================================================================
+
+    socket.on('update_status', async ({ numClient, numID_CSR, isLaboratorized, patientName }) => {
+        console.log('🔄 [SERVER] Mise à jour de statut reçue:');
+        console.log('📋 CSR:', numID_CSR);
+        console.log('📋 Client:', numClient);
+        console.log('📋 Statut code:', isLaboratorized);
+        console.log('📋 Nom patient:', patientName);
         
         try {
-            const newUser = await addUser(userData, userData.adminUsername);
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    message: `✅ Utilisateur "${newUser.username}" créé avec succès`,
-                    newUser: newUser
-                });
-            }
-            
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur ajout utilisateur:', error);
-            
-            if (callback) {
-                callback({
-                    success: false,
-                    message: '❌ Erreur lors de la création: ' + error.message
-                });
-            }
-        }
-    });
-
-    socket.on('modify_user', async (userData, callback) => {
-        console.log('👤 [SERVER] Demande de modification utilisateur:', userData);
-        
-        try {
-            const result = await modifyUser(userData.userId, userData, userData.adminUsername);
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    message: `✅ Utilisateur "${result.updatedUser.username}" modifié avec succès`,
-                    oldUser: result.oldUser,
-                    updatedUser: result.updatedUser
-                });
-            }
-            
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur modification utilisateur:', error);
-            
-            if (callback) {
-                callback({
-                    success: false,
-                    message: '❌ Erreur lors de la modification: ' + error.message
-                });
-            }
-        }
-    });
-
-    socket.on('delete_user', async (userData, callback) => {
-        console.log('👤 [SERVER] Demande de suppression utilisateur:', userData);
-        
-        try {
-            const deletedUser = await deleteUser(userData.userId, userData.adminUsername);
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    message: `✅ Utilisateur "${deletedUser.username}" supprimé avec succès`,
-                    deletedUser: deletedUser
-                });
-            }
-            
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur suppression utilisateur:', error);
-            
-            if (callback) {
-                callback({
-                    success: false,
-                    message: '❌ Erreur lors de la suppression: ' + error.message
-                });
-            }
-        }
-    });
-
-    socket.on('get_examens_config', async (callback) => {
-        try {
-            if (callback) {
-                callback({
-                    success: true,
-                    examensConfig: examensConfig,
-                    services: getAvailableServices()
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur récupération configuration examens:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: error.message
-                });
-            }
-        }
-    });
-
-    socket.on('add_new_exam', async (examData, callback) => {
-        console.log('🔧 [SERVER] Demande d\'ajout nouvel examen:', examData);
-        
-        try {
-            const { service, examName, examPrice, username } = examData;
-            
-            const newExam = await addNewExam(service, examName, examPrice, username);
-            
-            socketIO.emit('examens_config_updated', examensConfig);
-            
-            console.log('🔧 [SERVER] Configuration diffusée à tous les clients');
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    message: `✅ Examen "${examName}" ajouté avec succès au service ${service} pour ${examPrice} FCFA`,
-                    newExam: newExam
-                });
-            }
-            
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur ajout nouvel examen:', error);
-            
-            if (callback) {
-                callback({
-                    success: false,
-                    message: '❌ Erreur lors de l\'ajout: ' + error.message
-                });
-            }
-            
-            await addAdminLog(
-                'Erreur ajout examen: ' + error.message,
-                'error',
-                examData.username || 'admin'
-            );
-        }
-    });
-
-    socket.on('modify_exam', async (examData, callback) => {
-        console.log('🔧 [SERVER] Demande de modification d\'examen:', examData);
-        
-        try {
-            const { service, examId, newName, newPrice, username } = examData;
-            
-            const result = await modifyExam(service, examId, newName, newPrice, username);
-            
-            socketIO.emit('examens_config_updated', examensConfig);
-            
-            console.log('🔧 [SERVER] Configuration modifiée diffusée à tous les clients');
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    message: `✅ Examen "${result.ancienExam.name}" modifié avec succès`,
-                    ancienExam: result.ancienExam,
-                    nouvelExam: result.nouvelExam
-                });
-            }
-            
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur modification examen:', error);
-            
-            if (callback) {
-                callback({
-                    success: false,
-                    message: '❌ Erreur lors de la modification: ' + error.message
-                });
-            }
-            
-            await addAdminLog(
-                'Erreur modification examen: ' + error.message,
-                'error',
-                examData.username || 'admin'
-            );
-        }
-    });
-
-    socket.on('delete_exam', async (examData, callback) => {
-        console.log('🔧 [SERVER] Demande de suppression d\'examen:', examData);
-        
-        try {
-            const { service, examId, username } = examData;
-            
-            const examSupprime = await deleteExam(service, examId, username);
-            
-            socketIO.emit('examens_config_updated', examensConfig);
-            
-            console.log('🔧 [SERVER] Configuration mise à jour diffusée à tous les clients après suppression');
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    message: `✅ Examen "${examSupprime.name}" supprimé avec succès`,
-                    examSupprime: examSupprime
-                });
-            }
-            
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur suppression examen:', error);
-            
-            if (callback) {
-                callback({
-                    success: false,
-                    message: '❌ Erreur lors de la suppression: ' + error.message
-                });
-            }
-            
-            await addAdminLog(
-                'Erreur suppression examen: ' + error.message,
-                'error',
-                examData.username || 'admin'
-            );
-        }
-    });
-
-    // Gestionnaire pour l'annulation de paiement
-    socket.on('cancel_patient_payment', async (data, callback) => {
-        try {
-            console.log('🔔 [SERVER] Annulation de paiement demandée:', data);
-            
-            const patient = await trouverPatientParCSR(data.patientId);
-            if (!patient) {
-                console.log('❌ [SERVER] Patient non trouvé:', data.patientId);
-                if (callback) {
-                    callback({ 
-                        success: false, 
-                        message: 'Patient non trouvé' 
-                    });
-                }
-                return;
-            }
-
-            console.log(`✅ [SERVER] Patient trouvé: ${patient.nomClient} - ${data.amount} FCFA`);
-
-            const annulation = {
-                id: generateId(),
-                patientId: data.patientId,
-                patientName: data.patientName,
-                amount: data.amount,
-                services: data.services,
-                reason: data.reason,
-                cancelledBy: data.cancelledBy,
-                timestamp: data.timestamp,
-                status: 'annulé',
-                originalPatientData: {
-                    nomClient: patient.nomClient,
-                    numClient: patient.numClient,
-                    numAirTel: patient.numAirTel,
-                    numTIGO: patient.numTIGO,
-                    dateCreation: patient.dateCreation
-                }
+            const statusMap = {
+                0: "En attente",
+                1: "En cours",
+                2: "Terminé",
+                3: "Annulé"
             };
+            const isLaboratorizedText = statusMap[isLaboratorized] || "En attente";
             
-            await sauvegarderAnnulation(annulation);
+            console.log(`📊 Conversion statut: ${isLaboratorized} → "${isLaboratorizedText}"`);
             
-            const patientSupprime = await supprimerPatient(data.patientId);
+            let updatedRecord;
             
-            socketIO.emit('payment_cancelled', {
-                patientId: data.patientId,
-                patientName: data.patientName,
-                amount: data.amount,
-                cancelledBy: data.cancelledBy,
-                timestamp: data.timestamp,
-                reason: data.reason
-            });
-
-            socketIO.emit('patient_deleted', {
-                patientId: data.patientId,
-                deletedBy: data.cancelledBy,
-                timestamp: data.timestamp
-            });
-
-            await addAdminLog(
-                `Paiement annulé: ${data.patientName} (${data.patientId}) - ${data.amount} FCFA - Motif: ${data.reason}`,
-                'payment_cancelled',
-                data.cancelledBy
-            );
-
-            console.log(`✅ [SERVER] Paiement annulé avec succès pour ${data.patientName}`);
-
-            if (callback) {
-                callback({ 
-                    success: true, 
-                    message: `Paiement de ${data.amount} FCFA annulé pour ${data.patientName}`,
-                    annulation: annulation
-                });
-            }
-            
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur lors de l\'annulation:', error);
-            
-            await addAdminLog(
-                `Erreur annulation paiement: ${error.message}`,
-                'error',
-                data.cancelledBy || 'system'
-            );
-
-            if (callback) {
-                callback({ 
-                    success: false, 
-                    message: 'Erreur interne du serveur: ' + error.message 
-                });
-            }
-        }
-    });
-
-    // Gestionnaire pour récupérer l'historique des annulations
-    socket.on('get_cancellation_history', async (callback) => {
-        try {
-            const history = await loadCancellationHistory();
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    history: history,
-                    count: history.length,
-                    message: `${history.length} annulation(s) trouvée(s)`
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur récupération historique annulations:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: error.message
-                });
-            }
-        }
-    });
-
-    // Recherche patient pour annulation
-    socket.on('search_patient_for_cancellation', async (patientId, callback) => {
-        try {
-            const patient = await trouverPatientParCSR(patientId);
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    patient: patient,
-                    found: patient !== null
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur recherche patient annulation:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: error.message
-                });
-            }
-        }
-    });
-
-    // Gestionnaire pour obtenir le dernier numéro client
-    socket.on('get_last_client_number', async (callback) => {
-        try {
-            await chargerDernierNumClient();
-            if (callback) {
-                callback({
-                    success: true,
-                    lastClientNumber: dernierNumClient
-                });
-            }
-            console.log(`📊 Dernier numéro client envoyé: ${dernierNumClient}`);
-        } catch (error) {
-            console.error('Erreur get_last_client_number:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: error.message
-                });
-            }
-        }
-    });
-
-    // Récupérer données du journal
-    socket.on('recuperer_donnees_journal', async (callback) => {
-        try {
-            console.log('📥 Demande de récupération des données du journal');
-            
-            const patients = await loadPatientData();
-            
-            const donneesJournal = patients.map(patient => ({
-                ...patient,
-                dateCreation: patient.dateCreation || patient.dateModification || new Date().toISOString(),
-                total_OP: patient.total_OP || 0,
-                caisseUser: patient.caisseUser || 'Non spécifié',
-                isLaboratorized: patient.isLaboratorized || 'En attente'
-            }));
-
-            console.log(`✅ ${donneesJournal.length} patients chargés pour le journal`);
-
-            if (callback) {
-                callback({
-                    success: true,
-                    donnees: donneesJournal,
-                    count: donneesJournal.length,
-                    message: `${donneesJournal.length} patients chargés`
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur récupération données journal:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: 'Erreur lors du chargement: ' + error.message
-                });
-            }
-        }
-    });
-
-    // Gestionnaire pour admin login
-    socket.on('admin_login', async (adminData, callback) => {
-        try {
-            const isValid = adminData.username === 'admin' && adminData.password === 'admin123';
-            
-            if (isValid) {
-                await updateUserLastLogin(adminData.username);
-
-                const userData = {
-                    service: 'Administration',
-                    username: adminData.username,
-                    fullName: 'Administrateur Principal',
-                    connectTime: new Date().toISOString(),
-                    lastLogin: new Date().toISOString(),
-                    isIdentified: true,
-                    userId: 1
-                };
-                
-                connectedUsers.set(socket.id, userData);
-                
-                await addAdminLog('Connexion administrateur: ' + adminData.username, 'admin_login', adminData.username);
-                
-                // Envoyer les données mises à jour
-                socket.emit('examens_config_updated', examensConfig);
-                socket.emit('admin_logs_history', adminLogs.slice(0, 100));
-                socket.emit('server_stats', getServerStats());
-                socket.emit('connected_users', getConnectedUsersByService());
-                socket.emit('users_list_updated', {
-                    users: usersDatabase,
-                    connectedUsers: getConnectedUsersByService()
-                });
-                
-                if (callback) {
-                    callback({ success: true, message: 'Connexion réussie' });
-                }
+            if (numID_CSR) {
+                updatedRecord = await updateLaboratorizedStatusByCSR(numID_CSR, isLaboratorizedText);
+                console.log(`✅ Statut mis à jour pour ${numID_CSR}: ${isLaboratorizedText}`);
+            } else if (numClient) {
+                updatedRecord = await updateLaboratorizedStatus(numClient, isLaboratorizedText);
+                console.log(`✅ Statut mis à jour pour ${numClient}: ${isLaboratorizedText}`);
             } else {
-                await addAdminLog('Tentative de connexion admin échouée: ' + adminData.username, 'security', adminData.username);
-                if (callback) callback({ success: false, message: 'Identifiants incorrects' });
+                throw new Error('Identifiant client manquant (numClient ou numID_CSR requis)');
             }
+
+            await addAdminLog(
+                `Statut patient mis à jour: ${updatedRecord.nomClient} (${updatedRecord.numID_CSR}) - ${isLaboratorizedText}`,
+                'status_update',
+                'Laboratoire'
+            );
+
+            // CORRECTION CRITIQUE : Diffuser la mise à jour à TOUS les clients
+            socket.emit('Mise à jour réussie', updatedRecord);
+            
+            // CORRECTION : Émettre l'événement correct pour le labo
+            socketIO.emit('Etat Analyses Mis à Jour', updatedRecord);
+            
+            // CORRECTION : Émettre un événement spécifique pour les journaux
+            socketIO.emit('journal_status_update', {
+                patientId: updatedRecord.numID_CSR,
+                patientName: updatedRecord.nomClient,
+                patientNumber: updatedRecord.numClient,
+                newStatus: isLaboratorizedText,
+                updatedAt: new Date().toISOString(),
+                updatedBy: 'Laboratoire'
+            });
+
+            // CORRECTION : Émettre une mise à jour complète des données patient
+            socketIO.emit('patient_data_updated', updatedRecord);
+
+            // CORRECTION : Émettre également pour les services spécifiques
+            if (updatedRecord.servicesSelectionnes && Array.isArray(updatedRecord.servicesSelectionnes)) {
+                updatedRecord.servicesSelectionnes.forEach(service => {
+                    const serviceName = typeof service === 'object' ? service.value : service;
+                    socketIO.emit(`patient_status_update_${serviceName}`, {
+                        patientId: updatedRecord.numID_CSR,
+                        newStatus: isLaboratorizedText,
+                        service: serviceName
+                    });
+                });
+            }
+
+            console.log('📢 [SERVER] Diffusion de la mise à jour à tous les clients');
+            console.log('👥 [SERVER] Nombre de clients connectés:', socketIO.engine.clientsCount);
+            console.log('📋 [SERVER] Données diffusées:', {
+                patientId: updatedRecord.numID_CSR,
+                patientName: updatedRecord.nomClient,
+                newStatus: isLaboratorizedText,
+                services: updatedRecord.servicesSelectionnes
+            });
+
         } catch (error) {
-            console.error('Erreur admin_login:', error);
-            if (callback) callback({ success: false, message: error.message });
+            console.error('❌ [SERVER] Erreur:', error.message);
+            socket.emit('update_error', {
+                numClient: numClient || numID_CSR,
+                message: error.message
+            });
         }
     });
+
+    // ============================================================================
+    // AUTRES GESTIONNAIRES
+    // ============================================================================
 
     // Gestionnaire pour labo
     socket.on("labo", async (srData, callback) => {
         console.log("Tentative d'enregistrement pour: " + srData.nomClient + ', ' + srData.numID_CSR);
-        console.log("Services sélectionnés:", srData.servicesSelectionnes);
         
         try {
             await ensureDirectoryExists(databasesDir);
@@ -1982,29 +1601,31 @@ socketIO.on('connection', (socket) => {
                 console.log('🔄 Dernier numéro client mis à jour: ' + dernierNumClient);
             }
             
-            // Envoyer les données aux journaux des services
+            // CORRECTION : Diffuser les données aux journaux des services
             const servicesSelectionnes = srData.servicesSelectionnes || [];
             for (const service of servicesSelectionnes) {
                 try {
+                    const serviceName = typeof service === 'object' ? service.value : service;
                     const journalData = {
                         ...srData,
                         numClient: numClientFinal,
-                        service: service.value,
-                        serviceName: service.name,
+                        service: serviceName,
+                        serviceName: typeof service === 'object' ? service.name : service,
                         dateService: new Date().toISOString(),
                         caisseUser: srData.caisseUser || 'Utilisateur inconnu'
                     };
                     
-                    socketIO.emit(`nouveau_patient_${service.value}`, journalData);
+                    socketIO.emit(`nouveau_patient_${serviceName}`, journalData);
                     socketIO.emit('nouveau_patient_journal', journalData);
                     
-                    console.log(`📋 Données envoyées au service ${service.name}`);
+                    console.log(`📋 [SERVER] Données envoyées au service ${serviceName}`);
                     
                 } catch (error) {
                     console.error(`❌ Erreur envoi service ${service}:`, error);
                 }
             }
 
+            // CORRECTION : Émettre l'événement général
             socketIO.emit("nouveau_patient", {
                 ...srData,
                 numClient: numClientFinal,
@@ -2047,6 +1668,42 @@ socketIO.on('connection', (socket) => {
         }
     });
     
+    // CORRECTION : Récupérer données du journal
+    socket.on('recuperer_donnees_journal', async (callback) => {
+        try {
+            console.log('📥 [SERVER] Demande de récupération des données du journal');
+            
+            const patients = await loadPatientData();
+            
+            const donneesJournal = patients.map(patient => ({
+                ...patient,
+                dateCreation: patient.dateCreation || patient.dateModification || new Date().toISOString(),
+                total_OP: patient.total_OP || 0,
+                caisseUser: patient.caisseUser || 'Non spécifié',
+                isLaboratorized: patient.isLaboratorized || 'En attente'
+            }));
+
+            console.log(`✅ [SERVER] ${donneesJournal.length} patients chargés pour le journal`);
+
+            if (callback) {
+                callback({
+                    success: true,
+                    donnees: donneesJournal,
+                    count: donneesJournal.length,
+                    message: `${donneesJournal.length} patients chargés`
+                });
+            }
+        } catch (error) {
+            console.error('❌ Erreur récupération données journal:', error);
+            if (callback) {
+                callback({
+                    success: false,
+                    message: 'Erreur lors du chargement: ' + error.message
+                });
+            }
+        }
+    });
+
     socket.on('get_next_client_id', async (callback) => {
         try {
             const nextId = await generateNewClientId();
@@ -2079,48 +1736,6 @@ socketIO.on('connection', (socket) => {
     
     socket.on("maj", () => {
         socketIO.emit("update");
-    });
-    
-    socket.on('update_status', async ({ numClient, numID_CSR, isLaboratorized }) => {
-        console.log('Tentative de mise à jour: CSR=' + numID_CSR + ', Client=' + numClient + ', Statut=' + isLaboratorized);
-        
-        try {
-            const statusMap = {
-                0: "En attente",
-                1: "En cours",
-                2: "Terminé",
-                3: "Annulé"
-            };
-            const isLaboratorizedText = statusMap[isLaboratorized] || "En attente";
-            
-            let updatedRecord;
-            
-            if (numID_CSR) {
-                updatedRecord = await updateLaboratorizedStatusByCSR(numID_CSR, isLaboratorizedText);
-                console.log('Statut mis à jour pour ' + numID_CSR + ': ' + isLaboratorizedText);
-            } else if (numClient) {
-                updatedRecord = await updateLaboratorizedStatus(numClient, isLaboratorizedText);
-                console.log('Statut mis à jour pour ' + numClient + ': ' + isLaboratorizedText);
-            } else {
-                throw new Error('Identifiant client manquant (numClient ou numID_CSR requis)');
-            }
-
-            await addAdminLog(
-                'Statut patient mis à jour: ' + updatedRecord.nomClient + ' - ' + isLaboratorizedText,
-                'status_update',
-                'Laboratoire'
-            );
-
-            socket.emit('Mise à jour réussie', updatedRecord);
-            socketIO.emit('Etat Analyses Mis à Jour', updatedRecord);
-
-        } catch (error) {
-            console.error('Erreur:', error.message);
-            socket.emit('update_error', {
-                numClient: numClient || numID_CSR,
-                message: error.message
-            });
-        }
     });
 
     // PING/PONG
