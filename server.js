@@ -15,9 +15,10 @@ const ADMIN_LOG_FILE = path.resolve(databasesDir, 'admin_logs.json');
 const EXAMENS_CONFIG_FILE = path.resolve(databasesDir, 'examens_config.json');
 const USERS_FILE = path.resolve(databasesDir, 'users.json');
 // ====================================================================================
-// NOUVEAU : FICHIER POUR LE DERNIER NUMERO CLIENT
+// FICHIER POUR LE DERNIER NUMERO CLIENT
 // ====================================================================================
 const LAST_CLIENT_NUMBER_FILE = path.resolve(databasesDir, 'last_client_number.json');
+const CLIENT_NUMBER_BACKUP_FILE = path.resolve(databasesDir, 'client_number_backup.json');
 
 // ====================================================================================
 // CONFIGURATION CORS CRITIQUE : Liste blanche pour Vercel + Render
@@ -291,8 +292,44 @@ let examensConfig = {
 let connectedUsers = new Map();
 
 // ====================================================================================
-// NOUVELLES FONCTIONS POUR PERSISTANCE DES NUMEROS CLIENTS
+// FONCTIONS PERSISTANCE DES NUMEROS CLIENTS - CORRIGÉES
 // ====================================================================================
+
+// Fonction pour sauvegarder le dernier numéro de client
+const saveLastClientNumber = async () => {
+    let lockAcquired = false;
+    try {
+        await acquireLock(LAST_CLIENT_NUMBER_FILE);
+        lockAcquired = true;
+        
+        const dataToSave = {
+            lastClientNumber: dernierNumClient,
+            updatedAt: new Date().toISOString(),
+            server: 'csr-backend',
+            description: 'Dernier numéro de client attribué - NE PAS MODIFIER MANUELLEMENT',
+            checksum: `CSR_${dernierNumClient}_${Date.now()}`
+        };
+        
+        // Écrire dans un fichier temporaire d'abord
+        const tmpFile = LAST_CLIENT_NUMBER_FILE + '.tmp';
+        await fs.writeFile(tmpFile, JSON.stringify(dataToSave, null, 2));
+        
+        // Remplacer l'ancien fichier
+        await fs.rename(tmpFile, LAST_CLIENT_NUMBER_FILE);
+        
+        console.log(`💾 Dernier numéro client sauvegardé: ${dernierNumClient} (${new Date().toLocaleTimeString()})`);
+        
+        // Sauvegarder également une copie de backup
+        await backupClientNumber();
+    } catch (error) {
+        console.error('❌ Erreur sauvegarde dernier numéro client:', error);
+        throw error;
+    } finally {
+        if (lockAcquired) {
+            releaseLock(LAST_CLIENT_NUMBER_FILE);
+        }
+    }
+};
 
 // Fonction pour charger le dernier numéro de client depuis le fichier
 const loadLastClientNumber = async () => {
@@ -301,13 +338,34 @@ const loadLastClientNumber = async () => {
         const data = await fs.readFile(LAST_CLIENT_NUMBER_FILE, 'utf8');
         if (data.trim()) {
             const savedData = JSON.parse(data);
+            const previousValue = dernierNumClient;
             dernierNumClient = savedData.lastClientNumber || 0;
-            console.log(`📊 Dernier numéro client chargé depuis fichier: ${dernierNumClient}`);
+            
+            // Vérifier la cohérence avec la base patients
+            try {
+                const patients = await loadPatientData();
+                if (patients.length > 0) {
+                    const maxNumClient = Math.max(...patients.map(p => {
+                        const num = parseInt(p.numClient);
+                        return isNaN(num) ? 0 : num;
+                    }));
+                    
+                    // Si la base contient un numéro plus grand, l'utiliser
+                    if (maxNumClient > dernierNumClient) {
+                        console.log(`🔄 Correction cohérence: ${dernierNumClient} → ${maxNumClient}`);
+                        dernierNumClient = maxNumClient;
+                    }
+                }
+            } catch (dbError) {
+                console.error('Erreur vérification cohérence DB:', dbError);
+            }
+            
+            console.log(`📊 Dernier numéro client: ${previousValue} → ${dernierNumClient}`);
         }
     } catch (error) {
         if (error.code === 'ENOENT') {
+            console.log('📁 Fichier dernier numéro client non trouvé, création...');
             await saveLastClientNumber();
-            console.log('📁 Fichier dernier numéro client créé');
         } else {
             console.error('❌ Erreur chargement dernier numéro client:', error);
             dernierNumClient = 0;
@@ -315,20 +373,120 @@ const loadLastClientNumber = async () => {
     }
 };
 
-// Fonction pour sauvegarder le dernier numéro de client
-const saveLastClientNumber = async () => {
+// CORRECTION : Générer un nouvel ID client AVEC PERSISTANCE SYNCHRONISÉE
+const generateNewClientId = async () => {
+    let lockAcquired = false;
     try {
-        const dataToSave = {
-            lastClientNumber: dernierNumClient,
-            updatedAt: new Date().toISOString(),
-            server: 'csr-backend',
-            description: 'Dernier numéro de client attribué - NE PAS MODIFIER MANUELLEMENT'
-        };
-        await fs.writeFile(LAST_CLIENT_NUMBER_FILE, JSON.stringify(dataToSave, null, 2));
-        console.log(`💾 Dernier numéro client sauvegardé: ${dernierNumClient}`);
+        // Acquérir un verrou pour éviter les conflits
+        await acquireLock(LAST_CLIENT_NUMBER_FILE);
+        lockAcquired = true;
+        
+        // Charger la valeur actuelle depuis le fichier
+        await loadLastClientNumber();
+        
+        // Incrémenter
+        dernierNumClient++;
+        
+        // Sauvegarder IMMÉDIATEMENT
+        await saveLastClientNumber();
+        
+        console.log('✅ Nouveau numéro client généré et sauvegardé: ' + dernierNumClient);
+        
+        // Vérifier la cohérence avec la base de données
+        try {
+            const patients = await loadPatientData();
+            if (patients.length > 0) {
+                const maxNumClient = Math.max(...patients.map(p => {
+                    const num = parseInt(p.numClient);
+                    return isNaN(num) ? 0 : num;
+                }));
+                
+                // Si un patient a un numéro supérieur, ajuster
+                if (maxNumClient > dernierNumClient) {
+                    console.warn(`⚠️ Correction: ${maxNumClient} > ${dernierNumClient}. Ajustement...`);
+                    dernierNumClient = maxNumClient;
+                    await saveLastClientNumber();
+                }
+            }
+        } catch (error) {
+            console.error('Erreur vérification cohérence:', error);
+        }
+        
+        return dernierNumClient;
     } catch (error) {
-        console.error('❌ Erreur sauvegarde dernier numéro client:', error);
+        console.error('❌ Erreur génération ID:', error);
+        
+        // Tentative de récupération
+        try {
+            // Recharger depuis le fichier
+            await loadLastClientNumber();
+            dernierNumClient++; // Incrémenter quand même
+            await saveLastClientNumber();
+            return dernierNumClient;
+        } catch (fallbackError) {
+            console.error('❌ Erreur critique dans fallback:', fallbackError);
+            // Utiliser timestamp comme fallback
+            return Date.now() % 1000000;
+        }
+    } finally {
+        if (lockAcquired) {
+            releaseLock(LAST_CLIENT_NUMBER_FILE);
+        }
+    }
+};
+
+// Fonction pour forcer la synchronisation
+const forceSyncClientNumbers = async () => {
+    try {
+        console.log('🔄 Forçage de la synchronisation des numéros...');
+        
+        // Charger tous les patients
+        const patients = await loadPatientData();
+        
+        if (patients.length === 0) {
+            console.log('📭 Aucun patient trouvé, numéro client à 0');
+            dernierNumClient = 0;
+            await saveLastClientNumber();
+            return 0;
+        }
+        
+        // Trouver le numéro maximum
+        let maxNumClient = 0;
+        patients.forEach(patient => {
+            const num = parseInt(patient.numClient);
+            if (!isNaN(num) && num > maxNumClient) {
+                maxNumClient = num;
+            }
+        });
+        
+        // Mettre à jour
+        const previousValue = dernierNumClient;
+        dernierNumClient = maxNumClient;
+        
+        // Sauvegarder
+        await saveLastClientNumber();
+        
+        console.log(`✅ Synchronisation: ${previousValue} → ${dernierNumClient} (${patients.length} patients)`);
+        
+        return dernierNumClient;
+    } catch (error) {
+        console.error('❌ Erreur synchronisation forcée:', error);
         throw error;
+    }
+};
+
+// Fonction de backup
+const backupClientNumber = async () => {
+    try {
+        const backup = {
+            dernierNumClient: dernierNumClient,
+            timestamp: new Date().toISOString(),
+            patientsCount: (await loadPatientData()).length,
+            serverUptime: process.uptime()
+        };
+        await fs.writeFile(CLIENT_NUMBER_BACKUP_FILE, JSON.stringify(backup, null, 2));
+    } catch (error) {
+        console.error('❌ Erreur backup:', error);
     }
 };
 
@@ -1158,26 +1316,6 @@ const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
     }
 };
 
-// CORRECTION CRITIQUE : Générer un nouvel ID client AVEC PERSISTANCE
-const generateNewClientId = async () => {
-    try {
-        dernierNumClient++;
-        // SAUVEGARDER IMMÉDIATEMENT après incrémentation
-        await saveLastClientNumber();
-        console.log('Nouveau numéro client généré et sauvegardé: ' + dernierNumClient);
-        return dernierNumClient;
-    } catch (error) {
-        console.error('Erreur génération ID:', error);
-        // Tentative de sauvegarde même en cas d'erreur
-        try {
-            await saveLastClientNumber();
-        } catch (e) {
-            console.error('Erreur critique sauvegarde ID:', e);
-        }
-        return dernierNumClient;
-    }
-};
-
 // Ajouter un log d'administration
 const addAdminLog = async (message, type = 'info', user = 'system') => {
     const logEntry = {
@@ -1300,7 +1438,7 @@ const getConnectedUsersByService = () => {
 };
 
 // ====================================================================================
-// SOCKET.IO HANDLERS - CORRECTION POUR INTERACTION LABO/JOURNAL
+// SOCKET.IO HANDLERS - AVEC PERSISTANCE AMÉLIORÉE
 // ====================================================================================
 
 socketIO.on('connection', (socket) => {
@@ -1488,7 +1626,7 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // NOUVEAU : GESTIONNAIRE POUR LE DERNIER NUMERO CLIENT
+    // GESTIONNAIRE POUR LE DERNIER NUMERO CLIENT
     // ============================================================================
 
     socket.on('get_last_client_number', async (callback) => {
@@ -1496,7 +1634,7 @@ socketIO.on('connection', (socket) => {
             console.log('📊 [SERVER] Demande du dernier numéro client');
             
             // S'assurer que la valeur est à jour
-            await chargerDernierNumClient();
+            await loadLastClientNumber();
             
             if (callback) {
                 callback({
@@ -1519,37 +1657,21 @@ socketIO.on('connection', (socket) => {
     });
 
     // ============================================================================
-    // NOUVEAU : GESTIONNAIRE POUR SYNCHRONISATION
+    // GESTIONNAIRE POUR SYNCHRONISATION
     // ============================================================================
 
     socket.on('sync_client_numbers', async (callback) => {
         try {
             console.log('🔄 [SERVER] Synchronisation des numéros client demandée');
             
-            // Recharger depuis le fichier
-            await loadLastClientNumber();
-            
-            // Vérifier la cohérence avec la base de données
-            const patients = await loadPatientData();
-            if (patients.length > 0) {
-                const maxNumClient = Math.max(...patients.map(p => {
-                    const num = parseInt(p.numClient);
-                    return isNaN(num) ? 0 : num;
-                }));
-                
-                if (maxNumClient > dernierNumClient) {
-                    dernierNumClient = maxNumClient;
-                    await saveLastClientNumber();
-                    console.log(`🔄 Synchronisation: ajusté à ${dernierNumClient}`);
-                }
-            }
+            const newValue = await forceSyncClientNumbers();
             
             if (callback) {
                 callback({
                     success: true,
-                    lastClientNumber: dernierNumClient,
-                    patientCount: patients.length,
-                    message: `Synchronisation terminée. Dernier numéro: ${dernierNumClient}`
+                    lastClientNumber: newValue,
+                    patientCount: (await loadPatientData()).length,
+                    message: `Synchronisation terminée. Dernier numéro: ${newValue}`
                 });
             }
         } catch (error) {
@@ -1559,6 +1681,33 @@ socketIO.on('connection', (socket) => {
                     success: false,
                     message: error.message
                 });
+            }
+        }
+    });
+
+    // ============================================================================
+    // DEBUG : Vérification des numéros client
+    // ============================================================================
+
+    socket.on('debug_client_numbers', async (callback) => {
+        try {
+            const patients = await loadPatientData();
+            const maxNum = Math.max(...patients.map(p => parseInt(p.numClient) || 0));
+            
+            if (callback) {
+                callback({
+                    success: true,
+                    current: dernierNumClient,
+                    maxInDB: maxNum,
+                    consistent: maxNum === dernierNumClient,
+                    patientCount: patients.length,
+                    lastBackup: await fs.readFile(CLIENT_NUMBER_BACKUP_FILE, 'utf8').catch(() => 'No backup')
+                });
+            }
+        } catch (error) {
+            console.error('Debug error:', error);
+            if (callback) {
+                callback({ success: false, message: error.message });
             }
         }
     });
@@ -1695,9 +1844,10 @@ socketIO.on('connection', (socket) => {
                 patient.numID_CSR === srData.numID_CSR
             );
 
-            let numClientFinal = srData.numClient;
+            let numClientFinal;
 
             if (patientExistantIndex !== -1) {
+                // Patient existant - utiliser son numéro existant
                 numClientFinal = patientsData[patientExistantIndex].numClient;
                 patientsData[patientExistantIndex] = {
                     ...patientsData[patientExistantIndex],
@@ -1706,19 +1856,37 @@ socketIO.on('connection', (socket) => {
                     dateModification: new Date().toISOString()
                 };
                 
+                console.log(`✅ Patient mis à jour: ${srData.nomClient} (numéro: ${numClientFinal})`);
+                
                 await addAdminLog(
                     'Patient mis à jour: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
                     'patient_update',
                     'Caisse'
                 );
             } else {
-                // GÉNÉRER UN NOUVEAU NUMÉRO PERSISTANT
-                numClientFinal = await generateNewClientId();
+                // NOUVEAU PATIENT - CORRECTION CRITIQUE
+                if (!srData.numClient || srData.numClient === '0' || srData.numClient === 0) {
+                    // GÉNÉRER UN NOUVEAU NUMÉRO PERSISTANT
+                    numClientFinal = await generateNewClientId();
+                    console.log(`🆕 Nouveau numéro généré: ${numClientFinal} pour ${srData.nomClient}`);
+                } else {
+                    // Utiliser le numéro existant (cas rare)
+                    numClientFinal = srData.numClient;
+                    // Vérifier s'il est supérieur au dernier connu
+                    if (numClientFinal > dernierNumClient) {
+                        dernierNumClient = numClientFinal;
+                        await saveLastClientNumber();
+                        console.log(`🔄 Numéro client mis à jour: ${dernierNumClient}`);
+                    }
+                }
+                
                 patientsData.push({
                     ...srData,
                     numClient: numClientFinal,
                     dateCreation: new Date().toISOString()
                 });
+                
+                console.log(`✅ Nouveau patient: ${srData.nomClient} (numéro: ${numClientFinal})`);
                 
                 await addAdminLog(
                     'Nouveau patient: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ') - Numéro: ' + numClientFinal,
@@ -1729,8 +1897,10 @@ socketIO.on('connection', (socket) => {
 
             await fs.writeFile(LABO_FILE, JSON.stringify(patientsData, null, 2), 'utf8');
             
+            // Vérifier la cohérence
             if (numClientFinal > dernierNumClient) {
                 dernierNumClient = numClientFinal;
+                await saveLastClientNumber();
                 console.log('🔄 Dernier numéro client mis à jour: ' + dernierNumClient);
             }
             
@@ -2102,6 +2272,71 @@ app.get('/api/health/detailed', (req, res) => {
     res.json(health);
 });
 
+// ====================================================================================
+// NOUVELLES ROUTES POUR DEBUG ET SYNCHRONISATION
+// ====================================================================================
+
+// Route pour debug des numéros client
+app.get('/api/debug/client-numbers', async (req, res) => {
+    try {
+        const patients = await loadPatientData();
+        const maxNum = Math.max(...patients.map(p => parseInt(p.numClient) || 0));
+        
+        res.json({
+            success: true,
+            dernierNumClient: dernierNumClient,
+            maxInDatabase: maxNum,
+            patientCount: patients.length,
+            isConsistent: maxNum === dernierNumClient,
+            timestamp: new Date().toISOString(),
+            patients: patients.slice(-5).map(p => ({ 
+                numClient: p.numClient, 
+                nomClient: p.nomClient,
+                numID_CSR: p.numID_CSR 
+            }))
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour forcer la resynchronisation
+app.post('/api/admin/resync-client-numbers', async (req, res) => {
+    try {
+        const newValue = await forceSyncClientNumbers();
+        res.json({
+            success: true,
+            message: `Synchronisation forcée terminée`,
+            newValue: newValue,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour voir le backup
+app.get('/api/debug/backup', async (req, res) => {
+    try {
+        const backup = await fs.readFile(CLIENT_NUMBER_BACKUP_FILE, 'utf8');
+        res.json({
+            success: true,
+            backup: JSON.parse(backup)
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
 // Route 404 pour les routes non trouvées
 app.use((req, res) => {
     res.status(404).json({
@@ -2118,6 +2353,9 @@ app.use((req, res) => {
             '/api/examens/config',
             '/api/admin/logs',
             '/api/admin/stats',
+            '/api/debug/client-numbers',
+            '/api/admin/resync-client-numbers',
+            '/api/debug/backup',
             '/socket.io/'
         ]
     });
@@ -2134,23 +2372,60 @@ async function startServer() {
         await ensureDirectoryExists(databasesDir);
         console.log('✅ Répertoire de base de données vérifié');
         
-        // CHARGER LE DERNIER NUMERO CLIENT EN PREMIER
-        await loadLastClientNumber();
-        console.log(`✅ Dernier numéro client initialisé: ${dernierNumClient}`);
+        // 1. Charger les utilisateurs d'abord
+        await loadUsers();
+        console.log('✅ Base de données utilisateurs chargée');
         
+        // 2. Initialiser le fichier labo
         await initializeLaboFile();
         console.log('✅ Fichier labo initialisé');
         
+        // 3. SYNCHRONISATION CRITIQUE : Forcer la synchro avec la base patients
+        await forceSyncClientNumbers();
+        console.log(`✅ Dernier numéro client synchronisé: ${dernierNumClient}`);
+        
+        // 4. Charger les autres configurations
         await loadAdminLogs();
         console.log('✅ Logs d\'administration chargés');
         
         await loadExamensConfig();
         console.log('✅ Configuration des examens chargée');
         
-        await loadUsers();
-        console.log('✅ Base de données utilisateurs chargée');
+        // Ajouter une vérification supplémentaire au démarrage
+        const patients = await loadPatientData();
+        console.log(`📊 ${patients.length} patients trouvés dans la base`);
+        
+        // Vérifier la cohérence finale
+        if (patients.length > 0) {
+            const maxNum = Math.max(...patients.map(p => parseInt(p.numClient) || 0));
+            if (maxNum !== dernierNumClient) {
+                console.warn(`⚠️ Incohérence détectée: max=${maxNum}, dernier=${dernierNumClient}`);
+                dernierNumClient = maxNum;
+                await saveLastClientNumber();
+                console.log(`🔄 Corrigé: dernier numéro = ${dernierNumClient}`);
+            }
+        }
         
         const localIP = getLocalIP();
+        
+        // Sauvegarde automatique périodique
+        setInterval(async () => {
+            try {
+                await saveLastClientNumber();
+                console.log('💾 Sauvegarde automatique du numéro client');
+            } catch (error) {
+                console.error('❌ Erreur sauvegarde automatique:', error);
+            }
+        }, 60000); // Toutes les minutes
+
+        // Synchronisation périodique
+        setInterval(async () => {
+            try {
+                await forceSyncClientNumbers();
+            } catch (error) {
+                console.error('❌ Erreur synchro périodique:', error);
+            }
+        }, 300000); // Toutes les 5 minutes
         
         // Démarrer le serveur
         http.listen(PORT, '0.0.0.0', () => {
@@ -2173,6 +2448,7 @@ async function startServer() {
             console.log('1. Health check: https://csr-serveur-backend.onrender.com/health');
             console.log('2. Socket.IO: https://csr-serveur-backend.onrender.com/socket.io/');
             console.log('3. Test API: https://csr-serveur-backend.onrender.com/api/test-connection');
+            console.log('4. Debug numéros: https://csr-serveur-backend.onrender.com/api/debug/client-numbers');
             console.log('==========================================');
             
             addAdminLog('Serveur démarré sur Render.com', 'server_start', 'system');
