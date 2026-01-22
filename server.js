@@ -97,75 +97,6 @@ app.use((req, res, next) => {
 });
 
 // ====================================================================================
-// ROUTES CRITIQUES POUR RENDER.COM
-// ====================================================================================
-
-// Route de santé OBLIGATOIRE pour Render
-app.get('/health', (req, res) => {
-    console.log('🩺 Health check reçu');
-    res.status(200).json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        server: 'CSR Backend',
-        port: PORT,
-        environment: process.env.NODE_ENV || 'development',
-        uptime: process.uptime(),
-        memory: process.memoryUsage()
-    });
-});
-
-// Route de vérification Socket.IO
-app.get('/socket.io/', (req, res) => {
-    console.log('📡 Handshake Socket.IO reçu:', req.query);
-    
-    const origin = req.headers.origin;
-    if (origin && allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-    }
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
-    res.json({
-        success: true,
-        message: 'Socket.IO server is running',
-        sid: 'render_' + Date.now(),
-        upgrades: ['websocket', 'polling'],
-        pingInterval: 25000,
-        pingTimeout: 20000,
-        maxPayload: 1000000,
-        transports: ['polling', 'websocket']
-    });
-});
-
-// Route pour le polling Socket.IO
-app.get('/socket.io/*', (req, res) => {
-    console.log('📡 Polling request reçu:', req.path);
-    const origin = req.headers.origin;
-    if (origin && allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-    }
-    res.status(200).send('OK');
-});
-
-// Route de test de connexion
-app.get('/api/test-connection', (req, res) => {
-    res.json({
-        success: true,
-        message: 'Server is running on Render.com',
-        timestamp: new Date().toISOString(),
-        socketEnabled: true,
-        serverInfo: {
-            host: 'csr-serveur-backend.onrender.com',
-            port: PORT,
-            environment: process.env.NODE_ENV,
-            nodeVersion: process.version
-        }
-    });
-});
-
-// ====================================================================================
 // CONFIGURATION SOCKET.IO POUR RENDER.COM
 // ====================================================================================
 
@@ -296,7 +227,7 @@ let examensConfig = {
 let connectedUsers = new Map();
 
 // ====================================================================================
-// FONCTIONS PERSISTANCE DES NUMEROS CLIENTS - CORRIGÉES
+// FONCTIONS UTILITAIRES MANQUANTES - AJOUTÉES
 // ====================================================================================
 
 // Créer le répertoire si il n'existe pas
@@ -314,6 +245,104 @@ async function ensureDirectoryExists(dirPath) {
         }
     }
 }
+
+// Obtenir l'adresse IP locale
+function getLocalIP() {
+    try {
+        const interfaces = os.networkInterfaces();
+        for (const interfaceName in interfaces) {
+            for (const iface of interfaces[interfaceName]) {
+                if (iface.family === 'IPv4' && !iface.internal) {
+                    return iface.address;
+                }
+            }
+        }
+        return '0.0.0.0';
+    } catch (error) {
+        console.error('Erreur lors de la détection de l\'IP:', error);
+        return '0.0.0.0';
+    }
+}
+
+// FONCTION DETERMINE SERVICE MANQUANTE - AJOUTÉE
+const determineService = (socket, data = {}) => {
+    if (data.service) {
+        return data.service;
+    }
+    
+    if (socket.handshake.headers.referer) {
+        const referer = socket.handshake.headers.referer;
+        if (referer.includes('/MGLabo')) return 'Laboratoire';
+        if (referer.includes('/MGCaisse')) return 'Caisse';
+        if (referer.includes('/MGSpecialities')) return 'Consultation';
+        if (referer.includes('/Administration')) return 'Administration';
+        if (referer.includes('/MgJournaux')) return 'Journaux';
+    }
+    
+    const existingUser = connectedUsers.get(socket.id);
+    if (existingUser && existingUser.service) {
+        return existingUser.service;
+    }
+    
+    return 'Autre';
+};
+
+// Obtenir la liste des utilisateurs connectés par service
+const getConnectedUsersByService = () => {
+    const usersByService = {
+        'Laboratoire': [],
+        'Caisse': [],
+        'Consultation': [],
+        'Administration': [],
+        'Radiologie': [],
+        'Pharmacie': [],
+        'Hospitalisation': [],
+        'Maintenance': [],
+        'Autre': []
+    };
+    
+    connectedUsers.forEach((userData, socketId) => {
+        const service = userData.service || 'Autre';
+        if (usersByService[service]) {
+            usersByService[service].push({
+                socketId: socketId,
+                username: userData.username,
+                fullName: userData.fullName || userData.username,
+                service: service,
+                connectTime: userData.connectTime,
+                isIdentified: userData.isIdentified || false,
+                lastLogin: userData.lastLogin || new Date().toISOString()
+            });
+        } else {
+            usersByService['Autre'].push({
+                socketId: socketId,
+                username: userData.username,
+                fullName: userData.fullName || userData.username,
+                service: service,
+                connectTime: userData.connectTime,
+                isIdentified: userData.isIdentified || false,
+                lastLogin: userData.lastLogin || new Date().toISOString()
+            });
+        }
+    });
+    
+    return usersByService;
+};
+
+// Obtenir les statistiques du serveur
+const getServerStats = () => {
+    return {
+        totalPatients: dernierNumClient,
+        activeConnections: socketIO.engine.clientsCount,
+        serverUptime: process.uptime(),
+        memoryUsage: process.memoryUsage(),
+        timestamp: new Date().toISOString()
+    };
+};
+
+// ====================================================================================
+// FONCTIONS PERSISTANCE DES NUMEROS CLIENTS
+// ====================================================================================
 
 // Fonction pour sauvegarder le dernier numéro de client
 const saveLastClientNumber = async () => {
@@ -671,6 +700,80 @@ async function chargerDernierNumClient() {
     }
 }
 
+// Mettre à jour le statut par numID_CSR
+const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
+    let lockAcquired = false;
+    try {
+        await acquireLock(LABO_FILE);
+        lockAcquired = true;
+        
+        const data = await fs.readFile(LABO_FILE, 'utf8');
+        let records = JSON.parse(data);
+
+        const recordIndex = records.findIndex(r => r.numID_CSR === numID_CSR);
+
+        if (recordIndex === -1) {
+            throw new Error('Client ' + numID_CSR + ' non trouvé');
+        }
+
+        records[recordIndex] = {
+            ...records[recordIndex],
+            isLaboratorized: newStatus,
+            updatedAt: new Date().toISOString()
+        };
+
+        const tmpFile = LABO_FILE + '.tmp';
+        await fs.writeFile(tmpFile, JSON.stringify(records, null, 2));
+        await fs.rename(tmpFile, LABO_FILE);
+
+        return records[recordIndex];
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour par CSR:', error);
+        throw error;
+    } finally {
+        if (lockAcquired) {
+            releaseLock(LABO_FILE);
+        }
+    }
+};
+
+// Mettre à jour le statut par numClient
+const updateLaboratorizedStatus = async (numClient, newStatus) => {
+    let lockAcquired = false;
+    try {
+        await acquireLock(LABO_FILE);
+        lockAcquired = true;
+        
+        const data = await fs.readFile(LABO_FILE, 'utf8');
+        let records = JSON.parse(data);
+
+        const recordIndex = records.findIndex(r => r.numClient == numClient);
+
+        if (recordIndex === -1) {
+            throw new Error('Client ' + numClient + ' non trouvé');
+        }
+
+        records[recordIndex] = {
+            ...records[recordIndex],
+            isLaboratorized: newStatus,
+            updatedAt: new Date().toISOString()
+        };
+
+        const tmpFile = LABO_FILE + '.tmp';
+        await fs.writeFile(tmpFile, JSON.stringify(records, null, 2));
+        await fs.rename(tmpFile, LABO_FILE);
+
+        return records[recordIndex];
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour:', error);
+        throw error;
+    } finally {
+        if (lockAcquired) {
+            releaseLock(LABO_FILE);
+        }
+    }
+};
+
 // ====================================================================================
 // GESTION DES UTILISATEURS - CORRIGÉE
 // ====================================================================================
@@ -793,6 +896,49 @@ const saveUsers = async () => {
     }
 };
 
+// Mettre à jour la dernière connexion
+const updateUserLastLogin = async (username) => {
+    try {
+        const userIndex = usersDatabase.findIndex(user => user.username === username);
+        if (userIndex !== -1) {
+            usersDatabase[userIndex].lastLogin = new Date().toISOString();
+            await saveUsers();
+            console.log(`✅ Dernière connexion mise à jour pour: ${username}`);
+            return usersDatabase[userIndex];
+        }
+        return null;
+    } catch (error) {
+        console.error('❌ Erreur mise à jour dernière connexion:', error);
+        return null;
+    }
+};
+
+// FONCTION VERIFY CREDENTIALS CRITIQUE - VERSION CORRIGÉE
+const verifyCredentials = (username, password) => {
+    console.log('🔐 [SERVER] Vérification credentials pour:', username);
+    
+    const user = usersDatabase.find(u => 
+        u.username.toLowerCase() === username.toLowerCase() && 
+        u.password === password &&
+        u.isActive === true
+    );
+    
+    if (user) {
+        console.log('✅ [SERVER] Utilisateur authentifié:', user.username, 'Service:', user.service);
+        return {
+            id: user.id,
+            username: user.username,
+            service: user.service,
+            fullName: user.fullName || user.username,
+            permissions: user.permissions || [],
+            lastLogin: user.lastLogin
+        };
+    } else {
+        console.log('❌ [SERVER] Échec authentification pour:', username);
+        return null;
+    }
+};
+
 // Ajouter un log d'administration
 const addAdminLog = async (message, type = 'info', user = 'system') => {
     const logEntry = {
@@ -840,7 +986,7 @@ const loadAdminLogs = async () => {
 };
 
 // ====================================================================================
-// SOCKET.IO HANDLERS - CORRIGÉ POUR LES JOURNAUX
+// SOCKET.IO HANDLERS - COMPLET
 // ====================================================================================
 
 socketIO.on('connection', (socket) => {
@@ -857,7 +1003,7 @@ socketIO.on('connection', (socket) => {
     
     // Envoyer immédiatement les infos de connexion
     socket.emit('server_info', {
-        serverIP: 'csr-serveur-backend.onrender.com',
+        serverIP: 'csr-backend-production.onrender.com',
         serverPort: PORT,
         connectionType: 'socket.io',
         transports: ['polling', 'websocket'],
@@ -894,8 +1040,185 @@ socketIO.on('connection', (socket) => {
     initializeLaboFile().catch(console.error);
 
     // ============================================================================
-    // GESTIONNAIRE POUR AJOUT AU JOURNAL SPÉCIFIQUE
+    // GESTIONNAIRES SOCKET.IO
     // ============================================================================
+
+    socket.on('user_identification', async (userInfo) => {
+        try {
+            console.log('🔐 Identification utilisateur reçue:', userInfo);
+            
+            if (!userInfo || !userInfo.username || !userInfo.service) {
+                console.log('❌ Données d\'identification incomplètes');
+                socket.emit('identification_failed', { 
+                    message: 'Données d\'identification incomplètes' 
+                });
+                return;
+            }
+
+            const user = usersDatabase.find(u => 
+                u.username.toLowerCase() === userInfo.username.toLowerCase() && 
+                u.service === userInfo.service &&
+                u.isActive === true
+            );
+
+            if (!user) {
+                console.log('❌ Utilisateur non trouvé ou inactif:', userInfo.username);
+                socket.emit('identification_failed', { 
+                    message: 'Utilisateur non trouvé ou compte inactif' 
+                });
+                return;
+            }
+
+            await updateUserLastLogin(userInfo.username);
+
+            const updatedUserData = {
+                service: user.service,
+                username: user.username,
+                fullName: user.fullName || user.username,
+                connectTime: new Date().toISOString(),
+                lastLogin: new Date().toISOString(),
+                isIdentified: true,
+                userId: user.id,
+                permissions: user.permissions || []
+            };
+            
+            connectedUsers.set(socket.id, updatedUserData);
+            
+            console.log(`✅ Utilisateur identifié: ${user.username} (${user.service})`);
+
+            socket.emit('identification_confirmed', {
+                success: true,
+                user: updatedUserData,
+                message: `Identifié avec succès comme ${user.username} (${user.service})`
+            });
+
+            socketIO.emit('user_connected', {
+                socketId: socket.id,
+                service: updatedUserData.service,
+                username: updatedUserData.username,
+                fullName: updatedUserData.fullName,
+                connectTime: updatedUserData.connectTime,
+                connectedUsers: getConnectedUsersByService()
+            });
+
+            await addAdminLog(
+                `Utilisateur connecté: ${user.username} (${user.service})`,
+                'user_connection',
+                user.username
+            );
+            
+        } catch (error) {
+            console.error('❌ Erreur identification:', error);
+            socket.emit('identification_failed', { 
+                message: 'Erreur lors de l\'identification: ' + error.message 
+            });
+        }
+    });
+
+    socket.on('verify_user_credentials', async (credentials, callback) => {
+        try {
+            console.log('🔐 [SERVER] Vérification credentials reçue:', credentials);
+            
+            if (!credentials || !credentials.username || !credentials.password) {
+                console.log('❌ [SERVER] Credentials incomplets');
+                if (callback) {
+                    callback({
+                        success: false,
+                        isValid: false,
+                        message: 'Nom d\'utilisateur et mot de passe requis'
+                    });
+                }
+                return;
+            }
+
+            const user = verifyCredentials(credentials.username, credentials.password);
+            
+            if (user) {
+                console.log('✅ [SERVER] Utilisateur authentifié:', user.username);
+                
+                await updateUserLastLogin(credentials.username);
+                
+                if (callback) {
+                    callback({
+                        success: true,
+                        isValid: true,
+                        user: user,
+                        message: 'Authentification réussie'
+                    });
+                }
+            } else {
+                console.log('❌ [SERVER] Échec authentification pour:', credentials.username);
+                if (callback) {
+                    callback({
+                        success: true,
+                        isValid: false,
+                        user: null,
+                        message: 'Nom d\'utilisateur ou mot de passe incorrect'
+                    });
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ [SERVER] Erreur vérification credentials:', error);
+            if (callback) {
+                callback({
+                    success: false,
+                    message: 'Erreur interne du serveur: ' + error.message
+                });
+            }
+        }
+    });
+
+    socket.on('get_last_client_number', async (callback) => {
+        try {
+            console.log('📊 [SERVER] Demande du dernier numéro client');
+            
+            await loadLastClientNumber();
+            
+            if (callback) {
+                callback({
+                    success: true,
+                    lastClientNumber: dernierNumClient,
+                    message: `Dernier numéro client: ${dernierNumClient}`,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        } catch (error) {
+            console.error('❌ Erreur récupération dernier numéro client:', error);
+            if (callback) {
+                callback({
+                    success: false,
+                    lastClientNumber: 0,
+                    message: error.message
+                });
+            }
+        }
+    });
+
+    socket.on('sync_client_numbers', async (callback) => {
+        try {
+            console.log('🔄 [SERVER] Synchronisation des numéros client demandée');
+            
+            const newValue = await forceSyncClientNumbers();
+            
+            if (callback) {
+                callback({
+                    success: true,
+                    lastClientNumber: newValue,
+                    patientCount: (await loadPatientData()).length,
+                    message: `Synchronisation terminée. Dernier numéro: ${newValue}`
+                });
+            }
+        } catch (error) {
+            console.error('❌ Erreur synchronisation:', error);
+            if (callback) {
+                callback({
+                    success: false,
+                    message: error.message
+                });
+            }
+        }
+    });
 
     socket.on('add_to_journal', async (data, callback) => {
         try {
@@ -924,7 +1247,6 @@ socketIO.on('connection', (socket) => {
             
             const journalEntry = await addToJournal(journalFile, entry);
             
-            // Diffuser aux clients concernés
             socketIO.emit(`journal_updated_${journalType}`, journalEntry);
             socketIO.emit('journal_updated', { journalType, entry: journalEntry });
             
@@ -945,10 +1267,6 @@ socketIO.on('connection', (socket) => {
             }
         }
     });
-
-    // ============================================================================
-    // GESTIONNAIRE POUR RÉCUPÉRER UN JOURNAL
-    // ============================================================================
 
     socket.on('get_journal', async (data, callback) => {
         try {
@@ -998,10 +1316,6 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // ============================================================================
-    // AUTRES GESTIONNAIRES (restent identiques mais avec les chemins corrigés)
-    // ============================================================================
-
     socket.on("labo", async (srData, callback) => {
         console.log("Tentative d'enregistrement pour: " + srData.nomClient + ', ' + srData.numID_CSR);
         
@@ -1016,7 +1330,6 @@ socketIO.on('connection', (socket) => {
             let numClientFinal;
 
             if (patientExistantIndex !== -1) {
-                // Patient existant - utiliser son numéro existant
                 numClientFinal = patientsData[patientExistantIndex].numClient;
                 patientsData[patientExistantIndex] = {
                     ...patientsData[patientExistantIndex],
@@ -1033,15 +1346,11 @@ socketIO.on('connection', (socket) => {
                     'Caisse'
                 );
             } else {
-                // NOUVEAU PATIENT
                 if (!srData.numClient || srData.numClient === '0' || srData.numClient === 0) {
-                    // GÉNÉRER UN NOUVEAU NUMÉRO PERSISTANT
                     numClientFinal = await generateNewClientId();
                     console.log(`🆕 Nouveau numéro généré: ${numClientFinal} pour ${srData.nomClient}`);
                 } else {
-                    // Utiliser le numéro existant (cas rare)
                     numClientFinal = srData.numClient;
-                    // Vérifier s'il est supérieur au dernier connu
                     if (numClientFinal > dernierNumClient) {
                         dernierNumClient = numClientFinal;
                         await saveLastClientNumber();
@@ -1079,7 +1388,6 @@ socketIO.on('connection', (socket) => {
                             patientId: srData.numID_CSR
                         };
                         
-                        // Ajouter au journal approprié
                         switch (serviceName) {
                             case 'laboratoire':
                                 await addToJournal(JOURNAL_LABO_FILE, journalEntry);
@@ -1092,7 +1400,6 @@ socketIO.on('connection', (socket) => {
                                 break;
                         }
                         
-                        // Émettre les événements Socket.IO
                         socketIO.emit(`nouveau_patient_${serviceName}`, journalEntry);
                         socketIO.emit('nouveau_patient_journal', journalEntry);
                         
@@ -1106,14 +1413,12 @@ socketIO.on('connection', (socket) => {
 
             await fs.writeFile(LABO_FILE, JSON.stringify(patientsData, null, 2), 'utf8');
             
-            // Vérifier la cohérence
             if (numClientFinal > dernierNumClient) {
                 dernierNumClient = numClientFinal;
                 await saveLastClientNumber();
                 console.log('🔄 Dernier numéro client mis à jour: ' + dernierNumClient);
             }
             
-            // Émettre l'événement général
             socketIO.emit("nouveau_patient", {
                 ...srData,
                 numClient: numClientFinal,
@@ -1145,11 +1450,17 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Ajouter les autres gestionnaires existants...
-    // (user_identification, verify_user_credentials, get_last_client_number, etc.)
+    socket.on('recuperer_donnees', async (callback) => {
+        try {
+            const donnees = await loadPatientData();
+            if (callback) callback({ success: true, donnees });
+        } catch (error) {
+            console.error("Erreur récupération données:", error);
+            if (callback) callback({ success: false, error: error.message });
+        }
+    });
     
-    // Récupérer données du journal
-    socket.on('recuperer_donnees_journal', async (data, callback) => {
+    socket.on('recuperer_donnees_journal', async (callback) => {
         try {
             console.log('📥 [SERVER] Demande de récupération des données du journal');
             
@@ -1184,12 +1495,227 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    // Ajouter les autres gestionnaires Socket.IO...
+    socket.on('get_next_client_id', async (callback) => {
+        try {
+            const nextId = await generateNewClientId();
+            if (callback) callback({ success: true, nextId });
+        } catch (error) {
+            if (callback) callback({ success: false, message: error.message });
+        }
+    });
+    
+    socket.on('update_status', async ({ numClient, numID_CSR, isLaboratorized, patientName }) => {
+        console.log('🔄 [SERVER] Mise à jour de statut reçue:');
+        console.log('📋 CSR:', numID_CSR);
+        console.log('📋 Client:', numClient);
+        console.log('📋 Statut code:', isLaboratorized);
+        console.log('📋 Nom patient:', patientName);
+        
+        try {
+            const statusMap = {
+                0: "En attente",
+                1: "En cours",
+                2: "Terminé",
+                3: "Annulé"
+            };
+            const isLaboratorizedText = statusMap[isLaboratorized] || "En attente";
+            
+            console.log(`📊 Conversion statut: ${isLaboratorized} → "${isLaboratorizedText}"`);
+            
+            let updatedRecord;
+            
+            if (numID_CSR) {
+                updatedRecord = await updateLaboratorizedStatusByCSR(numID_CSR, isLaboratorizedText);
+                console.log(`✅ Statut mis à jour pour ${numID_CSR}: ${isLaboratorizedText}`);
+            } else if (numClient) {
+                updatedRecord = await updateLaboratorizedStatus(numClient, isLaboratorizedText);
+                console.log(`✅ Statut mis à jour pour ${numClient}: ${isLaboratorizedText}`);
+            } else {
+                throw new Error('Identifiant client manquant (numClient ou numID_CSR requis)');
+            }
+
+            await addAdminLog(
+                `Statut patient mis à jour: ${updatedRecord.nomClient} (${updatedRecord.numID_CSR}) - ${isLaboratorizedText}`,
+                'status_update',
+                'Laboratoire'
+            );
+
+            socket.emit('Mise à jour réussie', updatedRecord);
+            socketIO.emit('Etat Analyses Mis à Jour', updatedRecord);
+            socketIO.emit('journal_status_update', {
+                patientId: updatedRecord.numID_CSR,
+                patientName: updatedRecord.nomClient,
+                patientNumber: updatedRecord.numClient,
+                newStatus: isLaboratorizedText,
+                updatedAt: new Date().toISOString(),
+                updatedBy: 'Laboratoire'
+            });
+
+            socketIO.emit('patient_data_updated', updatedRecord);
+
+            if (updatedRecord.servicesSelectionnes && Array.isArray(updatedRecord.servicesSelectionnes)) {
+                updatedRecord.servicesSelectionnes.forEach(service => {
+                    const serviceName = typeof service === 'object' ? service.value : service;
+                    socketIO.emit(`patient_status_update_${serviceName}`, {
+                        patientId: updatedRecord.numID_CSR,
+                        newStatus: isLaboratorizedText,
+                        service: serviceName
+                    });
+                });
+            }
+
+            console.log('📢 [SERVER] Diffusion de la mise à jour à tous les clients');
+            console.log('👥 [SERVER] Nombre de clients connectés:', socketIO.engine.clientsCount);
+
+        } catch (error) {
+            console.error('❌ [SERVER] Erreur:', error.message);
+            socket.emit('update_error', {
+                numClient: numClient || numID_CSR,
+                message: error.message
+            });
+        }
+    });
+
+    socket.on("maj", () => {
+        socketIO.emit("update");
+    });
+
+    socket.on('ping', (data) => {
+        socket.emit('pong', { 
+            timestamp: Date.now(),
+            serverTime: new Date().toISOString(),
+            received: data 
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('🔌 Client déconnecté: ' + socket.id);
+        
+        const disconnectedUser = connectedUsers.get(socket.id);
+        connectedUsers.delete(socket.id);
+        
+        if (disconnectedUser) {
+            socketIO.emit('user_disconnected', {
+                socketId: socket.id,
+                service: disconnectedUser.service,
+                username: disconnectedUser.username,
+                fullName: disconnectedUser.fullName,
+                connectedUsers: getConnectedUsersByService()
+            });
+
+            socketIO.emit('users_list_updated', {
+                users: usersDatabase,
+                connectedUsers: getConnectedUsersByService()
+            });
+            
+            addAdminLog(
+                `Déconnexion: ${disconnectedUser.username} (${disconnectedUser.service})`,
+                'disconnection',
+                disconnectedUser.username
+            );
+        }
+    });
 });
 
 // ====================================================================================
-// ROUTES EXPRESS POUR LES JOURNAUX
+// ROUTES EXPRESS POUR L'API REST
 // ====================================================================================
+
+// Route racine
+app.get('/', (req, res) => {
+    res.json({ 
+        message: "Serveur CSR Backend en fonctionnement sur Render.com",
+        status: "OK",
+        server: 'csr-backend-production.onrender.com',
+        port: PORT,
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'production',
+        features: {
+            socketIO: 'ACTIVÉ ✅',
+            apiRest: 'ACTIVÉ ✅',
+            cors: 'ACTIVÉ ✅',
+            healthCheck: 'ACTIVÉ ✅',
+            users: usersDatabase.length,
+            connected: connectedUsers.size
+        }
+    });
+});
+
+// Route de santé OBLIGATOIRE pour Render
+app.get('/health', (req, res) => {
+    console.log('🩺 Health check reçu');
+    res.status(200).json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        server: 'CSR Backend',
+        port: PORT,
+        environment: process.env.NODE_ENV || 'development',
+        uptime: process.uptime(),
+        memory: process.memoryUsage()
+    });
+});
+
+// Route pour vérifier la connexion Socket.IO
+app.get('/api/socket-status', (req, res) => {
+    res.json({
+        success: true,
+        socketEnabled: true,
+        connectedClients: socketIO.engine.clientsCount,
+        transports: socketIO.engine.transports,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Route pour vérifier les credentials via API REST
+app.post('/api/auth/verify', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        console.log('🔐 [API] Vérification credentials pour:', username);
+        
+        const user = verifyCredentials(username, password);
+        
+        if (user) {
+            res.json({
+                success: true,
+                isValid: true,
+                user: user,
+                message: 'Authentification réussie'
+            });
+        } else {
+            res.status(401).json({
+                success: true,
+                isValid: false,
+                user: null,
+                message: 'Nom d\'utilisateur ou mot de passe incorrect'
+            });
+        }
+    } catch (error) {
+        console.error('❌ Erreur vérification API:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erreur interne du serveur'
+        });
+    }
+});
+
+// Route pour obtenir la liste des utilisateurs
+app.get('/api/users', async (req, res) => {
+    try {
+        res.json({
+            success: true,
+            users: usersDatabase,
+            services: availableServices,
+            count: usersDatabase.length,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
 
 // Route pour obtenir un journal spécifique
 app.get('/api/journals/:journalType', async (req, res) => {
@@ -1266,7 +1792,6 @@ app.post('/api/journals/:journalType', async (req, res) => {
         
         const journalEntry = await addToJournal(journalFile, entry);
         
-        // Émettre via Socket.IO
         socketIO.emit(`journal_updated_${journalType}`, journalEntry);
         socketIO.emit('journal_updated', { journalType, entry: journalEntry });
         
@@ -1283,7 +1808,156 @@ app.post('/api/journals/:journalType', async (req, res) => {
     }
 });
 
-// Ajouter les autres routes API existantes...
+// Route pour obtenir les logs d'administration
+app.get('/api/admin/logs', async (req, res) => {
+    try {
+        const logs = adminLogs.slice(0, 100);
+        res.json({
+            success: true,
+            logs: logs,
+            total: adminLogs.length,
+            serverTime: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour obtenir les statistiques
+app.get('/api/admin/stats', (req, res) => {
+    try {
+        const stats = getServerStats();
+        res.json({
+            success: true,
+            stats: stats
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour les utilisateurs connectés
+app.get('/api/admin/connected-users', (req, res) => {
+    try {
+        const users = getConnectedUsersByService();
+        res.json({
+            success: true,
+            connectedUsers: users,
+            totalConnections: connectedUsers.size
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour vérifier la santé complète
+app.get('/api/health/detailed', (req, res) => {
+    const health = {
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        server: {
+            uptime: process.uptime(),
+            memory: process.memoryUsage(),
+            cpu: process.cpuUsage(),
+            env: process.env.NODE_ENV || 'development'
+        },
+        socket: {
+            enabled: true,
+            clients: socketIO.engine.clientsCount,
+            transports: ['polling', 'websocket']
+        },
+        database: {
+            users: usersDatabase.length,
+            patients: dernierNumClient,
+            connected: connectedUsers.size
+        },
+        services: {
+            api: 'active',
+            socket: 'active',
+            auth: 'active',
+            logs: 'active'
+        }
+    };
+    
+    res.json(health);
+});
+
+// Route pour debug des numéros client
+app.get('/api/debug/client-numbers', async (req, res) => {
+    try {
+        const patients = await loadPatientData();
+        const maxNum = Math.max(...patients.map(p => parseInt(p.numClient) || 0));
+        
+        res.json({
+            success: true,
+            dernierNumClient: dernierNumClient,
+            maxInDatabase: maxNum,
+            patientCount: patients.length,
+            isConsistent: maxNum === dernierNumClient,
+            timestamp: new Date().toISOString(),
+            patients: patients.slice(-5).map(p => ({ 
+                numClient: p.numClient, 
+                nomClient: p.nomClient,
+                numID_CSR: p.numID_CSR 
+            }))
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour forcer la resynchronisation
+app.post('/api/admin/resync-client-numbers', async (req, res) => {
+    try {
+        const newValue = await forceSyncClientNumbers();
+        res.json({
+            success: true,
+            message: `Synchronisation forcée terminée`,
+            newValue: newValue,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route 404 pour les routes non trouvées
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Route non trouvée',
+        path: req.url,
+        method: req.method,
+        availableRoutes: [
+            '/',
+            '/health',
+            '/api/socket-status',
+            '/api/auth/verify',
+            '/api/users',
+            '/api/journals/:journalType',
+            '/api/admin/logs',
+            '/api/admin/stats',
+            '/api/admin/connected-users',
+            '/api/debug/client-numbers',
+            '/socket.io/'
+        ]
+    });
+});
 
 // ====================================================================================
 // LANCEMENT DU SERVEUR
@@ -1369,6 +2043,31 @@ async function startServer() {
         process.exit(1);
     }
 }
+
+// Gestion des signaux
+process.on('SIGINT', () => {
+    console.log('🔻 Arrêt du serveur...');
+    saveLastClientNumber().catch(console.error);
+    addAdminLog('Serveur arrêté', 'server_stop', 'system');
+    process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+    console.log('🔻 Arrêt du serveur (SIGTERM)...');
+    saveLastClientNumber().catch(console.error);
+    addAdminLog('Serveur arrêté par SIGTERM', 'server_stop', 'system');
+    process.exit(0);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('💥 Exception non capturée:', error);
+    addAdminLog('Exception non capturée: ' + error.message, 'error', 'system');
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('💥 Rejet non géré:', reason);
+    addAdminLog('Rejet non géré: ' + reason, 'error', 'system');
+});
 
 // Démarrer le serveur
 startServer();
