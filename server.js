@@ -341,6 +341,156 @@ const getServerStats = () => {
 };
 
 // ====================================================================================
+// FONCTION POUR RÉINITIALISER LES UTILISATEURS
+// ====================================================================================
+
+let usersDatabase = []; // Initialisé vide, sera rempli par initializeUsersDatabase()
+
+const initializeUsersDatabase = async () => {
+    try {
+        console.log('🔄 Initialisation de la base utilisateurs...');
+        
+        // Vérifier si le fichier existe
+        const fileExists = await fs.access(USERS_FILE).then(() => true).catch(() => false);
+        
+        // FORCER la réinitialisation pour corriger le problème
+        const FORCE_RESET = true;
+        
+        if (FORCE_RESET || !fileExists) {
+            console.log('🔄 Réinitialisation des utilisateurs...');
+            
+            // Liste complète des utilisateurs avec mot de passe UNIQUE "12345678" pour tous
+            const defaultUsers = [
+                {
+                    id: 1,
+                    username: "admin",
+                    password: "12345678",
+                    service: "Administration",
+                    fullName: "Administrateur Principal",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["all"]
+                },
+                {
+                    id: 2,
+                    username: "Chouaib",
+                    password: "12345678",
+                    service: "Administration",
+                    fullName: "Chouaib",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["all"]
+                },
+                {
+                    id: 3,
+                    username: "Djibrine",
+                    password: "12345678",
+                    service: "Administration",
+                    fullName: "Djibrine",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["all"]
+                },
+                {
+                    id: 4,
+                    username: "Labo",
+                    password: "12345678",
+                    service: "Laboratoire",
+                    fullName: "Technicien Laboratoire",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["labo", "view", "update_status"]
+                },
+                {
+                    id: 5,
+                    username: "Caisse",
+                    password: "12345678",
+                    service: "Caisse",
+                    fullName: "Caissier Principal",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["caisse", "view", "create_patient"]
+                },
+                {
+                    id: 6,
+                    username: "Consultation",
+                    password: "12345678",
+                    service: "Consultation",
+                    fullName: "Médecin Consultant",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["consultation", "view"]
+                },
+                {
+                    id: 7,
+                    username: "Radiologie",
+                    password: "12345678",
+                    service: "Radiologie",
+                    fullName: "Technicien Radiologie",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["radiologie", "view"]
+                },
+                {
+                    id: 8,
+                    username: "Pharmacie",
+                    password: "12345678",
+                    service: "Pharmacie",
+                    fullName: "Pharmacien",
+                    email: "",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    permissions: ["pharmacie", "view"]
+                }
+            ];
+            
+            // Sauvegarder dans le fichier
+            await ensureDirectoryExists(path.dirname(USERS_FILE));
+            await fs.writeFile(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
+            
+            usersDatabase = defaultUsers;
+            console.log(`✅ ${defaultUsers.length} utilisateurs réinitialisés`);
+            
+            // Afficher les identifiants
+            console.log('📋 Identifiants disponibles (mot de passe: 12345678 pour tous):');
+            defaultUsers.forEach(user => {
+                console.log(`   • ${user.username} (${user.service})`);
+            });
+        } else {
+            console.log('✅ Fichier utilisateurs existe déjà');
+        }
+    } catch (error) {
+        console.error('❌ Erreur initialisation utilisateurs:', error);
+    }
+};
+
+const availableServices = [
+    "Administration",
+    "Laboratoire", 
+    "Caisse",
+    "Consultation",
+    "Radiologie",
+    "Pharmacie",
+    "Hospitalisation",
+    "Maintenance"
+];
+
+// ====================================================================================
 // FONCTIONS PERSISTANCE DES NUMEROS CLIENTS
 // ====================================================================================
 
@@ -778,93 +928,7 @@ const updateLaboratorizedStatus = async (numClient, newStatus) => {
 // GESTION DES UTILISATEURS - CORRIGÉE
 // ====================================================================================
 
-let usersDatabase = [
-    {
-        id: 1,
-        username: "admin",
-        password: "admin123",
-        service: "Administration",
-        fullName: "Administrateur Principal",
-        email: "",
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: null,
-        permissions: ["all"]
-    },
-    {
-        id: 2,
-        username: "Chouaib",
-        password: "SansPasse",
-        service: "Administration",
-        fullName: "Chouaib",
-        email: "",
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: null,
-        permissions: ["all"]
-    },
-    {
-        id: 3,
-        username: "Djibrine",
-        password: "SansPasse",
-        service: "Administration",
-        fullName: "Djibrine",
-        email: "",
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: null,
-        permissions: ["all"]
-    },
-    {
-        id: 4,
-        username: "Labo",
-        password: "12345678",
-        service: "Laboratoire",
-        fullName: "Technicien Laboratoire",
-        email: "",
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: null,
-        permissions: ["labo", "view", "update_status"]
-    },
-    {
-        id: 5,
-        username: "Caisse",
-        password: "12345678",
-        service: "Caisse",
-        fullName: "Caissier Principal",
-        email: "",
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: null,
-        permissions: ["caisse", "view", "create_patient"]
-    },
-    {
-        id: 6,
-        username: "Consultation",
-        password: "12345678",
-        service: "Consultation",
-        fullName: "Médecin Consultant",
-        email: "",
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: null,
-        permissions: ["consultation", "view"]
-    }
-];
-
-const availableServices = [
-    "Administration",
-    "Laboratoire", 
-    "Caisse",
-    "Consultation",
-    "Radiologie",
-    "Pharmacie",
-    "Hospitalisation",
-    "Maintenance"
-];
-
-// Charger les utilisateurs depuis le fichier
+// Charger les utilisateurs depuis le fichier - VERSION CORRIGÉE
 const loadUsers = async () => {
     try {
         await ensureDirectoryExists(path.dirname(USERS_FILE));
@@ -873,11 +937,17 @@ const loadUsers = async () => {
         if (data.trim()) {
             usersDatabase = JSON.parse(data);
             console.log('✅ Utilisateurs chargés: ' + usersDatabase.length);
+            
+            // Afficher les utilisateurs pour debug
+            console.log('📋 Liste des utilisateurs:');
+            usersDatabase.forEach(user => {
+                console.log(`   • ${user.username} (${user.service}) - Mot de passe: ${user.password} - Actif: ${user.isActive}`);
+            });
         }
     } catch (error) {
         if (error.code === 'ENOENT') {
-            await saveUsers();
-            console.log('📁 Fichier utilisateurs créé avec la configuration par défaut');
+            console.log('📁 Fichier utilisateurs non trouvé');
+            // Le fichier sera créé par initializeUsersDatabase
         } else {
             console.error('❌ Erreur chargement utilisateurs:', error);
         }
@@ -913,13 +983,20 @@ const updateUserLastLogin = async (username) => {
     }
 };
 
-// FONCTION VERIFY CREDENTIALS CRITIQUE - VERSION CORRIGÉE
+// FONCTION VERIFY CREDENTIALS - VERSION AMÉLIORÉE POUR DEBUG
 const verifyCredentials = (username, password) => {
     console.log('🔐 [SERVER] Vérification credentials pour:', username);
+    console.log('🔐 [SERVER] Mot de passe reçu:', password);
+    
+    // Afficher tous les utilisateurs pour debug
+    console.log('📋 [SERVER] Base utilisateurs actuelle:');
+    usersDatabase.forEach(user => {
+        console.log(`   • ${user.username}: "${user.password}" (service: ${user.service}, actif: ${user.isActive})`);
+    });
     
     const user = usersDatabase.find(u => 
         u.username.toLowerCase() === username.toLowerCase() && 
-        u.password === password &&
+        u.password === password && // Comparaison exacte
         u.isActive === true
     );
     
@@ -935,6 +1012,21 @@ const verifyCredentials = (username, password) => {
         };
     } else {
         console.log('❌ [SERVER] Échec authentification pour:', username);
+        console.log('❌ [SERVER] Raisons possibles:');
+        
+        const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
+        if (!userExists) {
+            console.log('   - Utilisateur non trouvé dans la base');
+        } else {
+            const foundUser = usersDatabase.find(u => u.username.toLowerCase() === username.toLowerCase());
+            if (foundUser && foundUser.password !== password) {
+                console.log(`   - Mot de passe incorrect: reçu "${password}", attendu "${foundUser.password}"`);
+            }
+            if (foundUser && !foundUser.isActive) {
+                console.log('   - Compte inactif');
+            }
+        }
+        
         return null;
     }
 };
@@ -1702,12 +1794,74 @@ app.post('/api/auth/verify', async (req, res) => {
 // Route pour obtenir la liste des utilisateurs
 app.get('/api/users', async (req, res) => {
     try {
+        const safeUsers = usersDatabase.map(user => ({
+            id: user.id,
+            username: user.username,
+            service: user.service,
+            fullName: user.fullName,
+            email: user.email,
+            isActive: user.isActive,
+            createdAt: user.createdAt,
+            lastLogin: user.lastLogin,
+            permissions: user.permissions
+            // Ne pas inclure le mot de passe pour la sécurité
+        }));
+        
         res.json({
             success: true,
-            users: usersDatabase,
+            users: safeUsers,
             services: availableServices,
             count: usersDatabase.length,
             timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour réinitialiser les utilisateurs
+app.post('/api/admin/reset-users', async (req, res) => {
+    try {
+        console.log('🔄 Demande de réinitialisation des utilisateurs');
+        
+        await initializeUsersDatabase();
+        
+        res.json({
+            success: true,
+            message: "Utilisateurs réinitialisés avec succès",
+            users: usersDatabase.map(user => ({
+                username: user.username,
+                service: user.service,
+                password: user.password
+            }))
+        });
+    } catch (error) {
+        console.error('❌ Erreur réinitialisation utilisateurs:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Route pour afficher les utilisateurs (avec mots de passe pour debug)
+app.get('/api/admin/show-users', async (req, res) => {
+    try {
+        const usersInfo = usersDatabase.map(user => ({
+            username: user.username,
+            service: user.service,
+            password: user.password,
+            isActive: user.isActive,
+            lastLogin: user.lastLogin
+        }));
+        
+        res.json({
+            success: true,
+            users: usersInfo,
+            count: usersDatabase.length
         });
     } catch (error) {
         res.status(500).json({
@@ -1949,6 +2103,8 @@ app.use((req, res) => {
             '/api/socket-status',
             '/api/auth/verify',
             '/api/users',
+            '/api/admin/reset-users',
+            '/api/admin/show-users',
             '/api/journals/:journalType',
             '/api/admin/logs',
             '/api/admin/stats',
@@ -1972,19 +2128,23 @@ async function startServer() {
         await ensureDirectoryExists(databasesDir);
         console.log('✅ Répertoire de base de données vérifié:', databasesDir);
         
-        // 1. Charger les utilisateurs d'abord
+        // 1. INITIALISER LES UTILISATEURS EN PREMIER
+        await initializeUsersDatabase();
+        console.log('✅ Base de données utilisateurs initialisée');
+        
+        // 2. Charger les utilisateurs
         await loadUsers();
         console.log('✅ Base de données utilisateurs chargée');
         
-        // 2. Initialiser le fichier labo
+        // 3. Initialiser le fichier labo
         await initializeLaboFile();
         console.log('✅ Fichier labo initialisé');
         
-        // 3. Synchronisation des numéros
+        // 4. Synchronisation des numéros
         await forceSyncClientNumbers();
         console.log(`✅ Dernier numéro client synchronisé: ${dernierNumClient}`);
         
-        // 4. Charger les autres configurations
+        // 5. Charger les autres configurations
         await loadAdminLogs();
         console.log('✅ Logs d\'administration chargés');
         
@@ -2030,10 +2190,18 @@ async function startServer() {
             console.log('🔌 Socket.IO: ACTIVÉ ✅');
             console.log('📊 Utilisateurs: ' + usersDatabase.length);
             console.log('🔢 Dernier numéro client: ' + dernierNumClient);
+            console.log('🔐 Identifiants disponibles:');
+            console.log('   • Tous les utilisateurs ont le mot de passe: 12345678');
+            console.log('   • Utilisateurs principaux: admin, Caisse, Labo, Consultation');
             console.log('📝 Journaux disponibles:');
             console.log('   • Laboratoire: ' + JOURNAL_LABO_FILE);
             console.log('   • Consultation: ' + JOURNAL_CONSULT_FILE);
             console.log('   • Caisse: ' + JOURNAL_CAISSE_FILE);
+            console.log('==========================================');
+            console.log('🛠️  URLs utiles:');
+            console.log('   • Réinitialiser utilisateurs: https://csr-backend-production.onrender.com/api/admin/reset-users');
+            console.log('   • Voir utilisateurs: https://csr-backend-production.onrender.com/api/admin/show-users');
+            console.log('   • Health check: https://csr-backend-production.onrender.com/health');
             console.log('==========================================');
             
             addAdminLog('Serveur démarré', 'server_start', 'system');
