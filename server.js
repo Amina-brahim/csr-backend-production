@@ -8,21 +8,131 @@ const path = require('path');
 const os = require('os');
 
 // ====================================================================================
-// CORRECTION DES CHEMINS DES FICHIERS
+// CORRECTION DES CHEMINS - VERSION DÉFINITIVE POUR csr-backend-production
 // ====================================================================================
 
-// Chemins des fichiers - STRUCTURE CORRIGÉE
-const databasesDir = path.resolve(__dirname, 'databases', 'databases');
-const LABO_FILE = path.resolve(databasesDir, 'labo.json');
-const JOURNAL_LABO_FILE = path.resolve(databasesDir, 'journal_laboratoire.json');
-const JOURNAL_CONSULT_FILE = path.resolve(databasesDir, 'journal_consultation.json');
-const JOURNAL_CAISSE_FILE = path.resolve(databasesDir, 'journal_caisse.json');
-const ADMIN_LOG_FILE = path.resolve(databasesDir, 'admin_logs.json');
-const EXAMENS_CONFIG_FILE = path.resolve(databasesDir, 'examens_config.json');
-const USERS_FILE = path.resolve(databasesDir, 'users.json');
-const LAST_CLIENT_NUMBER_FILE = path.resolve(databasesDir, 'last_client_number.json');
-const CLIENT_NUMBER_BACKUP_FILE = path.resolve(databasesDir, 'client_number_backup.json');
-const PAYMENT_CANCELLATIONS_FILE = path.resolve(databasesDir, 'payment_cancellations.json');
+// CHEMIN ABSOLU FIXE - LA BONNE STRUCTURE
+const BASE_DATABASE_PATH = 'csr-backend-production/databases/databases';
+
+console.log('🔧 [CONFIG] Configuration des chemins de base de données...');
+console.log('=========================================================');
+console.log(`   • BASE_DATABASE_PATH: ${BASE_DATABASE_PATH}`);
+console.log(`   • process.cwd(): ${process.cwd()}`);
+console.log(`   • __dirname: ${__dirname}`);
+console.log('=========================================================');
+
+// Fonction pour obtenir le chemin absolu CORRECT
+const getDatabasePath = (filename) => {
+    const fullPath = path.resolve(BASE_DATABASE_PATH);
+    const filePath = path.join(fullPath, filename);
+    return filePath;
+};
+
+// CHEMINS DES FICHIERS - AVEC LE BON CHEMIN
+const LABO_FILE = getDatabasePath('labo.json');
+const JOURNAL_LABO_FILE = getDatabasePath('journal_laboratoire.json');
+const JOURNAL_CONSULT_FILE = getDatabasePath('journal_consultation.json');
+const JOURNAL_CAISSE_FILE = getDatabasePath('journal_caisse.json');
+const ADMIN_LOG_FILE = getDatabasePath('admin_logs.json');
+const EXAMENS_CONFIG_FILE = getDatabasePath('examens_config.json');
+const USERS_FILE = getDatabasePath('users.json');
+const LAST_CLIENT_NUMBER_FILE = getDatabasePath('last_client_number.json');
+const CLIENT_NUMBER_BACKUP_FILE = getDatabasePath('client_number_backup.json');
+const PAYMENT_CANCELLATIONS_FILE = getDatabasePath('payment_cancellations.json');
+
+// Afficher tous les chemins pour vérification
+console.log('📁 CHEMINS CONFIGURÉS:');
+console.log('=========================================================');
+console.log(`   • LABO_FILE: ${LABO_FILE}`);
+console.log(`   • JOURNAL_LABO_FILE: ${JOURNAL_LABO_FILE}`);
+console.log(`   • JOURNAL_CONSULT_FILE: ${JOURNAL_CONSULT_FILE}`);
+console.log(`   • JOURNAL_CAISSE_FILE: ${JOURNAL_CAISSE_FILE}`);
+console.log(`   • USERS_FILE: ${USERS_FILE}`);
+console.log('=========================================================');
+
+// ====================================================================================
+// FONCTIONS UTILITAIRES POUR LA GESTION DES DOSSIERS
+// ====================================================================================
+
+// Vérifier et créer le dossier de base de données
+const ensureDatabaseDirectory = async () => {
+    try {
+        const fullPath = path.resolve(BASE_DATABASE_PATH);
+        console.log(`📁 [DIR] Vérification du dossier: ${fullPath}`);
+        
+        try {
+            await fs.access(fullPath);
+            console.log(`✅ [DIR] Dossier trouvé: ${fullPath}`);
+            
+            // Lister les fichiers existants
+            const files = await fs.readdir(fullPath);
+            console.log(`📊 [DIR] ${files.length} fichiers trouvés dans le dossier`);
+            if (files.length > 0) {
+                console.log(`   • Fichiers: ${files.join(', ')}`);
+            }
+        } catch (error) {
+            console.log(`📂 [DIR] Création du dossier: ${fullPath}`);
+            await fs.mkdir(fullPath, { recursive: true });
+            console.log(`✅ [DIR] Dossier créé: ${fullPath}`);
+        }
+        
+        return fullPath;
+    } catch (error) {
+        console.error(`❌ [DIR] Erreur création dossier: ${error.message}`);
+        throw error;
+    }
+};
+
+// Créer tous les fichiers s'ils n'existent pas
+const initializeDatabaseFiles = async () => {
+    try {
+        const fullPath = path.resolve(BASE_DATABASE_PATH);
+        
+        console.log('\n📄 INITIALISATION DES FICHIERS:');
+        console.log('=========================================================');
+        
+        const filesToCreate = [
+            { path: JOURNAL_LABO_FILE, name: 'journal_laboratoire.json', default: '[]' },
+            { path: JOURNAL_CONSULT_FILE, name: 'journal_consultation.json', default: '[]' },
+            { path: JOURNAL_CAISSE_FILE, name: 'journal_caisse.json', default: '[]' },
+            { path: LABO_FILE, name: 'labo.json', default: '[]' },
+            { path: USERS_FILE, name: 'users.json', default: '[]' },
+            { path: ADMIN_LOG_FILE, name: 'admin_logs.json', default: '[]' },
+            { path: EXAMENS_CONFIG_FILE, name: 'examens_config.json', default: '{}' },
+            { path: LAST_CLIENT_NUMBER_FILE, name: 'last_client_number.json', default: JSON.stringify({ lastClientNumber: 0, updatedAt: new Date().toISOString() }) }
+        ];
+        
+        for (const file of filesToCreate) {
+            try {
+                await fs.access(file.path);
+                const content = await fs.readFile(file.path, 'utf8');
+                const size = content.length;
+                console.log(`✅ ${file.name}: Existe (${size} octets)`);
+                
+                // Vérifier si le fichier est vide
+                if (!content.trim()) {
+                    console.log(`⚠️  ${file.name}: Fichier vide, réinitialisation...`);
+                    await fs.writeFile(file.path, file.default);
+                }
+            } catch (error) {
+                if (error.code === 'ENOENT') {
+                    console.log(`📄 ${file.name}: Création...`);
+                    await fs.writeFile(file.path, file.default);
+                    console.log(`✅ ${file.name}: Créé avec succès`);
+                } else {
+                    console.error(`❌ ${file.name}: ${error.message}`);
+                }
+            }
+        }
+        
+        console.log('✅ Tous les fichiers sont initialisés');
+        console.log('=========================================================\n');
+        
+    } catch (error) {
+        console.error(`❌ Erreur initialisation fichiers: ${error.message}`);
+        throw error;
+    }
+};
 
 // ====================================================================================
 // CONFIGURATION CORS CRITIQUE : Liste blanche pour Vercel + Render
@@ -62,7 +172,6 @@ const corsOptions = {
             callback(null, true);
         } else {
             console.log(`🚫 CORS BLOQUÉ pour: ${origin}`);
-            console.log(`📋 Liste des origines autorisées:`, allowedOrigins);
             callback(new Error(`Origine non autorisée: ${origin}`));
         }
     },
@@ -230,22 +339,6 @@ let connectedUsers = new Map();
 // FONCTIONS UTILITAIRES MANQUANTES - AJOUTÉES
 // ====================================================================================
 
-// Créer le répertoire si il n'existe pas
-async function ensureDirectoryExists(dirPath) {
-    try {
-        await fs.access(dirPath);
-        console.log('✅ Répertoire existe: ' + dirPath);
-    } catch (error) {
-        if (error.code === 'ENOENT') {
-            await fs.mkdir(dirPath, { recursive: true });
-            console.log('📁 Répertoire créé: ' + dirPath);
-        } else {
-            console.error('❌ Erreur vérification répertoire:', error);
-            throw error;
-        }
-    }
-}
-
 // Obtenir l'adresse IP locale
 function getLocalIP() {
     try {
@@ -344,136 +437,123 @@ const getServerStats = () => {
 // FONCTION POUR RÉINITIALISER LES UTILISATEURS
 // ====================================================================================
 
-let usersDatabase = []; // Initialisé vide, sera rempli par initializeUsersDatabase()
+let usersDatabase = [];
 
 const initializeUsersDatabase = async () => {
     try {
         console.log('🔄 Initialisation de la base utilisateurs...');
         
-        // Vérifier si le fichier existe
-        const fileExists = await fs.access(USERS_FILE).then(() => true).catch(() => false);
+        // Liste complète des utilisateurs avec mot de passe UNIQUE "12345678" pour tous
+        const defaultUsers = [
+            {
+                id: 1,
+                username: "admin",
+                password: "12345678",
+                service: "Administration",
+                fullName: "Administrateur Principal",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["all"]
+            },
+            {
+                id: 2,
+                username: "Chouaib",
+                password: "12345678",
+                service: "Administration",
+                fullName: "Chouaib",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["all"]
+            },
+            {
+                id: 3,
+                username: "Djibrine",
+                password: "12345678",
+                service: "Administration",
+                fullName: "Djibrine",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["all"]
+            },
+            {
+                id: 4,
+                username: "Labo",
+                password: "12345678",
+                service: "Laboratoire",
+                fullName: "Technicien Laboratoire",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["labo", "view", "update_status"]
+            },
+            {
+                id: 5,
+                username: "Caisse",
+                password: "12345678",
+                service: "Caisse",
+                fullName: "Caissier Principal",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["caisse", "view", "create_patient"]
+            },
+            {
+                id: 6,
+                username: "Consultation",
+                password: "12345678",
+                service: "Consultation",
+                fullName: "Médecin Consultant",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["consultation", "view"]
+            },
+            {
+                id: 7,
+                username: "Radiologie",
+                password: "12345678",
+                service: "Radiologie",
+                fullName: "Technicien Radiologie",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["radiologie", "view"]
+            },
+            {
+                id: 8,
+                username: "Pharmacie",
+                password: "12345678",
+                service: "Pharmacie",
+                fullName: "Pharmacien",
+                email: "",
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                permissions: ["pharmacie", "view"]
+            }
+        ];
         
-        // FORCER la réinitialisation pour corriger le problème
-        const FORCE_RESET = true;
+        // Sauvegarder dans le fichier
+        await fs.writeFile(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
         
-        if (FORCE_RESET || !fileExists) {
-            console.log('🔄 Réinitialisation des utilisateurs...');
-            
-            // Liste complète des utilisateurs avec mot de passe UNIQUE "12345678" pour tous
-            const defaultUsers = [
-                {
-                    id: 1,
-                    username: "admin",
-                    password: "12345678",
-                    service: "Administration",
-                    fullName: "Administrateur Principal",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["all"]
-                },
-                {
-                    id: 2,
-                    username: "Chouaib",
-                    password: "12345678",
-                    service: "Administration",
-                    fullName: "Chouaib",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["all"]
-                },
-                {
-                    id: 3,
-                    username: "Djibrine",
-                    password: "12345678",
-                    service: "Administration",
-                    fullName: "Djibrine",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["all"]
-                },
-                {
-                    id: 4,
-                    username: "Labo",
-                    password: "12345678",
-                    service: "Laboratoire",
-                    fullName: "Technicien Laboratoire",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["labo", "view", "update_status"]
-                },
-                {
-                    id: 5,
-                    username: "Caisse",
-                    password: "12345678",
-                    service: "Caisse",
-                    fullName: "Caissier Principal",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["caisse", "view", "create_patient"]
-                },
-                {
-                    id: 6,
-                    username: "Consultation",
-                    password: "12345678",
-                    service: "Consultation",
-                    fullName: "Médecin Consultant",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["consultation", "view"]
-                },
-                {
-                    id: 7,
-                    username: "Radiologie",
-                    password: "12345678",
-                    service: "Radiologie",
-                    fullName: "Technicien Radiologie",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["radiologie", "view"]
-                },
-                {
-                    id: 8,
-                    username: "Pharmacie",
-                    password: "12345678",
-                    service: "Pharmacie",
-                    fullName: "Pharmacien",
-                    email: "",
-                    isActive: true,
-                    createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    permissions: ["pharmacie", "view"]
-                }
-            ];
-            
-            // Sauvegarder dans le fichier
-            await ensureDirectoryExists(path.dirname(USERS_FILE));
-            await fs.writeFile(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
-            
-            usersDatabase = defaultUsers;
-            console.log(`✅ ${defaultUsers.length} utilisateurs réinitialisés`);
-            
-            // Afficher les identifiants
-            console.log('📋 Identifiants disponibles (mot de passe: 12345678 pour tous):');
-            defaultUsers.forEach(user => {
-                console.log(`   • ${user.username} (${user.service})`);
-            });
-        } else {
-            console.log('✅ Fichier utilisateurs existe déjà');
-        }
+        usersDatabase = defaultUsers;
+        console.log(`✅ ${defaultUsers.length} utilisateurs réinitialisés`);
+        
+        // Afficher les identifiants
+        console.log('📋 Identifiants disponibles (mot de passe: 12345678 pour tous):');
+        defaultUsers.forEach(user => {
+            console.log(`   • ${user.username} (${user.service})`);
+        });
     } catch (error) {
         console.error('❌ Erreur initialisation utilisateurs:', error);
     }
@@ -501,8 +581,6 @@ const saveLastClientNumber = async () => {
         await acquireLock(LAST_CLIENT_NUMBER_FILE);
         lockAcquired = true;
         
-        await ensureDirectoryExists(path.dirname(LAST_CLIENT_NUMBER_FILE));
-        
         const dataToSave = {
             lastClientNumber: dernierNumClient,
             updatedAt: new Date().toISOString(),
@@ -520,8 +598,6 @@ const saveLastClientNumber = async () => {
         
         console.log(`💾 Dernier numéro client sauvegardé: ${dernierNumClient} (${new Date().toLocaleTimeString()})`);
         
-        // Sauvegarder également une copie de backup
-        await backupClientNumber();
     } catch (error) {
         console.error('❌ Erreur sauvegarde dernier numéro client:', error);
         throw error;
@@ -542,26 +618,7 @@ const loadLastClientNumber = async () => {
             const previousValue = dernierNumClient;
             dernierNumClient = savedData.lastClientNumber || 0;
             
-            // Vérifier la cohérence avec la base patients
-            try {
-                const patients = await loadPatientData();
-                if (patients.length > 0) {
-                    const maxNumClient = Math.max(...patients.map(p => {
-                        const num = parseInt(p.numClient);
-                        return isNaN(num) ? 0 : num;
-                    }));
-                    
-                    // Si la base contient un numéro plus grand, l'utiliser
-                    if (maxNumClient > dernierNumClient) {
-                        console.log(`🔄 Correction cohérence: ${dernierNumClient} → ${maxNumClient}`);
-                        dernierNumClient = maxNumClient;
-                    }
-                }
-            } catch (dbError) {
-                console.error('Erreur vérification cohérence DB:', dbError);
-            }
-            
-            console.log(`📊 Dernier numéro client: ${previousValue} → ${dernierNumClient}`);
+            console.log(`📊 Dernier numéro client chargé: ${previousValue} → ${dernierNumClient}`);
         }
     } catch (error) {
         if (error.code === 'ENOENT') {
@@ -574,61 +631,25 @@ const loadLastClientNumber = async () => {
     }
 };
 
-// CORRECTION : Générer un nouvel ID client AVEC PERSISTANCE SYNCHRONISÉE
+// Générer un nouvel ID client
 const generateNewClientId = async () => {
     let lockAcquired = false;
     try {
-        // Acquérir un verrou pour éviter les conflits
         await acquireLock(LAST_CLIENT_NUMBER_FILE);
         lockAcquired = true;
         
-        // Charger la valeur actuelle depuis le fichier
         await loadLastClientNumber();
         
-        // Incrémenter
         dernierNumClient++;
         
-        // Sauvegarder IMMÉDIATEMENT
         await saveLastClientNumber();
         
         console.log('✅ Nouveau numéro client généré et sauvegardé: ' + dernierNumClient);
         
-        // Vérifier la cohérence avec la base de données
-        try {
-            const patients = await loadPatientData();
-            if (patients.length > 0) {
-                const maxNumClient = Math.max(...patients.map(p => {
-                    const num = parseInt(p.numClient);
-                    return isNaN(num) ? 0 : num;
-                }));
-                
-                // Si un patient a un numéro supérieur, ajuster
-                if (maxNumClient > dernierNumClient) {
-                    console.warn(`⚠️ Correction: ${maxNumClient} > ${dernierNumClient}. Ajustement...`);
-                    dernierNumClient = maxNumClient;
-                    await saveLastClientNumber();
-                }
-            }
-        } catch (error) {
-            console.error('Erreur vérification cohérence:', error);
-        }
-        
         return dernierNumClient;
     } catch (error) {
         console.error('❌ Erreur génération ID:', error);
-        
-        // Tentative de récupération
-        try {
-            // Recharger depuis le fichier
-            await loadLastClientNumber();
-            dernierNumClient++; // Incrémenter quand même
-            await saveLastClientNumber();
-            return dernierNumClient;
-        } catch (fallbackError) {
-            console.error('❌ Erreur critique dans fallback:', fallbackError);
-            // Utiliser timestamp comme fallback
-            return Date.now() % 1000000;
-        }
+        return Date.now() % 1000000;
     } finally {
         if (lockAcquired) {
             releaseLock(LAST_CLIENT_NUMBER_FILE);
@@ -641,7 +662,6 @@ const forceSyncClientNumbers = async () => {
     try {
         console.log('🔄 Forçage de la synchronisation des numéros...');
         
-        // Charger tous les patients
         const patients = await loadPatientData();
         
         if (patients.length === 0) {
@@ -651,7 +671,6 @@ const forceSyncClientNumbers = async () => {
             return 0;
         }
         
-        // Trouver le numéro maximum
         let maxNumClient = 0;
         patients.forEach(patient => {
             const num = parseInt(patient.numClient);
@@ -660,11 +679,9 @@ const forceSyncClientNumbers = async () => {
             }
         });
         
-        // Mettre à jour
         const previousValue = dernierNumClient;
         dernierNumClient = maxNumClient;
         
-        // Sauvegarder
         await saveLastClientNumber();
         
         console.log(`✅ Synchronisation: ${previousValue} → ${dernierNumClient} (${patients.length} patients)`);
@@ -676,72 +693,102 @@ const forceSyncClientNumbers = async () => {
     }
 };
 
-// Fonction de backup
-const backupClientNumber = async () => {
-    try {
-        await ensureDirectoryExists(path.dirname(CLIENT_NUMBER_BACKUP_FILE));
-        
-        const backup = {
-            dernierNumClient: dernierNumClient,
-            timestamp: new Date().toISOString(),
-            patientsCount: (await loadPatientData()).length,
-            serverUptime: process.uptime()
-        };
-        await fs.writeFile(CLIENT_NUMBER_BACKUP_FILE, JSON.stringify(backup, null, 2));
-    } catch (error) {
-        console.error('❌ Erreur backup:', error);
-    }
-};
-
 // ====================================================================================
-// FONCTIONS POUR LES JOURNAUX PAR SERVICE
+// FONCTION ADD TO JOURNAL - VERSION CORRIGÉE POUR LE BON CHEMIN
 // ====================================================================================
 
-// Charger les données d'un journal spécifique
-const loadJournalData = async (journalFile) => {
-    try {
-        await fs.access(journalFile);
-        const data = await fs.readFile(journalFile, 'utf8');
-        if (!data.trim()) return [];
-        return JSON.parse(data);
-    } catch (error) {
-        if (error.code === 'ENOENT') {
-            await ensureDirectoryExists(path.dirname(journalFile));
-            await fs.writeFile(journalFile, '[]');
-            return [];
-        }
-        throw error;
-    }
-};
-
-// Ajouter une entrée à un journal spécifique
 const addToJournal = async (journalFile, entry) => {
+    console.log('\n📝 [JOURNAL] ==============================================');
+    console.log(`📝 [JOURNAL] Début ajout au journal...`);
+    console.log(`📝 [JOURNAL] Fichier cible: ${journalFile}`);
+    
     try {
-        await ensureDirectoryExists(path.dirname(journalFile));
+        // 1. Vérifier le chemin du fichier
+        const resolvedPath = path.resolve(journalFile);
+        console.log(`📝 [JOURNAL] Chemin résolu: ${resolvedPath}`);
         
-        let journalData = await loadJournalData(journalFile);
+        // 2. Vérifier que le dossier existe
+        const dirPath = path.dirname(resolvedPath);
+        try {
+            await fs.access(dirPath);
+            console.log(`✅ [JOURNAL] Dossier existe: ${dirPath}`);
+        } catch {
+            console.log(`📂 [JOURNAL] Création dossier: ${dirPath}`);
+            await fs.mkdir(dirPath, { recursive: true });
+        }
         
-        // Ajouter l'entrée avec timestamp
+        // 3. Lire le fichier ou créer s'il n'existe pas
+        let journalData;
+        try {
+            await fs.access(resolvedPath);
+            const fileContent = await fs.readFile(resolvedPath, 'utf8');
+            console.log(`✅ [JOURNAL] Fichier trouvé, taille: ${fileContent.length} caractères`);
+            
+            if (!fileContent.trim()) {
+                journalData = [];
+                console.log('⚠️ [JOURNAL] Fichier vide, initialisation tableau');
+            } else {
+                journalData = JSON.parse(fileContent);
+                console.log(`✅ [JOURNAL] ${journalData.length} entrées chargées`);
+            }
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                console.log(`📄 [JOURNAL] Création nouveau fichier: ${resolvedPath}`);
+                journalData = [];
+                await fs.writeFile(resolvedPath, JSON.stringify([], null, 2));
+            } else {
+                throw error;
+            }
+        }
+        
+        // 4. Créer l'entrée avec toutes les informations
         const journalEntry = {
             ...entry,
+            journalId: `JRN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             journalTimestamp: new Date().toISOString(),
-            journalId: `JRN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            addedAt: new Date().toLocaleString('fr-FR'),
+            addedBy: entry.caisseUser || 'Système',
+            patientName: entry.patientName || entry.nomClient || 'Inconnu',
+            patientId: entry.patientId || entry.numID_CSR || 'N/A',
+            filePath: resolvedPath
         };
         
-        journalData.unshift(journalEntry); // Ajouter au début
+        console.log(`📋 [JOURNAL] Données entrée:`);
+        console.log(`   • Patient: ${journalEntry.patientName}`);
+        console.log(`   • ID CSR: ${journalEntry.patientId}`);
+        console.log(`   • Service: ${journalEntry.service || 'N/A'}`);
+        console.log(`   • Date: ${journalEntry.addedAt}`);
         
-        // Limiter la taille du journal
-        if (journalData.length > 1000) {
-            journalData = journalData.slice(0, 1000);
+        // 5. Ajouter au journal
+        journalData.unshift(journalEntry);
+        
+        // 6. Écrire dans le fichier
+        await fs.writeFile(resolvedPath, JSON.stringify(journalData, null, 2));
+        
+        console.log(`✅✅✅ [JOURNAL] ÉCRITURE RÉUSSIE`);
+        console.log(`   • Fichier: ${path.basename(resolvedPath)}`);
+        console.log(`   • Chemin: ${resolvedPath}`);
+        console.log(`   • Nouvelles entrées: ${journalData.length}`);
+        
+        // 7. Vérifier que le fichier a bien été écrit
+        try {
+            const verifyContent = await fs.readFile(resolvedPath, 'utf8');
+            const verifyData = JSON.parse(verifyContent);
+            console.log(`✅ [JOURNAL] Vérification: ${verifyData.length} entrées dans le fichier`);
+        } catch (verifyError) {
+            console.error(`❌ [JOURNAL] Erreur vérification écriture: ${verifyError.message}`);
         }
         
-        await fs.writeFile(journalFile, JSON.stringify(journalData, null, 2));
-        
-        console.log(`📝 Entrée ajoutée au journal ${path.basename(journalFile)}: ${entry.patientName || entry.nomClient || 'N/A'}`);
+        console.log('📝 [JOURNAL] ==============================================\n');
         
         return journalEntry;
+        
     } catch (error) {
-        console.error(`❌ Erreur ajout au journal ${path.basename(journalFile)}:`, error);
+        console.error(`❌❌❌ [JOURNAL] ERREUR CRITIQUE DANS addToJournal:`);
+        console.error(`   • Fichier: ${journalFile}`);
+        console.error(`   • Chemin résolu: ${path.resolve(journalFile)}`);
+        console.error(`   • Erreur: ${error.message}`);
+        
         throw error;
     }
 };
@@ -753,7 +800,6 @@ const addToJournal = async (journalFile, entry) => {
 // Fonction pour charger la configuration des examens
 const loadExamensConfig = async () => {
     try {
-        await ensureDirectoryExists(path.dirname(EXAMENS_CONFIG_FILE));
         await fs.access(EXAMENS_CONFIG_FILE);
         const data = await fs.readFile(EXAMENS_CONFIG_FILE, 'utf8');
         if (data.trim()) {
@@ -762,7 +808,6 @@ const loadExamensConfig = async () => {
         }
     } catch (error) {
         if (error.code === 'ENOENT') {
-            await saveExamensConfig();
             console.log('📁 Fichier de configuration des examens créé');
         } else {
             console.error('❌ Erreur chargement configuration examens:', error);
@@ -770,22 +815,9 @@ const loadExamensConfig = async () => {
     }
 };
 
-// Fonction pour sauvegarder la configuration des examens
-const saveExamensConfig = async () => {
-    try {
-        await ensureDirectoryExists(path.dirname(EXAMENS_CONFIG_FILE));
-        await fs.writeFile(EXAMENS_CONFIG_FILE, JSON.stringify(examensConfig, null, 2));
-        console.log('✅ Configuration des examens sauvegardée');
-    } catch (error) {
-        console.error('❌ Erreur sauvegarde configuration examens:', error);
-        throw error;
-    }
-};
-
-// Charger les données des patients - CORRIGÉ POUR LE BON CHEMIN
+// Charger les données des patients
 const loadPatientData = async () => {
     try {
-        await ensureDirectoryExists(path.dirname(LABO_FILE));
         await fs.access(LABO_FILE);
         const data = await fs.readFile(LABO_FILE, 'utf8');
         if (!data.trim()) return [];
@@ -799,56 +831,6 @@ const loadPatientData = async () => {
         throw error;
     }
 };
-
-// Initialiser le fichier labo
-async function initializeLaboFile() {
-    try {
-        await ensureDirectoryExists(path.dirname(LABO_FILE));
-        
-        try {
-            await fs.access(LABO_FILE);
-            console.log('✅ Fichier labo.json existe déjà');
-            await chargerDernierNumClient();
-        } catch (error) {
-            if (error.code === 'ENOENT') {
-                await fs.writeFile(LABO_FILE, '[]');
-                console.log('📁 Fichier labo.json créé');
-                await saveLastClientNumber(); // Initialiser le fichier de numéros
-            } else {
-                throw error;
-            }
-        }
-    } catch (error) {
-        console.error('❌ Erreur lors de l\'initialisation:', error);
-    }
-}
-
-// Modifier la fonction chargerDernierNumClient
-async function chargerDernierNumClient() {
-    try {
-        // D'abord charger depuis le fichier dédié
-        await loadLastClientNumber();
-        
-        // Ensuite vérifier dans le fichier labo pour cohérence
-        const patients = await loadPatientData();
-        if (patients.length > 0) {
-            const maxNumClient = Math.max(...patients.map(p => {
-                const num = parseInt(p.numClient);
-                return isNaN(num) ? 0 : num;
-            }));
-            
-            // Si le max trouvé est supérieur à ce qu'on a, mettre à jour
-            if (maxNumClient > dernierNumClient) {
-                dernierNumClient = maxNumClient;
-                await saveLastClientNumber();
-                console.log('📊 Correction: dernier numéro client ajusté à: ' + dernierNumClient);
-            }
-        }
-    } catch (error) {
-        console.error('Erreur lors du chargement du dernier numéro client:', error);
-        // Garder la valeur chargée ou 0
-    }
-}
 
 // Mettre à jour le statut par numID_CSR
 const updateLaboratorizedStatusByCSR = async (numID_CSR, newStatus) => {
@@ -928,75 +910,31 @@ const updateLaboratorizedStatus = async (numClient, newStatus) => {
 // GESTION DES UTILISATEURS - CORRIGÉE
 // ====================================================================================
 
-// Charger les utilisateurs depuis le fichier - VERSION CORRIGÉE
+// Charger les utilisateurs depuis le fichier
 const loadUsers = async () => {
     try {
-        await ensureDirectoryExists(path.dirname(USERS_FILE));
         await fs.access(USERS_FILE);
         const data = await fs.readFile(USERS_FILE, 'utf8');
         if (data.trim()) {
             usersDatabase = JSON.parse(data);
             console.log('✅ Utilisateurs chargés: ' + usersDatabase.length);
-            
-            // Afficher les utilisateurs pour debug
-            console.log('📋 Liste des utilisateurs:');
-            usersDatabase.forEach(user => {
-                console.log(`   • ${user.username} (${user.service}) - Mot de passe: ${user.password} - Actif: ${user.isActive}`);
-            });
         }
     } catch (error) {
         if (error.code === 'ENOENT') {
             console.log('📁 Fichier utilisateurs non trouvé');
-            // Le fichier sera créé par initializeUsersDatabase
         } else {
             console.error('❌ Erreur chargement utilisateurs:', error);
         }
     }
 };
 
-// Sauvegarder les utilisateurs
-const saveUsers = async () => {
-    try {
-        await ensureDirectoryExists(path.dirname(USERS_FILE));
-        await fs.writeFile(USERS_FILE, JSON.stringify(usersDatabase, null, 2));
-        console.log('✅ Utilisateurs sauvegardés');
-    } catch (error) {
-        console.error('❌ Erreur sauvegarde utilisateurs:', error);
-        throw error;
-    }
-};
-
-// Mettre à jour la dernière connexion
-const updateUserLastLogin = async (username) => {
-    try {
-        const userIndex = usersDatabase.findIndex(user => user.username === username);
-        if (userIndex !== -1) {
-            usersDatabase[userIndex].lastLogin = new Date().toISOString();
-            await saveUsers();
-            console.log(`✅ Dernière connexion mise à jour pour: ${username}`);
-            return usersDatabase[userIndex];
-        }
-        return null;
-    } catch (error) {
-        console.error('❌ Erreur mise à jour dernière connexion:', error);
-        return null;
-    }
-};
-
-// FONCTION VERIFY CREDENTIALS - VERSION AMÉLIORÉE POUR DEBUG
+// FONCTION VERIFY CREDENTIALS
 const verifyCredentials = (username, password) => {
     console.log('🔐 [SERVER] Vérification credentials pour:', username);
-    console.log('🔐 [SERVER] Mot de passe reçu:', password);
-    
-    // Afficher tous les utilisateurs pour debug
-    console.log('📋 [SERVER] Base utilisateurs actuelle:');
-    usersDatabase.forEach(user => {
-        console.log(`   • ${user.username}: "${user.password}" (service: ${user.service}, actif: ${user.isActive})`);
-    });
     
     const user = usersDatabase.find(u => 
         u.username.toLowerCase() === username.toLowerCase() && 
-        u.password === password && // Comparaison exacte
+        u.password === password &&
         u.isActive === true
     );
     
@@ -1012,21 +950,6 @@ const verifyCredentials = (username, password) => {
         };
     } else {
         console.log('❌ [SERVER] Échec authentification pour:', username);
-        console.log('❌ [SERVER] Raisons possibles:');
-        
-        const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
-        if (!userExists) {
-            console.log('   - Utilisateur non trouvé dans la base');
-        } else {
-            const foundUser = usersDatabase.find(u => u.username.toLowerCase() === username.toLowerCase());
-            if (foundUser && foundUser.password !== password) {
-                console.log(`   - Mot de passe incorrect: reçu "${password}", attendu "${foundUser.password}"`);
-            }
-            if (foundUser && !foundUser.isActive) {
-                console.log('   - Compte inactif');
-            }
-        }
-        
         return null;
     }
 };
@@ -1048,7 +971,6 @@ const addAdminLog = async (message, type = 'info', user = 'system') => {
     }
     
     try {
-        await ensureDirectoryExists(path.dirname(ADMIN_LOG_FILE));
         const logsToSave = adminLogs.slice(0, 1000);
         await fs.writeFile(ADMIN_LOG_FILE, JSON.stringify(logsToSave, null, 2));
     } catch (error) {
@@ -1062,7 +984,6 @@ const addAdminLog = async (message, type = 'info', user = 'system') => {
 // Charger les logs d'administration
 const loadAdminLogs = async () => {
     try {
-        await ensureDirectoryExists(path.dirname(ADMIN_LOG_FILE));
         await fs.access(ADMIN_LOG_FILE);
         const data = await fs.readFile(ADMIN_LOG_FILE, 'utf8');
         if (data.trim()) {
@@ -1078,20 +999,11 @@ const loadAdminLogs = async () => {
 };
 
 // ====================================================================================
-// SOCKET.IO HANDLERS - COMPLET
+// SOCKET.IO HANDLERS - COMPLET AVEC CORRECTION DES JOURNAUX
 // ====================================================================================
 
 socketIO.on('connection', (socket) => {
     console.log('✅✅✅ NOUVELLE CONNEXION Socket.io: ' + socket.id);
-    console.log('📡 IP: ' + socket.handshake.address);
-    
-    // Vérifier l'origine de la connexion
-    const origin = socket.handshake.headers.origin || socket.handshake.headers.referer;
-    if (origin && !allowedOrigins.some(allowed => origin.includes(allowed.replace('*', '')))) {
-        console.log('🚫 Connexion Socket.IO rejetée - Origine non autorisée:', origin);
-        socket.disconnect(true);
-        return;
-    }
     
     // Envoyer immédiatement les infos de connexion
     socket.emit('server_info', {
@@ -1118,101 +1030,115 @@ socketIO.on('connection', (socket) => {
     
     addAdminLog('Nouvelle connexion détectée: ' + socket.id, 'connection', 'system');
 
-    // Notifier de la nouvelle connexion
-    socketIO.emit('user_connected', {
-        socketId: socket.id,
-        service: userService,
-        username: userData.username,
-        fullName: userData.fullName,
-        connectTime: userData.connectTime,
-        connectedUsers: getConnectedUsersByService()
-    });
-
-    // Initialisation
-    initializeLaboFile().catch(console.error);
-
     // ============================================================================
-    // GESTIONNAIRES SOCKET.IO
+    // GESTIONNAIRE ADD_TO_JOURNAL CORRIGÉ
     // ============================================================================
 
-    socket.on('user_identification', async (userInfo) => {
+    socket.on('add_to_journal', async (data, callback) => {
+        console.log('\n📡 [SOCKET] ==============================================');
+        console.log('📡 [SOCKET] Événement add_to_journal reçu');
+        console.log(`📡 [SOCKET] Type: ${data.journalType}`);
+        console.log(`📡 [SOCKET] Socket ID: ${socket.id}`);
+        
         try {
-            console.log('🔐 Identification utilisateur reçue:', userInfo);
+            const { journalType, entry } = data;
             
-            if (!userInfo || !userInfo.username || !userInfo.service) {
-                console.log('❌ Données d\'identification incomplètes');
-                socket.emit('identification_failed', { 
-                    message: 'Données d\'identification incomplètes' 
-                });
-                return;
+            if (!journalType || !entry) {
+                throw new Error('Données manquantes: journalType et entry sont requis');
             }
-
-            const user = usersDatabase.find(u => 
-                u.username.toLowerCase() === userInfo.username.toLowerCase() && 
-                u.service === userInfo.service &&
-                u.isActive === true
-            );
-
-            if (!user) {
-                console.log('❌ Utilisateur non trouvé ou inactif:', userInfo.username);
-                socket.emit('identification_failed', { 
-                    message: 'Utilisateur non trouvé ou compte inactif' 
-                });
-                return;
+            
+            // DÉTERMINER LE FICHIER EXACT
+            let journalFile;
+            switch (journalType.toLowerCase()) {
+                case 'laboratoire':
+                    journalFile = JOURNAL_LABO_FILE;
+                    console.log(`🔧 [SOCKET] Journal sélectionné: laboratoire`);
+                    break;
+                case 'consultation':
+                    journalFile = JOURNAL_CONSULT_FILE;
+                    console.log(`🔧 [SOCKET] Journal sélectionné: consultation`);
+                    break;
+                case 'caisse':
+                    journalFile = JOURNAL_CAISSE_FILE;
+                    console.log(`🔧 [SOCKET] Journal sélectionné: caisse`);
+                    break;
+                default:
+                    console.error(`❌ [SOCKET] Type de journal inconnu: ${journalType}`);
+                    throw new Error(`Type de journal non reconnu: ${journalType}`);
             }
-
-            await updateUserLastLogin(userInfo.username);
-
-            const updatedUserData = {
-                service: user.service,
-                username: user.username,
-                fullName: user.fullName || user.username,
-                connectTime: new Date().toISOString(),
-                lastLogin: new Date().toISOString(),
-                isIdentified: true,
-                userId: user.id,
-                permissions: user.permissions || []
+            
+            console.log(`📁 [SOCKET] Fichier: ${journalFile}`);
+            console.log(`📍 [SOCKET] Chemin complet: ${path.resolve(journalFile)}`);
+            
+            // Ajouter des informations supplémentaires à l'entrée
+            const enhancedEntry = {
+                ...entry,
+                socketId: socket.id,
+                receivedAt: new Date().toISOString(),
+                journalType: journalType,
+                patientName: entry.patientName || entry.nomClient || 'Patient sans nom',
+                patientId: entry.patientId || entry.numID_CSR || 'N/A'
             };
             
-            connectedUsers.set(socket.id, updatedUserData);
+            // APPEL À LA FONCTION addToJournal
+            console.log('📝 [SOCKET] Appel de addToJournal...');
+            const journalEntry = await addToJournal(journalFile, enhancedEntry);
             
-            console.log(`✅ Utilisateur identifié: ${user.username} (${user.service})`);
-
-            socket.emit('identification_confirmed', {
-                success: true,
-                user: updatedUserData,
-                message: `Identifié avec succès comme ${user.username} (${user.service})`
+            // DIFFUSER LA MISE À JOUR À TOUS LES CLIENTS
+            console.log(`📢 [SOCKET] Diffusion aux clients...`);
+            
+            socketIO.emit(`journal_updated_${journalType}`, {
+                type: journalType,
+                entry: journalEntry,
+                timestamp: new Date().toISOString(),
+                message: `Nouvelle entrée dans ${journalType}`
             });
-
-            socketIO.emit('user_connected', {
-                socketId: socket.id,
-                service: updatedUserData.service,
-                username: updatedUserData.username,
-                fullName: updatedUserData.fullName,
-                connectTime: updatedUserData.connectTime,
-                connectedUsers: getConnectedUsersByService()
+            
+            socketIO.emit('journal_updated', {
+                journalType: journalType,
+                entry: journalEntry,
+                serverTime: new Date().toISOString()
             });
-
-            await addAdminLog(
-                `Utilisateur connecté: ${user.username} (${user.service})`,
-                'user_connection',
-                user.username
-            );
+            
+            console.log(`✅✅✅ [SOCKET] JOURNAL MIS À JOUR AVEC SUCCÈS`);
+            console.log(`📡 [SOCKET] ==============================================\n`);
+            
+            // Réponse au client
+            if (callback) {
+                callback({
+                    success: true,
+                    message: `Entrée ajoutée au journal ${journalType}`,
+                    entry: journalEntry,
+                    filePath: path.resolve(journalFile),
+                    timestamp: new Date().toISOString()
+                });
+            }
             
         } catch (error) {
-            console.error('❌ Erreur identification:', error);
-            socket.emit('identification_failed', { 
-                message: 'Erreur lors de l\'identification: ' + error.message 
-            });
+            console.error('❌❌❌ [SOCKET] ERREUR add_to_journal:');
+            console.error(`   • Message: ${error.message}`);
+            
+            // Réponse d'erreur détaillée
+            if (callback) {
+                callback({
+                    success: false,
+                    message: `Échec de l'ajout au journal: ${error.message}`,
+                    errorCode: error.code || 'UNKNOWN',
+                    timestamp: new Date().toISOString()
+                });
+            }
         }
     });
+
+    // ============================================================================
+    // AUTRES GESTIONNAIRES SOCKET.IO
+    // ============================================================================
 
     socket.on('verify_user_credentials', async (credentials, callback) => {
         try {
             console.log('🔐 [SERVER] Vérification credentials reçue:', credentials);
             
             if (!credentials || !credentials.username || !credentials.password) {
-                console.log('❌ [SERVER] Credentials incomplets');
                 if (callback) {
                     callback({
                         success: false,
@@ -1227,8 +1153,6 @@ socketIO.on('connection', (socket) => {
             
             if (user) {
                 console.log('✅ [SERVER] Utilisateur authentifié:', user.username);
-                
-                await updateUserLastLogin(credentials.username);
                 
                 if (callback) {
                     callback({
@@ -1287,79 +1211,6 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    socket.on('sync_client_numbers', async (callback) => {
-        try {
-            console.log('🔄 [SERVER] Synchronisation des numéros client demandée');
-            
-            const newValue = await forceSyncClientNumbers();
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    lastClientNumber: newValue,
-                    patientCount: (await loadPatientData()).length,
-                    message: `Synchronisation terminée. Dernier numéro: ${newValue}`
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur synchronisation:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: error.message
-                });
-            }
-        }
-    });
-
-    socket.on('add_to_journal', async (data, callback) => {
-        try {
-            console.log('📝 Demande d\'ajout au journal:', data);
-            
-            const { journalType, entry } = data;
-            
-            if (!journalType || !entry) {
-                throw new Error('Type de journal et entrée requis');
-            }
-            
-            let journalFile;
-            switch (journalType) {
-                case 'laboratoire':
-                    journalFile = JOURNAL_LABO_FILE;
-                    break;
-                case 'consultation':
-                    journalFile = JOURNAL_CONSULT_FILE;
-                    break;
-                case 'caisse':
-                    journalFile = JOURNAL_CAISSE_FILE;
-                    break;
-                default:
-                    throw new Error('Type de journal non reconnu');
-            }
-            
-            const journalEntry = await addToJournal(journalFile, entry);
-            
-            socketIO.emit(`journal_updated_${journalType}`, journalEntry);
-            socketIO.emit('journal_updated', { journalType, entry: journalEntry });
-            
-            if (callback) {
-                callback({
-                    success: true,
-                    message: 'Entrée ajoutée au journal',
-                    entry: journalEntry
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur ajout au journal:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: error.message
-                });
-            }
-        }
-    });
-
     socket.on('get_journal', async (data, callback) => {
         try {
             console.log('📋 Demande de récupération de journal:', data);
@@ -1412,7 +1263,6 @@ socketIO.on('connection', (socket) => {
         console.log("Tentative d'enregistrement pour: " + srData.nomClient + ', ' + srData.numID_CSR);
         
         try {
-            await ensureDirectoryExists(path.dirname(LABO_FILE));
             let patientsData = await loadPatientData();
 
             const patientExistantIndex = patientsData.findIndex(patient => 
@@ -1431,12 +1281,6 @@ socketIO.on('connection', (socket) => {
                 };
                 
                 console.log(`✅ Patient mis à jour: ${srData.nomClient} (numéro: ${numClientFinal})`);
-                
-                await addAdminLog(
-                    'Patient mis à jour: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ')',
-                    'patient_update',
-                    'Caisse'
-                );
             } else {
                 if (!srData.numClient || srData.numClient === '0' || srData.numClient === 0) {
                     numClientFinal = await generateNewClientId();
@@ -1457,12 +1301,6 @@ socketIO.on('connection', (socket) => {
                 });
                 
                 console.log(`✅ Nouveau patient: ${srData.nomClient} (numéro: ${numClientFinal})`);
-                
-                await addAdminLog(
-                    'Nouveau patient: ' + srData.nomClient + ' (CSR: ' + srData.numID_CSR + ') - Numéro: ' + numClientFinal,
-                    'patient_create',
-                    'Caisse'
-                );
                 
                 // AJOUTER AUX JOURNAUX DES SERVICES
                 const servicesSelectionnes = srData.servicesSelectionnes || [];
@@ -1491,11 +1329,6 @@ socketIO.on('connection', (socket) => {
                                 await addToJournal(JOURNAL_CAISSE_FILE, journalEntry);
                                 break;
                         }
-                        
-                        socketIO.emit(`nouveau_patient_${serviceName}`, journalEntry);
-                        socketIO.emit('nouveau_patient_journal', journalEntry);
-                        
-                        console.log(`📋 [SERVER] Données envoyées au service ${serviceName}`);
                         
                     } catch (error) {
                         console.error(`❌ Erreur envoi service ${service}:`, error);
@@ -1527,12 +1360,6 @@ socketIO.on('connection', (socket) => {
         } catch (error) {
             console.error('Erreur écriture Fichier Base de Données', error);
             
-            await addAdminLog(
-                'Erreur enregistrement patient: ' + error.message,
-                'error',
-                'Caisse'
-            );
-            
             if (callback) {
                 callback({
                     success: false, 
@@ -1542,144 +1369,6 @@ socketIO.on('connection', (socket) => {
         }
     });
 
-    socket.on('recuperer_donnees', async (callback) => {
-        try {
-            const donnees = await loadPatientData();
-            if (callback) callback({ success: true, donnees });
-        } catch (error) {
-            console.error("Erreur récupération données:", error);
-            if (callback) callback({ success: false, error: error.message });
-        }
-    });
-    
-    socket.on('recuperer_donnees_journal', async (callback) => {
-        try {
-            console.log('📥 [SERVER] Demande de récupération des données du journal');
-            
-            const patients = await loadPatientData();
-            
-            const donneesJournal = patients.map(patient => ({
-                ...patient,
-                dateCreation: patient.dateCreation || patient.dateModification || new Date().toISOString(),
-                total_OP: patient.total_OP || 0,
-                caisseUser: patient.caisseUser || 'Non spécifié',
-                isLaboratorized: patient.isLaboratorized || 'En attente'
-            }));
-
-            console.log(`✅ [SERVER] ${donneesJournal.length} patients chargés pour le journal`);
-
-            if (callback) {
-                callback({
-                    success: true,
-                    donnees: donneesJournal,
-                    count: donneesJournal.length,
-                    message: `${donneesJournal.length} patients chargés`
-                });
-            }
-        } catch (error) {
-            console.error('❌ Erreur récupération données journal:', error);
-            if (callback) {
-                callback({
-                    success: false,
-                    message: 'Erreur lors du chargement: ' + error.message
-                });
-            }
-        }
-    });
-
-    socket.on('get_next_client_id', async (callback) => {
-        try {
-            const nextId = await generateNewClientId();
-            if (callback) callback({ success: true, nextId });
-        } catch (error) {
-            if (callback) callback({ success: false, message: error.message });
-        }
-    });
-    
-    socket.on('update_status', async ({ numClient, numID_CSR, isLaboratorized, patientName }) => {
-        console.log('🔄 [SERVER] Mise à jour de statut reçue:');
-        console.log('📋 CSR:', numID_CSR);
-        console.log('📋 Client:', numClient);
-        console.log('📋 Statut code:', isLaboratorized);
-        console.log('📋 Nom patient:', patientName);
-        
-        try {
-            const statusMap = {
-                0: "En attente",
-                1: "En cours",
-                2: "Terminé",
-                3: "Annulé"
-            };
-            const isLaboratorizedText = statusMap[isLaboratorized] || "En attente";
-            
-            console.log(`📊 Conversion statut: ${isLaboratorized} → "${isLaboratorizedText}"`);
-            
-            let updatedRecord;
-            
-            if (numID_CSR) {
-                updatedRecord = await updateLaboratorizedStatusByCSR(numID_CSR, isLaboratorizedText);
-                console.log(`✅ Statut mis à jour pour ${numID_CSR}: ${isLaboratorizedText}`);
-            } else if (numClient) {
-                updatedRecord = await updateLaboratorizedStatus(numClient, isLaboratorizedText);
-                console.log(`✅ Statut mis à jour pour ${numClient}: ${isLaboratorizedText}`);
-            } else {
-                throw new Error('Identifiant client manquant (numClient ou numID_CSR requis)');
-            }
-
-            await addAdminLog(
-                `Statut patient mis à jour: ${updatedRecord.nomClient} (${updatedRecord.numID_CSR}) - ${isLaboratorizedText}`,
-                'status_update',
-                'Laboratoire'
-            );
-
-            socket.emit('Mise à jour réussie', updatedRecord);
-            socketIO.emit('Etat Analyses Mis à Jour', updatedRecord);
-            socketIO.emit('journal_status_update', {
-                patientId: updatedRecord.numID_CSR,
-                patientName: updatedRecord.nomClient,
-                patientNumber: updatedRecord.numClient,
-                newStatus: isLaboratorizedText,
-                updatedAt: new Date().toISOString(),
-                updatedBy: 'Laboratoire'
-            });
-
-            socketIO.emit('patient_data_updated', updatedRecord);
-
-            if (updatedRecord.servicesSelectionnes && Array.isArray(updatedRecord.servicesSelectionnes)) {
-                updatedRecord.servicesSelectionnes.forEach(service => {
-                    const serviceName = typeof service === 'object' ? service.value : service;
-                    socketIO.emit(`patient_status_update_${serviceName}`, {
-                        patientId: updatedRecord.numID_CSR,
-                        newStatus: isLaboratorizedText,
-                        service: serviceName
-                    });
-                });
-            }
-
-            console.log('📢 [SERVER] Diffusion de la mise à jour à tous les clients');
-            console.log('👥 [SERVER] Nombre de clients connectés:', socketIO.engine.clientsCount);
-
-        } catch (error) {
-            console.error('❌ [SERVER] Erreur:', error.message);
-            socket.emit('update_error', {
-                numClient: numClient || numID_CSR,
-                message: error.message
-            });
-        }
-    });
-
-    socket.on("maj", () => {
-        socketIO.emit("update");
-    });
-
-    socket.on('ping', (data) => {
-        socket.emit('pong', { 
-            timestamp: Date.now(),
-            serverTime: new Date().toISOString(),
-            received: data 
-        });
-    });
-
     socket.on('disconnect', () => {
         console.log('🔌 Client déconnecté: ' + socket.id);
         
@@ -1687,24 +1376,7 @@ socketIO.on('connection', (socket) => {
         connectedUsers.delete(socket.id);
         
         if (disconnectedUser) {
-            socketIO.emit('user_disconnected', {
-                socketId: socket.id,
-                service: disconnectedUser.service,
-                username: disconnectedUser.username,
-                fullName: disconnectedUser.fullName,
-                connectedUsers: getConnectedUsersByService()
-            });
-
-            socketIO.emit('users_list_updated', {
-                users: usersDatabase,
-                connectedUsers: getConnectedUsersByService()
-            });
-            
-            addAdminLog(
-                `Déconnexion: ${disconnectedUser.username} (${disconnectedUser.service})`,
-                'disconnection',
-                disconnectedUser.username
-            );
+            console.log(`👤 Utilisateur déconnecté: ${disconnectedUser.username} (${disconnectedUser.service})`);
         }
     });
 });
@@ -1716,34 +1388,23 @@ socketIO.on('connection', (socket) => {
 // Route racine
 app.get('/', (req, res) => {
     res.json({ 
-        message: "Serveur CSR Backend en fonctionnement sur Render.com",
+        message: "Serveur CSR Backend en fonctionnement",
         status: "OK",
         server: 'csr-backend-production.onrender.com',
         port: PORT,
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'production',
-        features: {
-            socketIO: 'ACTIVÉ ✅',
-            apiRest: 'ACTIVÉ ✅',
-            cors: 'ACTIVÉ ✅',
-            healthCheck: 'ACTIVÉ ✅',
-            users: usersDatabase.length,
-            connected: connectedUsers.size
-        }
+        databasePath: BASE_DATABASE_PATH
     });
 });
 
 // Route de santé OBLIGATOIRE pour Render
 app.get('/health', (req, res) => {
-    console.log('🩺 Health check reçu');
     res.status(200).json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
         server: 'CSR Backend',
         port: PORT,
-        environment: process.env.NODE_ENV || 'development',
-        uptime: process.uptime(),
-        memory: process.memoryUsage()
+        databasePath: BASE_DATABASE_PATH
     });
 });
 
@@ -1753,122 +1414,9 @@ app.get('/api/socket-status', (req, res) => {
         success: true,
         socketEnabled: true,
         connectedClients: socketIO.engine.clientsCount,
-        transports: socketIO.engine.transports,
+        databasePath: BASE_DATABASE_PATH,
         timestamp: new Date().toISOString()
     });
-});
-
-// Route pour vérifier les credentials via API REST
-app.post('/api/auth/verify', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        
-        console.log('🔐 [API] Vérification credentials pour:', username);
-        
-        const user = verifyCredentials(username, password);
-        
-        if (user) {
-            res.json({
-                success: true,
-                isValid: true,
-                user: user,
-                message: 'Authentification réussie'
-            });
-        } else {
-            res.status(401).json({
-                success: true,
-                isValid: false,
-                user: null,
-                message: 'Nom d\'utilisateur ou mot de passe incorrect'
-            });
-        }
-    } catch (error) {
-        console.error('❌ Erreur vérification API:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Erreur interne du serveur'
-        });
-    }
-});
-
-// Route pour obtenir la liste des utilisateurs
-app.get('/api/users', async (req, res) => {
-    try {
-        const safeUsers = usersDatabase.map(user => ({
-            id: user.id,
-            username: user.username,
-            service: user.service,
-            fullName: user.fullName,
-            email: user.email,
-            isActive: user.isActive,
-            createdAt: user.createdAt,
-            lastLogin: user.lastLogin,
-            permissions: user.permissions
-            // Ne pas inclure le mot de passe pour la sécurité
-        }));
-        
-        res.json({
-            success: true,
-            users: safeUsers,
-            services: availableServices,
-            count: usersDatabase.length,
-            timestamp: new Date().toISOString()
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// Route pour réinitialiser les utilisateurs
-app.post('/api/admin/reset-users', async (req, res) => {
-    try {
-        console.log('🔄 Demande de réinitialisation des utilisateurs');
-        
-        await initializeUsersDatabase();
-        
-        res.json({
-            success: true,
-            message: "Utilisateurs réinitialisés avec succès",
-            users: usersDatabase.map(user => ({
-                username: user.username,
-                service: user.service,
-                password: user.password
-            }))
-        });
-    } catch (error) {
-        console.error('❌ Erreur réinitialisation utilisateurs:', error);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// Route pour afficher les utilisateurs (avec mots de passe pour debug)
-app.get('/api/admin/show-users', async (req, res) => {
-    try {
-        const usersInfo = usersDatabase.map(user => ({
-            username: user.username,
-            service: user.service,
-            password: user.password,
-            isActive: user.isActive,
-            lastLogin: user.lastLogin
-        }));
-        
-        res.json({
-            success: true,
-            users: usersInfo,
-            count: usersDatabase.length
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
 });
 
 // Route pour obtenir un journal spécifique
@@ -1895,7 +1443,16 @@ app.get('/api/journals/:journalType', async (req, res) => {
                 });
         }
         
-        const journalData = await loadJournalData(journalFile);
+        // Charger les données du journal
+        let journalData;
+        try {
+            await fs.access(journalFile);
+            const fileContent = await fs.readFile(journalFile, 'utf8');
+            journalData = fileContent.trim() ? JSON.parse(fileContent) : [];
+        } catch {
+            journalData = [];
+        }
+        
         const limitedData = journalData.slice(0, parseInt(limit));
         
         res.json({
@@ -1903,7 +1460,8 @@ app.get('/api/journals/:journalType', async (req, res) => {
             journalType,
             entries: limitedData,
             total: journalData.length,
-            limit: parseInt(limit)
+            limit: parseInt(limit),
+            filePath: journalFile
         });
     } catch (error) {
         res.status(500).json({
@@ -1947,12 +1505,12 @@ app.post('/api/journals/:journalType', async (req, res) => {
         const journalEntry = await addToJournal(journalFile, entry);
         
         socketIO.emit(`journal_updated_${journalType}`, journalEntry);
-        socketIO.emit('journal_updated', { journalType, entry: journalEntry });
         
         res.json({
             success: true,
             message: 'Entrée ajoutée au journal',
-            entry: journalEntry
+            entry: journalEntry,
+            filePath: journalFile
         });
     } catch (error) {
         res.status(500).json({
@@ -1962,158 +1520,78 @@ app.post('/api/journals/:journalType', async (req, res) => {
     }
 });
 
-// Route pour obtenir les logs d'administration
-app.get('/api/admin/logs', async (req, res) => {
-    try {
-        const logs = adminLogs.slice(0, 100);
-        res.json({
-            success: true,
-            logs: logs,
-            total: adminLogs.length,
-            serverTime: new Date().toISOString()
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// Route pour obtenir les statistiques
-app.get('/api/admin/stats', (req, res) => {
-    try {
-        const stats = getServerStats();
-        res.json({
-            success: true,
-            stats: stats
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// Route pour les utilisateurs connectés
-app.get('/api/admin/connected-users', (req, res) => {
-    try {
-        const users = getConnectedUsersByService();
-        res.json({
-            success: true,
-            connectedUsers: users,
-            totalConnections: connectedUsers.size
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// Route pour vérifier la santé complète
-app.get('/api/health/detailed', (req, res) => {
-    const health = {
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        server: {
-            uptime: process.uptime(),
-            memory: process.memoryUsage(),
-            cpu: process.cpuUsage(),
-            env: process.env.NODE_ENV || 'development'
-        },
-        socket: {
-            enabled: true,
-            clients: socketIO.engine.clientsCount,
-            transports: ['polling', 'websocket']
-        },
-        database: {
-            users: usersDatabase.length,
-            patients: dernierNumClient,
-            connected: connectedUsers.size
-        },
-        services: {
-            api: 'active',
-            socket: 'active',
-            auth: 'active',
-            logs: 'active'
+// Route pour vérifier les chemins
+app.get('/api/debug/paths', (req, res) => {
+    const paths = {
+        BASE_DATABASE_PATH,
+        LABO_FILE,
+        JOURNAL_LABO_FILE,
+        JOURNAL_CONSULT_FILE,
+        JOURNAL_CAISSE_FILE,
+        USERS_FILE,
+        process_cwd: process.cwd(),
+        __dirname: __dirname,
+        resolved_paths: {
+            labo: path.resolve(LABO_FILE),
+            journal_labo: path.resolve(JOURNAL_LABO_FILE),
+            journal_consult: path.resolve(JOURNAL_CONSULT_FILE),
+            journal_caisse: path.resolve(JOURNAL_CAISSE_FILE)
         }
     };
     
-    res.json(health);
-});
-
-// Route pour debug des numéros client
-app.get('/api/debug/client-numbers', async (req, res) => {
-    try {
-        const patients = await loadPatientData();
-        const maxNum = Math.max(...patients.map(p => parseInt(p.numClient) || 0));
-        
-        res.json({
-            success: true,
-            dernierNumClient: dernierNumClient,
-            maxInDatabase: maxNum,
-            patientCount: patients.length,
-            isConsistent: maxNum === dernierNumClient,
-            timestamp: new Date().toISOString(),
-            patients: patients.slice(-5).map(p => ({ 
-                numClient: p.numClient, 
-                nomClient: p.nomClient,
-                numID_CSR: p.numID_CSR 
-            }))
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// Route pour forcer la resynchronisation
-app.post('/api/admin/resync-client-numbers', async (req, res) => {
-    try {
-        const newValue = await forceSyncClientNumbers();
-        res.json({
-            success: true,
-            message: `Synchronisation forcée terminée`,
-            newValue: newValue,
-            timestamp: new Date().toISOString()
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// Route 404 pour les routes non trouvées
-app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        message: 'Route non trouvée',
-        path: req.url,
-        method: req.method,
-        availableRoutes: [
-            '/',
-            '/health',
-            '/api/socket-status',
-            '/api/auth/verify',
-            '/api/users',
-            '/api/admin/reset-users',
-            '/api/admin/show-users',
-            '/api/journals/:journalType',
-            '/api/admin/logs',
-            '/api/admin/stats',
-            '/api/admin/connected-users',
-            '/api/debug/client-numbers',
-            '/socket.io/'
-        ]
+    res.json({
+        success: true,
+        paths: paths,
+        timestamp: new Date().toISOString()
     });
 });
+
+// ====================================================================================
+// FONCTION DE VÉRIFICATION DES CHEMINS
+// ====================================================================================
+
+async function verifyAllPaths() {
+    console.log('\n🔍 VÉRIFICATION DES CHEMINS:');
+    console.log('=========================================================');
+    
+    const allFiles = [
+        { name: 'JOURNAL_LABO', path: JOURNAL_LABO_FILE },
+        { name: 'JOURNAL_CONSULT', path: JOURNAL_CONSULT_FILE },
+        { name: 'JOURNAL_CAISSE', path: JOURNAL_CAISSE_FILE },
+        { name: 'LABO', path: LABO_FILE },
+        { name: 'USERS', path: USERS_FILE }
+    ];
+    
+    for (const file of allFiles) {
+        console.log(`\n📁 ${file.name}:`);
+        console.log(`   • Chemin configuré: ${file.path}`);
+        console.log(`   • Chemin résolu: ${path.resolve(file.path)}`);
+        
+        try {
+            await fs.access(path.resolve(file.path));
+            const content = await fs.readFile(path.resolve(file.path), 'utf8');
+            const data = content.trim() ? JSON.parse(content) : [];
+            console.log(`   ✅ EXISTE - ${data.length} entrées`);
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                console.log(`   ❌ N'EXISTE PAS - création...`);
+                try {
+                    const dir = path.dirname(path.resolve(file.path));
+                    await fs.mkdir(dir, { recursive: true });
+                    await fs.writeFile(path.resolve(file.path), '[]');
+                    console.log(`   ✅ CRÉÉ avec succès`);
+                } catch (createError) {
+                    console.log(`   ❌ Échec création: ${createError.message}`);
+                }
+            } else {
+                console.log(`   ❌ ERREUR: ${error.message}`);
+            }
+        }
+    }
+    
+    console.log('\n=========================================================');
+    console.log('✅ VÉRIFICATION TERMINÉE');
+}
 
 // ====================================================================================
 // LANCEMENT DU SERVEUR
@@ -2121,88 +1599,66 @@ app.use((req, res) => {
 
 async function startServer() {
     try {
-        console.log('🚀 Démarrage du serveur Render.com...');
-        console.log('📁 Structure des dossiers: csr-backend-production/databases/databases/');
+        console.log('🚀 Démarrage du serveur...');
+        console.log('=========================================================\n');
         
-        // Créer tous les répertoires nécessaires
-        await ensureDirectoryExists(databasesDir);
-        console.log('✅ Répertoire de base de données vérifié:', databasesDir);
+        // 1. Vérifier et créer les dossiers
+        await ensureDatabaseDirectory();
         
-        // 1. INITIALISER LES UTILISATEURS EN PREMIER
+        // 2. Initialiser tous les fichiers
+        await initializeDatabaseFiles();
+        
+        // 3. Vérifier tous les chemins
+        await verifyAllPaths();
+        
+        // 4. Initialiser les utilisateurs
         await initializeUsersDatabase();
-        console.log('✅ Base de données utilisateurs initialisée');
         
-        // 2. Charger les utilisateurs
+        // 5. Charger les données
         await loadUsers();
-        console.log('✅ Base de données utilisateurs chargée');
-        
-        // 3. Initialiser le fichier labo
-        await initializeLaboFile();
-        console.log('✅ Fichier labo initialisé');
-        
-        // 4. Synchronisation des numéros
-        await forceSyncClientNumbers();
-        console.log(`✅ Dernier numéro client synchronisé: ${dernierNumClient}`);
-        
-        // 5. Charger les autres configurations
         await loadAdminLogs();
-        console.log('✅ Logs d\'administration chargés');
-        
         await loadExamensConfig();
-        console.log('✅ Configuration des examens chargée');
         
-        // Vérifier la cohérence
-        const patients = await loadPatientData();
-        console.log(`📊 ${patients.length} patients trouvés dans la base`);
+        // 6. Synchroniser les numéros clients
+        await forceSyncClientNumbers();
         
-        // Initialiser les fichiers de journaux
-        await loadJournalData(JOURNAL_LABO_FILE);
-        await loadJournalData(JOURNAL_CONSULT_FILE);
-        await loadJournalData(JOURNAL_CAISSE_FILE);
-        console.log('✅ Fichiers de journaux initialisés');
+        // 7. Vérifier que les fichiers journaux sont accessibles
+        console.log('\n📊 ÉTAT DES JOURNAUX:');
+        console.log('=========================================================');
+        const journals = [
+            { name: 'Laboratoire', file: JOURNAL_LABO_FILE },
+            { name: 'Consultation', file: JOURNAL_CONSULT_FILE },
+            { name: 'Caisse', file: JOURNAL_CAISSE_FILE }
+        ];
         
-        // Sauvegarde automatique périodique
-        setInterval(async () => {
+        for (const journal of journals) {
             try {
-                await saveLastClientNumber();
-                console.log('💾 Sauvegarde automatique du numéro client');
-            } catch (error) {
-                console.error('❌ Erreur sauvegarde automatique:', error);
+                const content = await fs.readFile(journal.file, 'utf8');
+                const data = content.trim() ? JSON.parse(content) : [];
+                console.log(`   • ${journal.name}: ${data.length} entrées (${journal.file})`);
+            } catch {
+                console.log(`   • ${journal.name}: 0 entrées (fichier vide ou inexistant)`);
             }
-        }, 60000);
-
-        // Synchronisation périodique
-        setInterval(async () => {
-            try {
-                await forceSyncClientNumbers();
-            } catch (error) {
-                console.error('❌ Erreur synchro périodique:', error);
-            }
-        }, 300000);
+        }
         
         // Démarrer le serveur
         http.listen(PORT, '0.0.0.0', () => {
-            console.log('==========================================');
+            console.log('\n=========================================================');
             console.log('🎉 SERVEUR DÉMARRÉ AVEC SUCCÈS');
-            console.log('==========================================');
-            console.log('📁 Base de données: ' + databasesDir);
-            console.log('📡 Port: ' + PORT);
-            console.log('🔌 Socket.IO: ACTIVÉ ✅');
-            console.log('📊 Utilisateurs: ' + usersDatabase.length);
-            console.log('🔢 Dernier numéro client: ' + dernierNumClient);
+            console.log('=========================================================');
+            console.log(`📡 Port: ${PORT}`);
+            console.log(`📁 Base de données: ${BASE_DATABASE_PATH}`);
+            console.log(`🔌 Socket.IO: ACTIVÉ ✅`);
+            console.log(`📊 Utilisateurs: ${usersDatabase.length}`);
+            console.log(`🔢 Dernier numéro client: ${dernierNumClient}`);
             console.log('🔐 Identifiants disponibles:');
             console.log('   • Tous les utilisateurs ont le mot de passe: 12345678');
             console.log('   • Utilisateurs principaux: admin, Caisse, Labo, Consultation');
             console.log('📝 Journaux disponibles:');
-            console.log('   • Laboratoire: ' + JOURNAL_LABO_FILE);
-            console.log('   • Consultation: ' + JOURNAL_CONSULT_FILE);
-            console.log('   • Caisse: ' + JOURNAL_CAISSE_FILE);
-            console.log('==========================================');
-            console.log('🛠️  URLs utiles:');
-            console.log('   • Réinitialiser utilisateurs: https://csr-backend-production.onrender.com/api/admin/reset-users');
-            console.log('   • Voir utilisateurs: https://csr-backend-production.onrender.com/api/admin/show-users');
-            console.log('   • Health check: https://csr-backend-production.onrender.com/health');
-            console.log('==========================================');
+            console.log(`   • Laboratoire: ${JOURNAL_LABO_FILE}`);
+            console.log(`   • Consultation: ${JOURNAL_CONSULT_FILE}`);
+            console.log(`   • Caisse: ${JOURNAL_CAISSE_FILE}`);
+            console.log('=========================================================\n');
             
             addAdminLog('Serveur démarré', 'server_start', 'system');
         });
@@ -2216,25 +1672,7 @@ async function startServer() {
 process.on('SIGINT', () => {
     console.log('🔻 Arrêt du serveur...');
     saveLastClientNumber().catch(console.error);
-    addAdminLog('Serveur arrêté', 'server_stop', 'system');
     process.exit(0);
-});
-
-process.on('SIGTERM', () => {
-    console.log('🔻 Arrêt du serveur (SIGTERM)...');
-    saveLastClientNumber().catch(console.error);
-    addAdminLog('Serveur arrêté par SIGTERM', 'server_stop', 'system');
-    process.exit(0);
-});
-
-process.on('uncaughtException', (error) => {
-    console.error('💥 Exception non capturée:', error);
-    addAdminLog('Exception non capturée: ' + error.message, 'error', 'system');
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('💥 Rejet non géré:', reason);
-    addAdminLog('Rejet non géré: ' + reason, 'error', 'system');
 });
 
 // Démarrer le serveur
